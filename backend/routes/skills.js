@@ -1,0 +1,64 @@
+const express = require('express');
+const db = require('../db');
+const { requireAuth } = require('../middleware/auth');
+
+const router = express.Router();
+
+function currentWeekNumber(enrolledAt) {
+  const start = new Date(enrolledAt);
+  const now = new Date();
+  const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  const week = Math.floor(diffDays / 7) + 1;
+  return Math.min(Math.max(week, 1), 52);
+}
+
+router.get('/skills', requireAuth, (req, res) => {
+  const { week, category } = req.query;
+  let sql = 'SELECT * FROM skills';
+  const conditions = [];
+  const params = [];
+  if (week) {
+    conditions.push('week_number = ?');
+    params.push(week);
+  }
+  if (category) {
+    conditions.push('category = ?');
+    params.push(category);
+  }
+  if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
+  sql += ' ORDER BY week_number ASC';
+
+  const skills = db.prepare(sql).all(...params);
+  const stampedIds = new Set(
+    db.prepare('SELECT skill_id FROM stamps WHERE user_id = ?').all(req.user.id).map((r) => r.skill_id)
+  );
+  res.json(skills.map((s) => ({ ...s, stamped: stampedIds.has(s.id) })));
+});
+
+router.get('/skills/current', requireAuth, (req, res) => {
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+  const week = currentWeekNumber(user.enrolled_at);
+  const skill = db.prepare('SELECT * FROM skills WHERE week_number = ?').get(week);
+  if (!skill) return res.json({ week, skill: null });
+  const stamped = !!db
+    .prepare('SELECT 1 FROM stamps WHERE user_id = ? AND skill_id = ?')
+    .get(req.user.id, skill.id);
+  res.json({ week, skill: { ...skill, stamped } });
+});
+
+router.get('/skills/:id', requireAuth, (req, res) => {
+  const skill = db.prepare('SELECT * FROM skills WHERE id = ?').get(req.params.id);
+  if (!skill) return res.status(404).json({ error: 'Skill不存在' });
+  const stamp = db
+    .prepare('SELECT * FROM stamps WHERE user_id = ? AND skill_id = ?')
+    .get(req.user.id, skill.id);
+  const prev = db
+    .prepare('SELECT id, title FROM skills WHERE week_number < ? ORDER BY week_number DESC LIMIT 1')
+    .get(skill.week_number);
+  const next = db
+    .prepare('SELECT id, title FROM skills WHERE week_number > ? ORDER BY week_number ASC LIMIT 1')
+    .get(skill.week_number);
+  res.json({ ...skill, stamp: stamp || null, prev: prev || null, next: next || null });
+});
+
+module.exports = router;
