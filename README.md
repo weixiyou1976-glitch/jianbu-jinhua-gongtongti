@@ -2,6 +2,13 @@
 
 一周一枚策印，持续52周的进化路径。PWA 知识库应用，素纸风设计。
 
+## 线上访问地址
+
+- 前端：https://jianbu-jinhua-gongtongti.netlify.app
+- 后端 API：https://jianbu-jinhua-gongtongti-production.up.railway.app/api
+- 后台管理：https://jianbu-jinhua-gongtongti.netlify.app/admin
+- GitHub 仓库：https://github.com/weixiyou1976-glitch/jianbu-jinhua-gongtongti
+
 ## 技术栈
 
 - 前端：React + Vite + Tailwind CSS + React Router
