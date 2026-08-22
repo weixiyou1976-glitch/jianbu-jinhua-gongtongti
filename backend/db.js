@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS skills (
   insight TEXT NOT NULL,
   case_study TEXT NOT NULL,
   cognitive_reframe TEXT NOT NULL,
+  growth_friction TEXT NOT NULL DEFAULT '',
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -66,5 +67,10 @@ CREATE TABLE IF NOT EXISTS checkins (
   UNIQUE(user_id, skill_id)
 );
 `);
+
+const skillColumns = db.prepare(`PRAGMA table_info(skills)`).all().map((c) => c.name);
+if (!skillColumns.includes('growth_friction')) {
+  db.exec(`ALTER TABLE skills ADD COLUMN growth_friction TEXT NOT NULL DEFAULT ''`);
+}
 
 module.exports = db;

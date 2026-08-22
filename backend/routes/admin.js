@@ -69,10 +69,10 @@ router.post('/skills', (req, res) => {
   }
   const info = db.prepare(`
     INSERT INTO skills (week_number, title, skill_name, category, trigger_condition,
-      step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe)
+      step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction)
     VALUES (@week_number, @title, @skill_name, @category, @trigger_condition,
-      @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe)
-  `).run(s);
+      @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction)
+  `).run({ growth_friction: '', ...s });
   res.json(db.prepare('SELECT * FROM skills WHERE id = ?').get(info.lastInsertRowid));
 });
 
@@ -84,7 +84,8 @@ router.put('/skills/:id', (req, res) => {
     UPDATE skills SET week_number=@week_number, title=@title, skill_name=@skill_name,
       category=@category, trigger_condition=@trigger_condition, step_one=@step_one,
       step_two=@step_two, step_three=@step_three, memory_anchor=@memory_anchor,
-      insight=@insight, case_study=@case_study, cognitive_reframe=@cognitive_reframe
+      insight=@insight, case_study=@case_study, cognitive_reframe=@cognitive_reframe,
+      growth_friction=@growth_friction
     WHERE id=@id
   `).run(merged);
   res.json(db.prepare('SELECT * FROM skills WHERE id = ?').get(existing.id));

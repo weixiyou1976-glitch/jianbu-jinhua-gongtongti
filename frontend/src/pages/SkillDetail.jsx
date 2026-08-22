@@ -107,6 +107,23 @@ export default function SkillDetail() {
           <p className="text-sm text-ink leading-loose whitespace-pre-line">{skill.cognitive_reframe}</p>
         </section>
 
+        {/* 这一关·成长摩擦 */}
+        {skill.growth_friction && (
+          <section>
+            <h2 className="text-sm font-semibold text-ink/70 mb-3">这一关 · 成长摩擦</h2>
+            <p className="text-sm text-ink/70 leading-loose mb-4">
+              每一个真实的 Skill，安装时都会产生摩擦。这不是出错的信号，而是你的能力边界正在被推动的信号。
+            </p>
+            <p className="text-sm text-ink/50 mb-2">这个 Skill 的摩擦点通常在这里：</p>
+            <blockquote className="border-l-2 border-vermilion/40 pl-4 text-sm text-ink leading-loose whitespace-pre-line italic">
+              {skill.growth_friction}
+            </blockquote>
+            <p className="text-sm text-ink/70 leading-loose mt-4">
+              这一关，没有办法绕过去，只能穿过去。穿过去的那一刻，Skill 才算真正装进来了。
+            </p>
+          </section>
+        )}
+
         {/* 5. 策印提交区 */}
         <section className="border border-ink/10 rounded-2xl p-6">
           <h2 className="text-sm font-semibold text-ink mb-4">策印提交</h2>
