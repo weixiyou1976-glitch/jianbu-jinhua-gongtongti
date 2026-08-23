@@ -3,6 +3,21 @@ import { api } from '../api';
 
 const PRIVACY_NOTE = '你输入的内容将发送给AI处理，请勿填写敏感个人信息';
 
+function renderLiteMarkdown(text) {
+  return text.split('\n').map((line, i, lines) => (
+    <span key={i}>
+      {line.split(/(\*\*[^*]+\*\*)/g).map((part, j) =>
+        part.startsWith('**') && part.endsWith('**') ? (
+          <strong key={j}>{part.slice(2, -2)}</strong>
+        ) : (
+          part
+        )
+      )}
+      {i < lines.length - 1 && <br />}
+    </span>
+  ));
+}
+
 export default function CoachPanel({ skill }) {
   const [situation, setSituation] = useState('');
   const [conversation, setConversation] = useState([]);
@@ -102,11 +117,15 @@ export default function CoachPanel({ skill }) {
             {conversation.map((m, i) => (
               <div key={i} className={m.role === 'user' ? 'text-right' : 'text-left'}>
                 <div
-                  className={`inline-block max-w-[85%] rounded-xl px-4 py-2 text-sm leading-relaxed whitespace-pre-line text-left ${
+                  className={`inline-block max-w-[85%] rounded-xl px-4 py-2 text-sm leading-relaxed text-left ${
                     m.role === 'user' ? 'bg-vermilion/10 text-ink' : 'bg-ink/5 text-ink'
                   }`}
                 >
-                  {m.content || (status === 'streaming' && i === conversation.length - 1 ? '…' : '')}
+                  {m.content
+                    ? renderLiteMarkdown(m.content)
+                    : status === 'streaming' && i === conversation.length - 1
+                    ? '…'
+                    : ''}
                 </div>
               </div>
             ))}
