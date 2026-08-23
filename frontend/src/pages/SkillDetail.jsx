@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api';
+import CoachPanel from '../components/CoachPanel';
 
 export default function SkillDetail() {
   const { id } = useParams();
@@ -123,6 +124,9 @@ export default function SkillDetail() {
             </p>
           </section>
         )}
+
+        {/* AI陪练 */}
+        <CoachPanel skill={skill} />
 
         {/* 5. 策印提交区 */}
         <section className="border border-ink/10 rounded-2xl p-6">

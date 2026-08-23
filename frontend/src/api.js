@@ -20,6 +20,30 @@ async function request(path, { method = 'GET', body, token, admin } = {}) {
   return data;
 }
 
+async function streamRequest(path, body) {
+  const token = localStorage.getItem('token');
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    let message = '陪练暂时休息中，请稍后再试';
+    try {
+      const data = await res.json();
+      if (data?.error) message = data.error;
+    } catch {
+      // 忽略非JSON错误体
+    }
+    throw new Error(message);
+  }
+  return res.body;
+}
+
 export const api = {
   register: (payload) => request('/auth/register', { method: 'POST', body: payload }),
   login: (payload) => request('/auth/login', { method: 'POST', body: payload }),
@@ -32,6 +56,9 @@ export const api = {
   submitStamp: (id, payload) => request(`/skills/${id}/stamp`, { method: 'POST', body: payload }),
   getStamps: () => request('/stamps'),
   getProgress: () => request('/progress'),
+  coachStart: (skill_id, user_message) => streamRequest('/coach/start', { skill_id, user_message }),
+  coachReply: (skill_id, conversation_history, user_message) =>
+    streamRequest('/coach/reply', { skill_id, conversation_history, user_message }),
 
   adminGenerateCodes: (count) => request('/admin/activation-codes', { method: 'POST', body: { count }, admin: true }),
   adminListCodes: () => request('/admin/activation-codes', { admin: true }),

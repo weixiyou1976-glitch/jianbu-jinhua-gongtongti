@@ -7,6 +7,7 @@ const skillsRoutes = require('./routes/skills');
 const stampsRoutes = require('./routes/stamps');
 const progressRoutes = require('./routes/progress');
 const adminRoutes = require('./routes/admin');
+const coachRoutes = require('./routes/coach');
 
 const app = express();
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
@@ -18,6 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api', skillsRoutes);
 app.use('/api', stampsRoutes);
 app.use('/api', progressRoutes);
+app.use('/api', coachRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.use((err, req, res, next) => {
