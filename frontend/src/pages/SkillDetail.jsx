@@ -55,6 +55,48 @@ export default function SkillDetail() {
     return <div className="min-h-screen bg-paper" />;
   }
 
+  if (skill.locked) {
+    const currentSkill = skill.current_skill;
+    return (
+      <div className="min-h-screen bg-paper pb-16">
+        <header className="max-w-content mx-auto px-6 pt-6 pb-2">
+          <Link to="/skills" className="text-xs text-ink/40">← 返回 Skill 库</Link>
+        </header>
+        <main className="max-w-content mx-auto px-6">
+          <section className="border border-ink/10 rounded-2xl p-8 bg-white/40 text-center mt-6">
+            <p className="text-2xl mb-3">🔒</p>
+            <p className="text-base font-semibold text-ink mb-4">第 {skill.week_number} 周 · 尚未解锁</p>
+            <p className="text-sm text-ink/60 leading-relaxed mb-2">
+              这个 Skill 会在你进度到第 {skill.week_number} 周时解锁。
+            </p>
+            {currentSkill && (
+              <p className="text-sm text-ink/60 leading-relaxed mb-6">
+                不如先把当前这周的「{currentSkill.skill_name}」练扎实——
+                <br />
+                真正的进化，不是看得多，是装得稳。
+              </p>
+            )}
+            {currentSkill ? (
+              <button
+                onClick={() => navigate(`/skill/${currentSkill.id}`)}
+                className="bg-vermilion text-paper rounded-lg px-5 py-2.5 text-sm font-medium"
+              >
+                返回本周Skill
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/skills')}
+                className="bg-vermilion text-paper rounded-lg px-5 py-2.5 text-sm font-medium"
+              >
+                返回 Skill 库
+              </button>
+            )}
+          </section>
+        </main>
+      </div>
+    );
+  }
+
   const stamp = skill.stamp;
 
   return (

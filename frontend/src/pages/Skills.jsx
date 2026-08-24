@@ -13,12 +13,18 @@ const SEASONS = [
 const CATEGORIES = ['表达类', '决策类', '关系类', '变现类', '行动类', '认知类'];
 
 function SkillCard({ skill }) {
+  const locked = skill.unlocked === false;
   return (
     <Link
       to={`/skill/${skill.id}`}
-      className="block border border-ink/10 rounded-xl p-4 bg-white/40 hover:border-vermilion/30 transition-colors"
+      className={`relative block border rounded-xl p-4 transition-colors ${
+        locked
+          ? 'border-ink/5 bg-white/20 opacity-50 grayscale'
+          : 'border-ink/10 bg-white/40 hover:border-vermilion/30'
+      }`}
     >
-      <div className="flex items-center justify-between mb-1">
+      {locked && <span className="absolute top-3 right-3 text-sm">🔒</span>}
+      <div className="flex items-center justify-between mb-1 pr-5">
         <span className="text-xs text-ink/40">第 {skill.week_number} 周</span>
         <span className="text-xs bg-vermilion/10 text-vermilion rounded-full px-2 py-0.5">{skill.category}</span>
       </div>
