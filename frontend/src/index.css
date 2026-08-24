@@ -8,8 +8,16 @@ html, body, #root {
   min-height: 100%;
 }
 
+html {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
+  width: 100%;
+  overflow-x: hidden;
   background: #FAF8F4;
   color: #2B2B2B;
   font-family: 'Noto Serif SC', serif;

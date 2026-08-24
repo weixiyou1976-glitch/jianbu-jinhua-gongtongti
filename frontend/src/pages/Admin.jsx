@@ -123,26 +123,28 @@ function StudentsPanel() {
   return (
     <div className="space-y-2">
       {error && <p className="text-vermilion text-sm">{error}</p>}
-      <table className="w-full text-sm border-collapse">
-        <thead>
-          <tr className="text-left text-ink/40 border-b border-ink/10">
-            <th className="py-2 font-normal">邮箱</th>
-            <th className="py-2 font-normal">入学日期</th>
-            <th className="py-2 font-normal">策印数</th>
-            <th className="py-2 font-normal">完成度</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map((s) => (
-            <tr key={s.id} className="border-b border-ink/5">
-              <td className="py-2">{s.email}</td>
-              <td className="py-2 text-ink/50">{s.enrolled_at?.slice(0, 10)}</td>
-              <td className="py-2">{s.stamp_count}</td>
-              <td className="py-2 text-vermilion">{s.percent}%</td>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-left text-ink/40 border-b border-ink/10">
+              <th className="py-2 font-normal">邮箱</th>
+              <th className="py-2 font-normal">入学日期</th>
+              <th className="py-2 font-normal">策印数</th>
+              <th className="py-2 font-normal">完成度</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {students.map((s) => (
+              <tr key={s.id} className="border-b border-ink/5">
+                <td className="py-2">{s.email}</td>
+                <td className="py-2 text-ink/50">{s.enrolled_at?.slice(0, 10)}</td>
+                <td className="py-2">{s.stamp_count}</td>
+                <td className="py-2 text-vermilion">{s.percent}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
