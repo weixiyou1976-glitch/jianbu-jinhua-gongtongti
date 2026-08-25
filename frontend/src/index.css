@@ -28,11 +28,13 @@ body {
 }
 
 /* iOS Safari 在 input/textarea 的 font-size 小于16px时，聚焦会自动放大整个页面，
-   导致屏幕边缘元素（如AI陪练的发送按钮）看起来被挤出可视区域。窄屏下强制16px来阻止这个自动缩放。 */
+   导致屏幕边缘元素（如AI陪练的发送按钮）看起来被挤出可视区域。窄屏下强制16px来阻止这个自动缩放。
+   用 !important 是因为组件上的 Tailwind text-sm（class选择器）优先级高于这里的元素选择器，
+   不加!important会被text-sm的14px覆盖。 */
 @media (max-width: 640px) {
   input,
   textarea,
   select {
-    font-size: 16px;
+    font-size: 16px !important;
   }
 }
