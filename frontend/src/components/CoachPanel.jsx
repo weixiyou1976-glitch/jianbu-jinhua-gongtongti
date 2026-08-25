@@ -140,7 +140,7 @@ export default function CoachPanel({ skill }) {
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="继续对话…"
                 disabled={status === 'streaming'}
-                className="flex-1 border border-ink/15 rounded-lg px-3 py-2 text-sm bg-white/60 focus:outline-none focus:border-vermilion disabled:opacity-50"
+                className="flex-1 min-w-0 border border-ink/15 rounded-lg px-3 py-2 text-sm bg-white/60 focus:outline-none focus:border-vermilion disabled:opacity-50"
               />
               <button
                 type="submit"

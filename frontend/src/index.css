@@ -26,3 +26,13 @@ body {
 ::selection {
   background: rgba(192, 57, 43, 0.18);
 }
+
+/* iOS Safari 在 input/textarea 的 font-size 小于16px时，聚焦会自动放大整个页面，
+   导致屏幕边缘元素（如AI陪练的发送按钮）看起来被挤出可视区域。窄屏下强制16px来阻止这个自动缩放。 */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
