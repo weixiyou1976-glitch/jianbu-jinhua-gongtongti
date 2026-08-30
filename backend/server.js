@@ -9,8 +9,12 @@ const progressRoutes = require('./routes/progress');
 const adminRoutes = require('./routes/admin');
 const coachRoutes = require('./routes/coach');
 
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean)
+  : '*';
+
 const app = express();
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
