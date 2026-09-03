@@ -3,7 +3,7 @@ import { api, API_BASE_URL } from '../api';
 
 const emptySkill = {
   week_number: '', title: '', skill_name: '', category: '认知类', trigger_condition: '',
-  step_one: '', step_two: '', step_three: '', memory_anchor: '', insight: '',
+  key_question: '', step_one: '', step_two: '', step_three: '', memory_anchor: '', insight: '',
   case_study: '', cognitive_reframe: '', growth_friction: '',
 };
 
@@ -187,7 +187,7 @@ function SkillsPanel() {
         {Object.keys(emptySkill).map((field) => (
           <div key={field}>
             <label className="text-xs text-ink/50 block mb-1">{field}</label>
-            {['insight', 'case_study', 'cognitive_reframe', 'growth_friction', 'step_one', 'step_two', 'step_three', 'trigger_condition'].includes(field) ? (
+            {['insight', 'case_study', 'cognitive_reframe', 'growth_friction', 'step_one', 'step_two', 'step_three', 'trigger_condition', 'key_question'].includes(field) ? (
               <textarea
                 value={editing[field] ?? ''}
                 onChange={(e) => setEditing((s) => ({ ...s, [field]: e.target.value }))}

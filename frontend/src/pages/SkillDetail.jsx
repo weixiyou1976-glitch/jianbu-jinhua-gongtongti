@@ -116,6 +116,13 @@ export default function SkillDetail() {
             <p className="text-sm text-ink leading-relaxed">{skill.trigger_condition}</p>
           </div>
 
+          {skill.key_question && (
+            <div className="mb-4">
+              <p className="text-xs text-ink/50 mb-1">关键问题</p>
+              <p className="text-sm text-ink leading-relaxed font-semibold">{skill.key_question}</p>
+            </div>
+          )}
+
           <div className="space-y-2 mb-4">
             <p className="text-xs text-ink/50">三步动作</p>
             {[skill.step_one, skill.step_two, skill.step_three].map((step, i) => (

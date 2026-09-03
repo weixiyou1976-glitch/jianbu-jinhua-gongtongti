@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS skills (
   skill_name TEXT NOT NULL,
   category TEXT NOT NULL,
   trigger_condition TEXT NOT NULL,
+  key_question TEXT NOT NULL DEFAULT '',
   step_one TEXT NOT NULL,
   step_two TEXT NOT NULL,
   step_three TEXT NOT NULL,
@@ -71,6 +72,9 @@ CREATE TABLE IF NOT EXISTS checkins (
 const skillColumns = db.prepare(`PRAGMA table_info(skills)`).all().map((c) => c.name);
 if (!skillColumns.includes('growth_friction')) {
   db.exec(`ALTER TABLE skills ADD COLUMN growth_friction TEXT NOT NULL DEFAULT ''`);
+}
+if (!skillColumns.includes('key_question')) {
+  db.exec(`ALTER TABLE skills ADD COLUMN key_question TEXT NOT NULL DEFAULT ''`);
 }
 
 module.exports = db;

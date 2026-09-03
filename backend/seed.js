@@ -158,6 +158,7 @@ const skills = [
     skill_name: '对频术',
     category: '表达类',
     trigger_condition: '当你和别人沟通，发现对方没有反应、敷衍了事、或者你说了很多但对方就是不为所动时',
+    key_question: '这个人现在最在意的是什么，我有没有先说他的事再说我的事？',
     step_one: '停播：停止输出你想说的内容，先问自己："这个人现在最在意的是什么？他现在的状态是什么？"',
     step_two: '调频：用一句话说出对方当下最在意的那件事，不是你认为重要的，是他认为重要的',
     step_three: '再发：在对方感到被理解之后，再说你真正想说的内容',
@@ -233,6 +234,7 @@ const skills = [
     skill_name: '互惠先给',
     category: '影响力类',
     trigger_condition: '当你意识到"我接下来要向某人提出请求"时',
+    key_question: '我准备开口要求之前，我能先给对方什么？',
     step_one: '暂停：停下来，不要急着开口提要求，先问自己："我能先给他什么有价值的东西？"',
     step_two: '先给：主动给出一个对方真实需要的东西——信息、帮助、资源或时间，不附带任何条件',
     step_three: '再提：在对方感受到你的给予之后，再提出你的请求',
@@ -248,6 +250,7 @@ const skills = [
     skill_name: '小诺钉桩',
     category: '影响力类',
     trigger_condition: '当你希望对方做到某件事，或者你自己想要坚持某个行动时',
+    key_question: '我能把这件事缩小到对方几乎不可能拒绝的最小版本是什么？',
     step_one: '找到最小入口：把你想要对方做的事，缩小到一个几乎不可能拒绝的最小版本',
     step_two: '让承诺公开：让对方当众说出这个小承诺，哪怕只是在你面前点头说"好"',
     step_three: '顺势推进：在对方完成小承诺之后，再提出下一步稍大一点的请求',
@@ -263,6 +266,7 @@ const skills = [
     skill_name: '从众引路',
     category: '影响力类',
     trigger_condition: '当对方对某件事犹豫不决，或者你需要降低对方的决策阻力时',
+    key_question: '和对方处境最相似的人，已经做了什么？',
     step_one: '找参照群体：找到和对方最相似的人群——同行业、同规模、同处境',
     step_two: '呈现真实证据：说出"和你情况类似的人已经这样做了"，给出具体的、真实的例子',
     step_three: '让对方看到结果：不只是说"他们在做"，还要说"他们做了之后发生了什么"',
@@ -278,6 +282,7 @@ const skills = [
     skill_name: '先立权威',
     category: '影响力类',
     trigger_condition: '当对方对你的判断或建议持怀疑态度，或者你需要让对方快速信任你时',
+    key_question: '我凭什么有资格说这件事，我有没有在开口前说清楚？',
     step_one: '先建立身份：在说观点之前，用一句话说清楚你为什么有资格说这件事',
     step_two: '借用相关权威：引用和话题直接相关的专家、数据或研究，注意必须和话题匹配',
     step_three: '说出结论：在权威背书建立之后，再说你真正想说的判断或建议',
@@ -293,6 +298,7 @@ const skills = [
     skill_name: '先找共频',
     category: '影响力类',
     trigger_condition: '当你需要影响一个和你不熟、有距离感，或者明显对你有防御的人时',
+    key_question: '在我说我的事之前，我们之间有什么真实的共同点？',
     step_one: '主动寻找共同点：共同认识的人、共同经历、共同爱好、共同处境都算',
     step_two: '真诚说出来：不是策略性地提起，是真实地表达"我们有这个共同点"',
     step_three: '再说正事：在对方放下防御之后，再说你真正想说的事',
@@ -308,6 +314,7 @@ const skills = [
     skill_name: '稀缺激活',
     category: '影响力类',
     trigger_condition: '当对方对某件事感兴趣但迟迟不行动，或者你需要推动对方做出决定时',
+    key_question: '这件事真实的限制是什么，我有没有清楚地让对方看见？',
     step_one: '确认真实限制：在说出限制之前，先确认这个限制是真实存在的——名额、时间或条件',
     step_two: '清晰呈现损失：不是说"快来抢"，而是说"如果错过，你会失去什么"',
     step_three: '给出明确截止点：说出具体的截止时间或数量，让对方能够清楚地感受到边界',
@@ -323,6 +330,7 @@ const skills = [
     skill_name: '课题分离',
     category: '关系类',
     trigger_condition: '当你感到被别人的情绪、期待或评价牵着走，开始焦虑、内疚或愤怒，却又说不清楚为什么时',
+    key_question: '这件事的最终后果，由谁来承担？',
     step_one: '停下来问一个问题："这件事的最终后果，由谁来承担？"',
     step_two: '划清边界：如果后果由对方承担，这就是对方的课题，不是你的。你只需要决定：我愿不愿意提供帮助，以及如何提供',
     step_three: '只做自己的课题：把100%的精力放回到你真正能控制、也真正需要负责的那件事上',
@@ -338,6 +346,7 @@ const skills = [
     skill_name: '舒适区突围',
     category: '行动类',
     trigger_condition: '当你发现某件事已经很久没有让你感到不适，或者一件你一直想做的事，因为"有点怕"而迟迟没有开始时',
+    key_question: '我有多久没有感到"有点怕但想试试"的感觉了？',
     step_one: '找到那件让你有点怕的事：不是很怕，不是要你去跳悬崖。是那种"想做但有点不确定"的事',
     step_two: '把它缩小到15分钟能完成的最小版本：不是"完整地做这件事"，而是"做这件事最小的第一步"',
     step_three: '排进日程，就这周做：不是"找个时间"，而是锁定具体的时间，像对待重要会议一样执行',
@@ -353,6 +362,7 @@ const skills = [
     skill_name: '二八聚焦',
     category: '效能类',
     trigger_condition: '当你感到事情太多、不知道从哪里开始，或者忙了很久却感觉没有真正推进时',
+    key_question: '如果今天只能做两件事，哪两件事做完之后其他事的影响会变得最小？',
     step_one: '列出清单：把今天或这周所有要做的事情写出来，不筛选，全部列出来',
     step_two: '找出那20%：问自己：如果这张清单上只能做两件事，哪两件事完成之后，其他事情的影响会变得最小？圈出来',
     step_three: '先做那两件，其余降级：圈出来的事情优先做，排进最重要的时间段。剩下的事情，要么推后，要么委托，要么直接砍掉',
@@ -368,6 +378,7 @@ const skills = [
     skill_name: '第二步棋',
     category: '决策类',
     trigger_condition: '当你准备做一个决定，或者已经做了一个决定，感觉很有道理，却又隐约有点不安时',
+    key_question: '这个决定落地之后，最可能出现的下一个结果是什么？',
     step_one: '说出你的决定：把你准备做的事或已经决定的事说清楚，一句话描述',
     step_two: '追问一层：问自己："如果这件事真的发生了，接下来最可能出现的是什么？"不是最好的情况，是最可能的情况',
     step_three: '再追问一层：对那个"最可能出现的情况"，再问一遍同样的问题："然后呢？"把这个答案纳入你的当前决策',
@@ -383,6 +394,7 @@ const skills = [
     skill_name: '底牌思维',
     category: '谈判类',
     trigger_condition: '当你需要争取某件事——加薪、合作条件、资源、机会——开口之前感到没有底气时',
+    key_question: '如果这次谈不成，我有什么？',
     step_one: '问自己"如果这次谈不成，我有什么？"：把你的备选方案写出来，不管现在看起来好不好，先写出来',
     step_two: '评估并强化你的备选方案：如果备选方案太弱，在谈判前先花时间把它变强一点——多联系一家，多准备一个选项，多留一条退路',
     step_three: '带着底牌去谈：知道自己有退路之后，再开口。不是因为傲慢，而是因为你真的有选择',
@@ -398,6 +410,7 @@ const skills = [
     skill_name: '向上管理',
     category: '职场类',
     trigger_condition: '当你感到上级不了解你的工作、误解你的能力，或者你的努力总是得不到应有的认可时',
+    key_question: '我的上级现在最需要知道什么，我有没有主动让他知道？',
     step_one: '搞清楚上级真正在意什么：不是你认为重要的事，是他在考核季、在向他的上级汇报时，最需要拿出来说的那件事',
     step_two: '把你的工作翻译成他的语言：用他在意的指标和结果描述你的工作，而不是用你自己的专业语言',
     step_three: '主动汇报，不要等他来问：在他需要知道之前，就让他知道。让他对你的工作有掌控感，而不是总在被动接收信息',
@@ -413,6 +426,7 @@ const skills = [
     skill_name: '结论先行',
     category: '表达类',
     trigger_condition: '当你需要向别人说清楚一件复杂的事——汇报、说服、解释、提建议——却不知道从哪里开始，或者说了很久对方还是没听懂时',
+    key_question: '我最想让对方知道的那一句话是什么，我有没有把它放在第一句？',
     step_one: '先说结论：在开口之前，先把你最想让对方知道的那一句话找出来，第一句就说它',
     step_two: '说支撑这个结论的理由：最多三个，每个理由一句话说清楚',
     step_three: '用细节补充，而不是铺垫：细节是用来证明你的理由的，不是用来帮你过渡到结论的',
@@ -428,6 +442,7 @@ const skills = [
     skill_name: '框架夺回',
     category: '影响力类',
     trigger_condition: '当你感到一场对话被对方带跑了——你在回应对方设定的问题，而不是推进你自己的目标时',
+    key_question: '我现在在回答谁的问题，这个问题是谁设定的？',
     step_one: '识别对方的框架：停下来问自己："我现在在回答谁的问题？这个问题是谁设定的？"',
     step_two: '不在对方的框架内回应：不是反驳，不是争论，而是用一句话把对话重新拉回到你的框架——"这个问题很重要，但我想先确认一件更关键的事——"',
     step_three: '在你的框架里推进：在你设定的问题和角度上，把对话继续下去',
@@ -440,16 +455,16 @@ const skills = [
 ];
 
 const insertSkill = db.prepare(`
-  INSERT INTO skills (week_number, title, skill_name, category, trigger_condition,
+  INSERT INTO skills (week_number, title, skill_name, category, trigger_condition, key_question,
     step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction)
-  VALUES (@week_number, @title, @skill_name, @category, @trigger_condition,
+  VALUES (@week_number, @title, @skill_name, @category, @trigger_condition, @key_question,
     @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction)
 `);
 
 const existingCount = db.prepare('SELECT COUNT(*) AS c FROM skills').get().c;
 if (existingCount === 0) {
   const tx = db.transaction(() => {
-    for (const s of skills) insertSkill.run(s);
+    for (const s of skills) insertSkill.run({ key_question: '', ...s });
   });
   tx();
   console.log(`已写入 ${skills.length} 条示例Skill内容`);

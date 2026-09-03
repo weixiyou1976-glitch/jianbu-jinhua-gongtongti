@@ -68,11 +68,11 @@ router.post('/skills', (req, res) => {
     if (!s[field]) return res.status(400).json({ error: `缺少字段: ${field}` });
   }
   const info = db.prepare(`
-    INSERT INTO skills (week_number, title, skill_name, category, trigger_condition,
+    INSERT INTO skills (week_number, title, skill_name, category, trigger_condition, key_question,
       step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction)
-    VALUES (@week_number, @title, @skill_name, @category, @trigger_condition,
+    VALUES (@week_number, @title, @skill_name, @category, @trigger_condition, @key_question,
       @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction)
-  `).run({ growth_friction: '', ...s });
+  `).run({ growth_friction: '', key_question: '', ...s });
   res.json(db.prepare('SELECT * FROM skills WHERE id = ?').get(info.lastInsertRowid));
 });
 
@@ -82,8 +82,8 @@ router.put('/skills/:id', (req, res) => {
   const merged = { ...existing, ...req.body, id: existing.id };
   db.prepare(`
     UPDATE skills SET week_number=@week_number, title=@title, skill_name=@skill_name,
-      category=@category, trigger_condition=@trigger_condition, step_one=@step_one,
-      step_two=@step_two, step_three=@step_three, memory_anchor=@memory_anchor,
+      category=@category, trigger_condition=@trigger_condition, key_question=@key_question,
+      step_one=@step_one, step_two=@step_two, step_three=@step_three, memory_anchor=@memory_anchor,
       insight=@insight, case_study=@case_study, cognitive_reframe=@cognitive_reframe,
       growth_friction=@growth_friction
     WHERE id=@id
