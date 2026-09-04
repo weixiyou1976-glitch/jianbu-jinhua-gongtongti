@@ -137,6 +137,20 @@ export default function SkillDetail() {
             <p className="text-xs text-ink/50 mb-1">记忆锚点</p>
             <p className="text-xl font-bold text-vermilion leading-snug">{skill.memory_anchor}</p>
           </div>
+
+          {skill.tags?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-4 pt-4 border-t border-vermilion/10">
+              {skill.tags.map((tag) => (
+                <Link
+                  key={tag}
+                  to={`/tag/${encodeURIComponent(tag)}`}
+                  className="text-xs text-ink/50 bg-ink/5 rounded-full px-2.5 py-1 hover:bg-vermilion/10 hover:text-vermilion"
+                >
+                  #{tag}
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* 2. 洞察 */}

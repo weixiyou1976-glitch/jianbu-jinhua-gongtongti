@@ -4,8 +4,58 @@ import { api, API_BASE_URL } from '../api';
 const emptySkill = {
   week_number: '', title: '', skill_name: '', category: '认知类', trigger_condition: '',
   key_question: '', step_one: '', step_two: '', step_three: '', memory_anchor: '', insight: '',
-  case_study: '', cognitive_reframe: '', growth_friction: '',
+  case_study: '', cognitive_reframe: '', growth_friction: '', tags: [],
 };
+
+function TagsEditor({ tags, onChange }) {
+  const [draft, setDraft] = useState('');
+
+  function addTag() {
+    const value = draft.trim();
+    if (!value || tags.includes(value)) {
+      setDraft('');
+      return;
+    }
+    onChange([...tags, value]);
+    setDraft('');
+  }
+
+  function removeTag(tag) {
+    onChange(tags.filter((t) => t !== tag));
+  }
+
+  return (
+    <div>
+      <label className="text-xs text-ink/50 block mb-1">tags</label>
+      <div className="flex flex-wrap gap-2 mb-2">
+        {tags.map((tag) => (
+          <span key={tag} className="inline-flex items-center gap-1 bg-vermilion/10 text-vermilion rounded-full px-3 py-1 text-xs">
+            {tag}
+            <button type="button" onClick={() => removeTag(tag)} className="text-vermilion/70 hover:text-vermilion">×</button>
+          </span>
+        ))}
+        {tags.length === 0 && <span className="text-xs text-ink/30">暂无标签</span>}
+      </div>
+      <div className="flex gap-2">
+        <input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              addTag();
+            }
+          }}
+          placeholder="输入标签后按 Enter 或点击添加"
+          className="flex-1 border border-ink/15 rounded-lg p-2 text-sm"
+        />
+        <button type="button" onClick={addTag} className="border border-vermilion/30 text-vermilion rounded-lg px-3 py-2 text-sm shrink-0">
+          添加
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function AdminGate({ onUnlock }) {
   const [password, setPassword] = useState('');
@@ -184,7 +234,7 @@ function SkillsPanel() {
     return (
       <form onSubmit={handleSave} className="space-y-3 text-sm">
         <button type="button" onClick={() => setEditing(null)} className="text-ink/40 text-xs mb-2">← 返回列表</button>
-        {Object.keys(emptySkill).map((field) => (
+        {Object.keys(emptySkill).filter((field) => field !== 'tags').map((field) => (
           <div key={field}>
             <label className="text-xs text-ink/50 block mb-1">{field}</label>
             {['insight', 'case_study', 'cognitive_reframe', 'growth_friction', 'step_one', 'step_two', 'step_three', 'trigger_condition', 'key_question'].includes(field) ? (
@@ -203,6 +253,7 @@ function SkillsPanel() {
             )}
           </div>
         ))}
+        <TagsEditor tags={editing.tags ?? []} onChange={(tags) => setEditing((s) => ({ ...s, tags }))} />
         {error && <p className="text-vermilion text-sm">{error}</p>}
         <button className="bg-vermilion text-paper rounded-lg px-4 py-2 text-sm">保存</button>
       </form>

@@ -46,8 +46,17 @@ CREATE TABLE IF NOT EXISTS skills (
   case_study TEXT NOT NULL,
   cognitive_reframe TEXT NOT NULL,
   growth_friction TEXT NOT NULL DEFAULT '',
+  tags TEXT NOT NULL DEFAULT '[]',
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS skill_tags (
+  skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+  tag TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_skill_tags_tag ON skill_tags(tag);
+CREATE INDEX IF NOT EXISTS idx_skill_tags_skill_id ON skill_tags(skill_id);
 
 CREATE TABLE IF NOT EXISTS stamps (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -76,5 +85,15 @@ if (!skillColumns.includes('growth_friction')) {
 if (!skillColumns.includes('key_question')) {
   db.exec(`ALTER TABLE skills ADD COLUMN key_question TEXT NOT NULL DEFAULT ''`);
 }
+if (!skillColumns.includes('tags')) {
+  db.exec(`ALTER TABLE skills ADD COLUMN tags TEXT NOT NULL DEFAULT '[]'`);
+}
+
+function setSkillTags(skillId, tags) {
+  db.prepare('DELETE FROM skill_tags WHERE skill_id = ?').run(skillId);
+  const insert = db.prepare('INSERT INTO skill_tags (skill_id, tag) VALUES (?, ?)');
+  for (const tag of tags) insert.run(skillId, tag);
+}
 
 module.exports = db;
+module.exports.setSkillTags = setSkillTags;

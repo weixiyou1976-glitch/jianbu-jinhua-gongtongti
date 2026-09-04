@@ -53,6 +53,10 @@ export const api = {
     return request(`/skills${qs ? `?${qs}` : ''}`);
   },
   getSkill: (id) => request(`/skills/${id}`),
+  searchSkills: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/skills/search${qs ? `?${qs}` : ''}`);
+  },
   submitStamp: (id, payload) => request(`/skills/${id}/stamp`, { method: 'POST', body: payload }),
   getStamps: () => request('/stamps'),
   getProgress: () => request('/progress'),

@@ -12,6 +12,10 @@ function currentWeekNumber(enrolledAt) {
   return Math.min(Math.max(week, 1), 52);
 }
 
+function withParsedTags(row) {
+  return { ...row, tags: JSON.parse(row.tags || '[]') };
+}
+
 router.get('/skills', requireAuth, (req, res) => {
   const { week, category } = req.query;
   let sql = 'SELECT * FROM skills';
@@ -36,7 +40,7 @@ router.get('/skills', requireAuth, (req, res) => {
   const currentWeek = currentWeekNumber(user.enrolled_at);
   res.json(
     skills.map((s) => ({
-      ...s,
+      ...withParsedTags(s),
       stamped: stampedIds.has(s.id),
       unlocked: s.week_number <= currentWeek || stampedIds.has(s.id),
     }))
@@ -51,7 +55,47 @@ router.get('/skills/current', requireAuth, (req, res) => {
   const stamped = !!db
     .prepare('SELECT 1 FROM stamps WHERE user_id = ? AND skill_id = ?')
     .get(req.user.id, skill.id);
-  res.json({ week, skill: { ...skill, stamped } });
+  res.json({ week, skill: { ...withParsedTags(skill), stamped } });
+});
+
+router.get('/skills/search', requireAuth, (req, res) => {
+  const { tag, q } = req.query;
+  if (!tag && !q) return res.status(400).json({ error: '缺少查询参数 tag 或 q' });
+
+  let skills;
+  if (tag) {
+    skills = db
+      .prepare(
+        `SELECT s.* FROM skills s
+         JOIN skill_tags st ON st.skill_id = s.id
+         WHERE st.tag = ?
+         ORDER BY s.week_number ASC`
+      )
+      .all(tag);
+  } else {
+    const like = `%${q}%`;
+    skills = db
+      .prepare(
+        `SELECT DISTINCT s.* FROM skills s
+         LEFT JOIN skill_tags st ON st.skill_id = s.id
+         WHERE s.skill_name LIKE ? OR s.title LIKE ? OR st.tag LIKE ?
+         ORDER BY s.week_number ASC`
+      )
+      .all(like, like, like);
+  }
+
+  const stampedIds = new Set(
+    db.prepare('SELECT skill_id FROM stamps WHERE user_id = ?').all(req.user.id).map((r) => r.skill_id)
+  );
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+  const currentWeek = currentWeekNumber(user.enrolled_at);
+  res.json(
+    skills.map((s) => ({
+      ...withParsedTags(s),
+      stamped: stampedIds.has(s.id),
+      unlocked: s.week_number <= currentWeek || stampedIds.has(s.id),
+    }))
+  );
 });
 
 router.get('/skills/:id', requireAuth, (req, res) => {
@@ -82,7 +126,7 @@ router.get('/skills/:id', requireAuth, (req, res) => {
   const next = db
     .prepare('SELECT id, title FROM skills WHERE week_number > ? ORDER BY week_number ASC LIMIT 1')
     .get(skill.week_number);
-  res.json({ ...skill, locked: false, stamp: stamp || null, prev: prev || null, next: next || null });
+  res.json({ ...withParsedTags(skill), locked: false, stamp: stamp || null, prev: prev || null, next: next || null });
 });
 
 module.exports = router;

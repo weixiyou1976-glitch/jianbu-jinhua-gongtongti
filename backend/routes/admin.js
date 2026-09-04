@@ -53,8 +53,12 @@ router.get('/students', (req, res) => {
   res.json(withProgress);
 });
 
+function withParsedTags(row) {
+  return { ...row, tags: JSON.parse(row.tags || '[]') };
+}
+
 router.get('/skills', (req, res) => {
-  res.json(db.prepare('SELECT * FROM skills ORDER BY week_number ASC').all());
+  res.json(db.prepare('SELECT * FROM skills ORDER BY week_number ASC').all().map(withParsedTags));
 });
 
 router.post('/skills', (req, res) => {
@@ -67,28 +71,32 @@ router.post('/skills', (req, res) => {
   for (const field of required) {
     if (!s[field]) return res.status(400).json({ error: `缺少字段: ${field}` });
   }
+  const tags = Array.isArray(s.tags) ? s.tags : [];
   const info = db.prepare(`
     INSERT INTO skills (week_number, title, skill_name, category, trigger_condition, key_question,
-      step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction)
+      step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, tags)
     VALUES (@week_number, @title, @skill_name, @category, @trigger_condition, @key_question,
-      @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction)
-  `).run({ growth_friction: '', key_question: '', ...s });
-  res.json(db.prepare('SELECT * FROM skills WHERE id = ?').get(info.lastInsertRowid));
+      @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @tags)
+  `).run({ growth_friction: '', key_question: '', ...s, tags: JSON.stringify(tags) });
+  db.setSkillTags(info.lastInsertRowid, tags);
+  res.json(withParsedTags(db.prepare('SELECT * FROM skills WHERE id = ?').get(info.lastInsertRowid)));
 });
 
 router.put('/skills/:id', (req, res) => {
   const existing = db.prepare('SELECT * FROM skills WHERE id = ?').get(req.params.id);
   if (!existing) return res.status(404).json({ error: 'Skill不存在' });
-  const merged = { ...existing, ...req.body, id: existing.id };
+  const tags = Array.isArray(req.body.tags) ? req.body.tags : JSON.parse(existing.tags || '[]');
+  const merged = { ...existing, ...req.body, id: existing.id, tags: JSON.stringify(tags) };
   db.prepare(`
     UPDATE skills SET week_number=@week_number, title=@title, skill_name=@skill_name,
       category=@category, trigger_condition=@trigger_condition, key_question=@key_question,
       step_one=@step_one, step_two=@step_two, step_three=@step_three, memory_anchor=@memory_anchor,
       insight=@insight, case_study=@case_study, cognitive_reframe=@cognitive_reframe,
-      growth_friction=@growth_friction
+      growth_friction=@growth_friction, tags=@tags
     WHERE id=@id
   `).run(merged);
-  res.json(db.prepare('SELECT * FROM skills WHERE id = ?').get(existing.id));
+  db.setSkillTags(existing.id, tags);
+  res.json(withParsedTags(db.prepare('SELECT * FROM skills WHERE id = ?').get(existing.id)));
 });
 
 router.delete('/skills/:id', (req, res) => {
