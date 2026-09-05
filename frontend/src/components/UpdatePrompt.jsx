@@ -11,6 +11,16 @@ export default function UpdatePrompt() {
         setNeedRefresh(true);
       },
       onOfflineReady() {},
+      onRegisteredSW(swUrl, registration) {
+        if (!registration) return;
+        const checkForUpdate = () => registration.update().catch(() => {});
+        // iOS 上长期驻留主屏幕的PWA很少触发浏览器自带的SW更新检查，
+        // 每次回到前台时主动查一次，避免用户停留在旧版本上看不到新内容。
+        setInterval(checkForUpdate, 60 * 60 * 1000);
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') checkForUpdate();
+        });
+      },
     });
     setUpdateFn(() => update);
   }, []);
