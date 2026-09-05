@@ -9,7 +9,8 @@ function currentWeekNumber(enrolledAt) {
   const now = new Date();
   const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
   const week = Math.floor(diffDays / 7) + 1;
-  return Math.min(Math.max(week, 1), 52);
+  const maxWeek = db.prepare('SELECT MAX(week_number) AS m FROM skills').get().m || 1;
+  return Math.min(Math.max(week, 1), maxWeek);
 }
 
 function withParsedTags(row) {

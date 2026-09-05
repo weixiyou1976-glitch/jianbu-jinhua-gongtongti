@@ -5,7 +5,7 @@ const { requireAuth } = require('../middleware/auth');
 const router = express.Router();
 
 router.get('/progress', requireAuth, (req, res) => {
-  const total = 52;
+  const total = db.prepare('SELECT MAX(week_number) AS m FROM skills').get().m || 52;
   const checkins = db
     .prepare(
       `SELECT checkins.checked_at, skills.week_number

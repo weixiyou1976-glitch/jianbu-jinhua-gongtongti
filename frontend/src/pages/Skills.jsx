@@ -10,8 +10,6 @@ const SEASONS = [
   { label: '变现实战', range: [40, 52] },
 ];
 
-const CATEGORIES = ['表达类', '决策类', '关系类', '变现类', '行动类', '认知类'];
-
 export default function Skills() {
   const [tab, setTab] = useState('week');
   const [skills, setSkills] = useState([]);
@@ -23,14 +21,25 @@ export default function Skills() {
   }, []);
 
   const byWeek = useMemo(() => {
-    return SEASONS.map((season) => ({
+    const seasons = SEASONS.map((season) => ({
       ...season,
       items: skills.filter((s) => s.week_number >= season.range[0] && s.week_number <= season.range[1]),
     }));
+    const lastRangeEnd = SEASONS.length ? SEASONS[SEASONS.length - 1].range[1] : 0;
+    const rest = skills.filter((s) => s.week_number > lastRangeEnd);
+    if (rest.length) {
+      const maxWeek = Math.max(...rest.map((s) => s.week_number));
+      seasons.push({ label: '持续更新', range: [lastRangeEnd + 1, maxWeek], items: rest });
+    }
+    return seasons;
   }, [skills]);
 
   const byCategory = useMemo(() => {
-    return CATEGORIES.map((cat) => ({
+    const seen = [];
+    for (const s of skills) {
+      if (!seen.includes(s.category)) seen.push(s.category);
+    }
+    return seen.map((cat) => ({
       label: cat,
       items: skills.filter((s) => s.category === cat),
     }));

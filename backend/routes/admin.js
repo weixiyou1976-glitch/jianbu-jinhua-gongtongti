@@ -46,9 +46,10 @@ router.get('/activation-codes/export.csv', (req, res) => {
 
 router.get('/students', (req, res) => {
   const users = db.prepare('SELECT id, email, activated_at, enrolled_at FROM users ORDER BY created_at DESC').all();
+  const totalWeeks = db.prepare('SELECT MAX(week_number) AS m FROM skills').get().m || 52;
   const withProgress = users.map((u) => {
     const stampCount = db.prepare('SELECT COUNT(*) AS c FROM stamps WHERE user_id = ?').get(u.id).c;
-    return { ...u, stamp_count: stampCount, percent: Math.round((stampCount / 52) * 100) };
+    return { ...u, stamp_count: stampCount, percent: Math.round((stampCount / totalWeeks) * 100) };
   });
   res.json(withProgress);
 });
