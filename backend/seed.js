@@ -3365,13 +3365,122 @@ const skills = [
     growth_friction: '这个Skill的摩擦点通常在这里：带着焦虑开始做了十分钟，焦虑没有消失，甚至在某些时候反而更强——你会感到"这个方法没用，我果然需要先处理情绪再做事"。但你要记住：带着感觉做，不承诺感觉会在十分钟内消失，它只承诺那十分钟的事情会被完成。感觉消不消，是额外的好处，不是衡量这个方法是否有效的标准。衡量标准只有一个：那件事，有没有推进了？推进了，就有效。\n\n不是感觉消了才叫成功，是事情推进了就叫成功。',
     tags: ['自我管理', '行动力', '情绪能力', '拖延', '心理韧性', '效能', '成长', '自律'],
   },
+  // 以下为"让人心动"学习模块的占位Skill（待写，内容尚未提供）
+  {
+    week_number: 201,
+    title: '（待写）找到对的人',
+    skill_name: '找到对的人',
+    category: '营销能力类',
+    trigger_condition: '（待写 · 环节一·找到对的人）',
+    key_question: '',
+    step_one: '（待写）',
+    step_two: '（待写）',
+    step_three: '（待写）',
+    memory_anchor: '（待写）',
+    insight: '（待写）',
+    case_study: '（待写）',
+    cognitive_reframe: '（待写）',
+    growth_friction: '',
+    tags: [],
+    status: 'draft',
+  },
+  {
+    week_number: 202,
+    title: '（待写）帮他说出来',
+    skill_name: '帮他说出来',
+    category: '营销能力类',
+    trigger_condition: '（待写 · 环节三·激活痛点）',
+    key_question: '',
+    step_one: '（待写）',
+    step_two: '（待写）',
+    step_three: '（待写）',
+    memory_anchor: '（待写）',
+    insight: '（待写）',
+    case_study: '（待写）',
+    cognitive_reframe: '（待写）',
+    growth_friction: '',
+    tags: [],
+    status: 'draft',
+  },
+  {
+    week_number: 203,
+    title: '（待写）一句话说清楚',
+    skill_name: '一句话说清楚',
+    category: '营销能力类',
+    trigger_condition: '（待写 · 环节四·呈现价值）',
+    key_question: '',
+    step_one: '（待写）',
+    step_two: '（待写）',
+    step_three: '（待写）',
+    memory_anchor: '（待写）',
+    insight: '（待写）',
+    case_study: '（待写）',
+    cognitive_reframe: '（待写）',
+    growth_friction: '',
+    tags: [],
+    status: 'draft',
+  },
+  {
+    week_number: 204,
+    title: '（待写）用故事说话',
+    skill_name: '用故事说话',
+    category: '营销能力类',
+    trigger_condition: '（待写 · 环节四·呈现价值）',
+    key_question: '',
+    step_one: '（待写）',
+    step_two: '（待写）',
+    step_three: '（待写）',
+    memory_anchor: '（待写）',
+    insight: '（待写）',
+    case_study: '（待写）',
+    cognitive_reframe: '（待写）',
+    growth_friction: '',
+    tags: [],
+    status: 'draft',
+  },
+  {
+    week_number: 205,
+    title: '（待写）读懂信号',
+    skill_name: '读懂信号',
+    category: '营销能力类',
+    trigger_condition: '（待写 · 环节五·处理顾虑）',
+    key_question: '',
+    step_one: '（待写）',
+    step_two: '（待写）',
+    step_three: '（待写）',
+    memory_anchor: '（待写）',
+    insight: '（待写）',
+    case_study: '（待写）',
+    cognitive_reframe: '（待写）',
+    growth_friction: '',
+    tags: [],
+    status: 'draft',
+  },
+  {
+    week_number: 206,
+    title: '（待写）写出让人想看的文案',
+    skill_name: '写出让人想看的文案',
+    category: '营销能力类',
+    trigger_condition: '（待写 · 环节七·写出来）',
+    key_question: '',
+    step_one: '（待写）',
+    step_two: '（待写）',
+    step_three: '（待写）',
+    memory_anchor: '（待写）',
+    insight: '（待写）',
+    case_study: '（待写）',
+    cognitive_reframe: '（待写）',
+    growth_friction: '',
+    tags: [],
+    status: 'draft',
+  },
 ];
 
 const insertSkill = db.prepare(`
   INSERT INTO skills (week_number, title, skill_name, category, trigger_condition, key_question,
-    step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, tags)
+    step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, tags, status)
   VALUES (@week_number, @title, @skill_name, @category, @trigger_condition, @key_question,
-    @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @tags)
+    @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @tags, @status)
 `);
 
 const existingCount = db.prepare('SELECT COUNT(*) AS c FROM skills').get().c;
@@ -3379,7 +3488,8 @@ if (existingCount === 0) {
   const tx = db.transaction(() => {
     for (const s of skills) {
       const tags = s.tags || [];
-      const info = insertSkill.run({ key_question: '', ...s, tags: JSON.stringify(tags) });
+      const status = s.status || 'published';
+      const info = insertSkill.run({ key_question: '', ...s, tags: JSON.stringify(tags), status });
       db.setSkillTags(info.lastInsertRowid, tags);
     }
   });
