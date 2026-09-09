@@ -9,7 +9,7 @@ function currentWeekNumber(enrolledAt) {
   const now = new Date();
   const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
   const week = Math.floor(diffDays / 7) + 1;
-  const maxWeek = db.prepare('SELECT MAX(week_number) AS m FROM skills').get().m || 1;
+  const maxWeek = db.prepare("SELECT MAX(week_number) AS m FROM skills WHERE status != 'draft'").get().m || 1;
   return Math.min(Math.max(week, 1), maxWeek);
 }
 
@@ -19,31 +19,30 @@ function withParsedTags(row) {
 
 router.get('/skills', requireAuth, (req, res) => {
   const { week, category } = req.query;
-  let sql = 'SELECT * FROM skills';
-  const conditions = [];
+  let sql = "SELECT * FROM skills WHERE status != 'draft'";
   const params = [];
   if (week) {
-    conditions.push('week_number = ?');
+    sql += ' AND week_number = ?';
     params.push(week);
   }
   if (category) {
-    conditions.push('category = ?');
+    sql += ' AND category = ?';
     params.push(category);
   }
-  if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
   sql += ' ORDER BY week_number ASC';
 
   const skills = db.prepare(sql).all(...params);
   const stampedIds = new Set(
     db.prepare('SELECT skill_id FROM stamps WHERE user_id = ?').all(req.user.id).map((r) => r.skill_id)
   );
+  const moduleSkillIds = db.getModuleSkillIdSet();
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
   res.json(
     skills.map((s) => ({
       ...withParsedTags(s),
       stamped: stampedIds.has(s.id),
-      unlocked: s.week_number <= currentWeek || stampedIds.has(s.id),
+      unlocked: s.week_number <= currentWeek || stampedIds.has(s.id) || moduleSkillIds.has(s.id),
     }))
   );
 });
@@ -69,7 +68,7 @@ router.get('/skills/search', requireAuth, (req, res) => {
       .prepare(
         `SELECT s.* FROM skills s
          JOIN skill_tags st ON st.skill_id = s.id
-         WHERE st.tag = ?
+         WHERE st.tag = ? AND s.status != 'draft'
          ORDER BY s.week_number ASC`
       )
       .all(tag);
@@ -79,7 +78,7 @@ router.get('/skills/search', requireAuth, (req, res) => {
       .prepare(
         `SELECT DISTINCT s.* FROM skills s
          LEFT JOIN skill_tags st ON st.skill_id = s.id
-         WHERE s.skill_name LIKE ? OR s.title LIKE ? OR st.tag LIKE ?
+         WHERE (s.skill_name LIKE ? OR s.title LIKE ? OR st.tag LIKE ?) AND s.status != 'draft'
          ORDER BY s.week_number ASC`
       )
       .all(like, like, like);
@@ -88,13 +87,14 @@ router.get('/skills/search', requireAuth, (req, res) => {
   const stampedIds = new Set(
     db.prepare('SELECT skill_id FROM stamps WHERE user_id = ?').all(req.user.id).map((r) => r.skill_id)
   );
+  const moduleSkillIds = db.getModuleSkillIdSet();
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
   res.json(
     skills.map((s) => ({
       ...withParsedTags(s),
       stamped: stampedIds.has(s.id),
-      unlocked: s.week_number <= currentWeek || stampedIds.has(s.id),
+      unlocked: s.week_number <= currentWeek || stampedIds.has(s.id) || moduleSkillIds.has(s.id),
     }))
   );
 });
@@ -103,12 +103,23 @@ router.get('/skills/:id', requireAuth, (req, res) => {
   const skill = db.prepare('SELECT * FROM skills WHERE id = ?').get(req.params.id);
   if (!skill) return res.status(404).json({ error: 'Skill不存在' });
 
+  if (skill.status === 'draft') {
+    return res.json({
+      id: skill.id,
+      week_number: skill.week_number,
+      skill_name: skill.skill_name,
+      category: skill.category,
+      draft: true,
+    });
+  }
+
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
   const stamp = db
     .prepare('SELECT * FROM stamps WHERE user_id = ? AND skill_id = ?')
     .get(req.user.id, skill.id);
-  const unlocked = skill.week_number <= currentWeek || !!stamp;
+  const inModule = !!db.prepare('SELECT 1 FROM module_items WHERE skill_id = ?').get(skill.id);
+  const unlocked = skill.week_number <= currentWeek || !!stamp || inModule;
 
   if (!unlocked) {
     const currentSkill = db.prepare('SELECT id, skill_name FROM skills WHERE week_number = ?').get(currentWeek);

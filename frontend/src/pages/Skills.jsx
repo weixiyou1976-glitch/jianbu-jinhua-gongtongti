@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../api';
 import BottomNav from '../components/BottomNav';
 import SkillCard from '../components/SkillCard';
@@ -59,7 +60,10 @@ export default function Skills() {
   return (
     <div className="min-h-screen bg-paper pb-24">
       <header className="max-w-content mx-auto px-6 pt-8 pb-4">
-        <h1 className="text-lg font-semibold text-ink mb-4">Skill 总库</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-lg font-semibold text-ink">Skill 总库</h1>
+          <Link to="/modules" className="text-xs text-vermilion">学习路径 →</Link>
+        </div>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}

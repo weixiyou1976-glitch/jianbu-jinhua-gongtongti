@@ -8,6 +8,7 @@ const stampsRoutes = require('./routes/stamps');
 const progressRoutes = require('./routes/progress');
 const adminRoutes = require('./routes/admin');
 const coachRoutes = require('./routes/coach');
+const modulesRoutes = require('./routes/modules');
 
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean)
@@ -24,6 +25,7 @@ app.use('/api', skillsRoutes);
 app.use('/api', stampsRoutes);
 app.use('/api', progressRoutes);
 app.use('/api', coachRoutes);
+app.use('/api', modulesRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.use((err, req, res, next) => {

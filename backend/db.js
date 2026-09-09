@@ -76,6 +76,26 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at TEXT NOT NULL DEFAULT (datetime('now')),
   UNIQUE(user_id, skill_id)
 );
+
+CREATE TABLE IF NOT EXISTS modules (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  subtitle TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS module_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  module_id INTEGER NOT NULL REFERENCES modules(id) ON DELETE CASCADE,
+  stage_order INTEGER NOT NULL,
+  stage_name TEXT NOT NULL,
+  skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+  item_order INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_module_items_module ON module_items(module_id);
+CREATE INDEX IF NOT EXISTS idx_module_items_skill ON module_items(skill_id);
 `);
 
 const skillColumns = db.prepare(`PRAGMA table_info(skills)`).all().map((c) => c.name);
@@ -88,6 +108,9 @@ if (!skillColumns.includes('key_question')) {
 if (!skillColumns.includes('tags')) {
   db.exec(`ALTER TABLE skills ADD COLUMN tags TEXT NOT NULL DEFAULT '[]'`);
 }
+if (!skillColumns.includes('status')) {
+  db.exec(`ALTER TABLE skills ADD COLUMN status TEXT NOT NULL DEFAULT 'published'`);
+}
 
 function setSkillTags(skillId, tags) {
   db.prepare('DELETE FROM skill_tags WHERE skill_id = ?').run(skillId);
@@ -95,5 +118,10 @@ function setSkillTags(skillId, tags) {
   for (const tag of tags) insert.run(skillId, tag);
 }
 
+function getModuleSkillIdSet() {
+  return new Set(db.prepare('SELECT DISTINCT skill_id FROM module_items').all().map((r) => r.skill_id));
+}
+
 module.exports = db;
 module.exports.setSkillTags = setSkillTags;
+module.exports.getModuleSkillIdSet = getModuleSkillIdSet;

@@ -11,6 +11,19 @@ export default function SkillCard({ skill }) {
     navigate(`/tag/${encodeURIComponent(tag)}`);
   }
 
+  if (skill.draft) {
+    return (
+      <div className="relative block border rounded-xl p-4 border-ink/5 bg-white/20 opacity-60">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-xs text-ink/40">第 {skill.week_number} 周</span>
+          <span className="text-xs bg-ink/5 text-ink/40 rounded-full px-2 py-0.5">{skill.category}</span>
+        </div>
+        <p className="text-sm font-medium text-ink/50">{skill.skill_name}</p>
+        <span className="text-xs text-ink/35 mt-1 inline-block">内容筹备中</span>
+      </div>
+    );
+  }
+
   return (
     <div
       role="link"

@@ -279,6 +279,56 @@ function SkillsPanel() {
   );
 }
 
+function ModulesPanel() {
+  const [modules, setModules] = useState([]);
+  const [error, setError] = useState('');
+
+  function refresh() {
+    api.adminListModules().then(setModules).catch((err) => setError(err.message));
+  }
+  useEffect(refresh, []);
+
+  async function handleDelete(id) {
+    if (!confirm('确认删除这个模块？（不会删除其中的 Skill）')) return;
+    await api.adminDeleteModule(id);
+    refresh();
+  }
+
+  return (
+    <div className="space-y-6">
+      {error && <p className="text-vermilion text-sm">{error}</p>}
+      {modules.length === 0 && <p className="text-sm text-ink/40">还没有学习模块</p>}
+      {modules.map((m) => (
+        <div key={m.id} className="border border-ink/10 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-1">
+            <div>
+              <p className="text-sm font-semibold text-ink">{m.name}</p>
+              <p className="text-xs text-ink/40">{m.subtitle}</p>
+              <p className="text-xs text-ink/30 mt-0.5">/modules/{m.slug}</p>
+            </div>
+            <button onClick={() => handleDelete(m.id)} className="text-xs text-ink/40 shrink-0">删除</button>
+          </div>
+          <div className="mt-3 space-y-2">
+            {m.stages.map((stage, i) => (
+              <div key={stage.stage_order} className="text-xs">
+                <p className="text-ink/50 font-medium mb-1">环节{i + 1} · {stage.stage_name}</p>
+                <ul className="pl-3 space-y-0.5">
+                  {stage.items.map((it) => (
+                    <li key={it.item_id} className="text-ink/70 flex items-center gap-2">
+                      <span>第{it.week_number}周 · {it.skill_name}</span>
+                      {it.status === 'draft' && <span className="text-ink/30">（待写）</span>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Admin() {
   const [unlocked, setUnlocked] = useState(!!localStorage.getItem('adminPassword'));
   const [tab, setTab] = useState('codes');
@@ -294,6 +344,7 @@ export default function Admin() {
             ['codes', '激活码'],
             ['students', '学员'],
             ['skills', 'Skill内容'],
+            ['modules', '学习模块'],
           ].map(([key, label]) => (
             <button
               key={key}
@@ -309,6 +360,7 @@ export default function Admin() {
         {tab === 'codes' && <CodesPanel />}
         {tab === 'students' && <StudentsPanel />}
         {tab === 'skills' && <SkillsPanel />}
+        {tab === 'modules' && <ModulesPanel />}
       </main>
     </div>
   );

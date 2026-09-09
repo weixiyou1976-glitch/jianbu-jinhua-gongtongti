@@ -67,6 +67,14 @@ export default function Dashboard() {
           </div>
         )}
 
+        <Link
+          to="/modules"
+          className="block border border-ink/10 rounded-2xl p-5 mb-8 bg-white/40 hover:border-vermilion/30"
+        >
+          <p className="text-xs text-ink/40 mb-1">按主题学</p>
+          <p className="text-sm font-semibold text-ink">学习路径 →</p>
+        </Link>
+
         <div>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-ink">最近的策印</h3>

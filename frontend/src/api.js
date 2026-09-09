@@ -57,6 +57,8 @@ export const api = {
     const qs = new URLSearchParams(params).toString();
     return request(`/skills/search${qs ? `?${qs}` : ''}`);
   },
+  getModules: () => request('/modules'),
+  getModule: (slug) => request(`/modules/${slug}`),
   submitStamp: (id, payload) => request(`/skills/${id}/stamp`, { method: 'POST', body: payload }),
   getStamps: () => request('/stamps'),
   getProgress: () => request('/progress'),
@@ -71,6 +73,12 @@ export const api = {
   adminCreateSkill: (payload) => request('/admin/skills', { method: 'POST', body: payload, admin: true }),
   adminUpdateSkill: (id, payload) => request(`/admin/skills/${id}`, { method: 'PUT', body: payload, admin: true }),
   adminDeleteSkill: (id) => request(`/admin/skills/${id}`, { method: 'DELETE', admin: true }),
+
+  adminListModules: () => request('/admin/modules', { admin: true }),
+  adminGetModule: (id) => request(`/admin/modules/${id}`, { admin: true }),
+  adminCreateModule: (payload) => request('/admin/modules', { method: 'POST', body: payload, admin: true }),
+  adminUpdateModule: (id, payload) => request(`/admin/modules/${id}`, { method: 'PUT', body: payload, admin: true }),
+  adminDeleteModule: (id) => request(`/admin/modules/${id}`, { method: 'DELETE', admin: true }),
 };
 
 export const API_BASE_URL = API_BASE;

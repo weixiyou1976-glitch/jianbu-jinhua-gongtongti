@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import Skills from './pages/Skills';
 import SkillDetail from './pages/SkillDetail';
 import TagSkills from './pages/TagSkills';
+import Modules from './pages/Modules';
+import ModuleDetail from './pages/ModuleDetail';
 import Stamp from './pages/Stamp';
 import Progress from './pages/Progress';
 import Admin from './pages/Admin';
@@ -27,6 +29,8 @@ export default function App() {
         <Route path="/skills" element={<ProtectedRoute><Skills /></ProtectedRoute>} />
         <Route path="/skill/:id" element={<ProtectedRoute><SkillDetail /></ProtectedRoute>} />
         <Route path="/tag/:tag" element={<ProtectedRoute><TagSkills /></ProtectedRoute>} />
+        <Route path="/modules" element={<ProtectedRoute><Modules /></ProtectedRoute>} />
+        <Route path="/modules/:slug" element={<ProtectedRoute><ModuleDetail /></ProtectedRoute>} />
         <Route path="/stamp" element={<ProtectedRoute><Stamp /></ProtectedRoute>} />
         <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
         <Route path="/admin" element={<Admin />} />
