@@ -99,6 +99,104 @@ router.get('/skills/search', requireAuth, (req, res) => {
   );
 });
 
+function buildMatchPrompt(query, candidates) {
+  const list = candidates.map((s) => `${s.skill_name}|${s.trigger_condition}`).join('\n');
+  return `你是渐步进化共同体的Skill推荐助手。学员描述了他的处境，请从候选Skill卡中找出最匹配的2-3张。
+
+学员描述：
+${query}
+
+候选Skill卡（名称|触发条件）：
+${list}
+
+请选出最匹配的2-3张，按匹配程度排序。
+输出JSON格式：
+[
+  {"skill_name": "xxx", "reason": "一句话说明匹配原因"},
+  {"skill_name": "xxx", "reason": "一句话说明匹配原因"}
+]
+只输出JSON，不要其他内容。`;
+}
+
+async function callMatchAI(query, candidates) {
+  const upstream = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [{ role: 'user', content: buildMatchPrompt(query, candidates) }],
+      temperature: 0.3,
+      max_tokens: 500,
+    }),
+  });
+  if (!upstream.ok) throw new Error('AI请求失败');
+  const data = await upstream.json();
+  const text = (data.choices?.[0]?.message?.content || '').trim();
+  const cleaned = text.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/```\s*$/, '');
+  const parsed = JSON.parse(cleaned);
+  if (!Array.isArray(parsed)) throw new Error('AI返回格式异常');
+  return parsed;
+}
+
+router.post('/skills/match', requireAuth, async (req, res) => {
+  const query = (req.body?.query || '').trim();
+  if (!query) return res.status(400).json({ error: '请描述你的处境' });
+
+  const allSkills = db.prepare("SELECT * FROM skills WHERE status != 'draft'").all();
+
+  const scored = allSkills
+    .map((s) => {
+      const tags = JSON.parse(s.tags || '[]');
+      const score = tags.filter((t) => t && query.includes(t)).length;
+      return { skill: s, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  const candidates = scored.length < 20 ? allSkills : scored.slice(0, 30).map((x) => x.skill);
+
+  const stampedIds = new Set(
+    db.prepare('SELECT skill_id FROM stamps WHERE user_id = ?').all(req.user.id).map((r) => r.skill_id)
+  );
+  const moduleSkillIds = db.getModuleSkillIdSet();
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+  const currentWeek = currentWeekNumber(user.enrolled_at);
+  const annotate = (s) => ({
+    ...withParsedTags(s),
+    stamped: stampedIds.has(s.id),
+    unlocked: s.week_number <= currentWeek || stampedIds.has(s.id) || moduleSkillIds.has(s.id),
+  });
+
+  let picks = null;
+  try {
+    picks = await callMatchAI(query, candidates);
+  } catch {
+    picks = null;
+  }
+
+  if (Array.isArray(picks) && picks.length > 0) {
+    const byName = new Map(candidates.map((s) => [s.skill_name, s]));
+    const results = [];
+    for (const p of picks) {
+      const s = byName.get(p?.skill_name);
+      if (s && !results.some((r) => r.id === s.id)) {
+        results.push({ ...annotate(s), match_reason: p.reason || '' });
+      }
+      if (results.length >= 3) break;
+    }
+    if (results.length > 0) {
+      return res.json({ results, source: 'ai' });
+    }
+  }
+
+  const fallbackPool = scored.length > 0 ? scored.map((x) => x.skill) : candidates;
+  const fallback = fallbackPool.slice(0, 3).map((s) => ({ ...annotate(s), match_reason: '' }));
+  res.json({ results: fallback, source: 'keyword' });
+});
+
 router.get('/skills/:id', requireAuth, (req, res) => {
   const skill = db.prepare('SELECT * FROM skills WHERE id = ?').get(req.params.id);
   if (!skill) return res.status(404).json({ error: 'Skill不存在' });

@@ -57,6 +57,7 @@ export const api = {
     const qs = new URLSearchParams(params).toString();
     return request(`/skills/search${qs ? `?${qs}` : ''}`);
   },
+  matchSkills: (query) => request('/skills/match', { method: 'POST', body: { query } }),
   getModules: () => request('/modules'),
   getModule: (slug) => request(`/modules/${slug}`),
   submitStamp: (id, payload) => request(`/skills/${id}/stamp`, { method: 'POST', body: payload }),
