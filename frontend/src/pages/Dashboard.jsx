@@ -10,6 +10,7 @@ export default function Dashboard() {
   const [current, setCurrent] = useState(null);
   const [progress, setProgress] = useState(null);
   const [stamps, setStamps] = useState([]);
+  const [modules, setModules] = useState([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -20,6 +21,7 @@ export default function Dashboard() {
         setStamps(s.slice(0, 3));
       })
       .catch((err) => setError(err.message));
+    api.getModules().then(setModules).catch(() => {});
   }, []);
 
   return (
@@ -67,13 +69,24 @@ export default function Dashboard() {
           </div>
         )}
 
-        <Link
-          to="/modules"
-          className="block border border-ink/10 rounded-2xl p-5 mb-8 bg-white/40 hover:border-vermilion/30"
-        >
-          <p className="text-xs text-ink/40 mb-1">按主题学</p>
-          <p className="text-sm font-semibold text-ink">学习路径 →</p>
-        </Link>
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-ink">按主题学</h3>
+            <Link to="/modules" className="text-xs text-vermilion">全部 →</Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {modules.map((m) => (
+              <Link
+                key={m.id}
+                to={`/modules/${m.slug}`}
+                className="block border border-vermilion/20 rounded-2xl p-4 bg-white/50 hover:border-vermilion/40"
+              >
+                <p className="text-sm font-semibold text-ink mb-1">{m.name}</p>
+                <p className="text-xs text-ink/60 line-clamp-2">{m.subtitle}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
 
         <div>
           <div className="flex items-center justify-between mb-3">
