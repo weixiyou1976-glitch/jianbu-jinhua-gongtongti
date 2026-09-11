@@ -12,6 +12,7 @@ export default function SkillDetail() {
   const [form, setForm] = useState({ learned: '', practiced: '', gained: '' });
   const [submitting, setSubmitting] = useState(false);
   const [stampNumber, setStampNumber] = useState(null);
+  const [insightExpanded, setInsightExpanded] = useState(false);
 
   function load() {
     api
@@ -24,6 +25,7 @@ export default function SkillDetail() {
     setSkill(null);
     setStampNumber(null);
     setForm({ learned: '', practiced: '', gained: '' });
+    setInsightExpanded(false);
     load();
     window.scrollTo(0, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,9 +160,32 @@ export default function SkillDetail() {
         <section>
           <div className="flex items-center gap-2 mb-3">
             <h2 className="text-sm font-semibold text-ink/70">洞察</h2>
-            <InsightAudioButton src={skill.insight_audio_url} />
+            {skill.insight_audio_url && (
+              <>
+                <InsightAudioButton src={skill.insight_audio_url} />
+                <button
+                  type="button"
+                  onClick={() => setInsightExpanded((v) => !v)}
+                  className="text-xs text-vermilion border border-vermilion/30 rounded-full px-2.5 py-1 hover:bg-vermilion/5"
+                >
+                  {insightExpanded ? '收起' : '展开'}
+                </button>
+              </>
+            )}
           </div>
-          <p className="text-sm text-ink leading-loose whitespace-pre-line">{skill.insight}</p>
+          {skill.insight_audio_url ? (
+            <div
+              className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+                insightExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+              }`}
+            >
+              <div className="overflow-hidden">
+                <p className="text-sm text-ink leading-loose whitespace-pre-line">{skill.insight}</p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-ink leading-loose whitespace-pre-line">{skill.insight}</p>
+          )}
         </section>
 
         {/* 3. 案例 */}
