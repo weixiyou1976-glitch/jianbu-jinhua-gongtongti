@@ -12,7 +12,7 @@ function MicIcon({ className }) {
   );
 }
 
-export default function VoiceInputButton({ onResult, disabled = false }) {
+export default function VoiceInputButton({ onResult, disabled = false, compact = false }) {
   const { isSupported, isRecording, error, start, stop } = useSpeechRecognition();
 
   if (!isSupported) return null;
@@ -27,23 +27,25 @@ export default function VoiceInputButton({ onResult, disabled = false }) {
   }
 
   return (
-    <div className="relative shrink-0">
+    <div className={`absolute right-1.5 z-10 ${compact ? 'bottom-1.5' : 'bottom-2'}`}>
       <button
         type="button"
         onClick={handleClick}
         disabled={disabled}
         aria-label={isRecording ? '停止录音' : '语音输入'}
         aria-pressed={isRecording}
-        className={`w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none ${
+        className={`flex items-center justify-center rounded-xl bg-white shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none ${
+          compact ? 'w-7 h-7' : 'w-8 h-8'
+        } ${
           isRecording
             ? 'text-vermilion ring-2 ring-vermilion/40 animate-pulse'
             : 'text-ink/50 hover:text-vermilion'
         }`}
       >
-        <MicIcon className="w-5 h-5" />
+        <MicIcon className={compact ? 'w-3.5 h-3.5' : 'w-4 h-4'} />
       </button>
       {error && (
-        <p className="absolute top-full right-0 mt-1 text-xs text-vermilion whitespace-nowrap z-10">{error}</p>
+        <p className="absolute bottom-full right-0 mb-1 text-xs text-vermilion whitespace-nowrap z-10">{error}</p>
       )}
     </div>
   );

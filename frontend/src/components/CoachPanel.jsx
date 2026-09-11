@@ -94,12 +94,12 @@ export default function CoachPanel({ skill }) {
 
       {!started && (
         <form onSubmit={handleStart} className="space-y-2">
-          <div className="flex gap-2 items-start">
+          <div className="relative">
             <textarea
               value={situation}
               onChange={(e) => setSituation(e.target.value)}
               placeholder="描述你现在面对的真实情况，越具体越好"
-              className="flex-1 min-w-0 border border-ink/15 rounded-lg p-3 text-sm bg-white/60 focus:outline-none focus:border-vermilion"
+              className="w-full border border-ink/15 rounded-lg p-3 pr-11 text-sm bg-white/60 focus:outline-none focus:border-vermilion"
               rows={3}
             />
             <VoiceInputButton
@@ -141,17 +141,20 @@ export default function CoachPanel({ skill }) {
 
           <form onSubmit={handleContinue} className="space-y-2">
             <div className="flex gap-2">
-              <input
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                placeholder="继续对话…"
-                disabled={status === 'streaming'}
-                className="flex-1 min-w-0 border border-ink/15 rounded-lg px-3 py-2 text-sm bg-white/60 focus:outline-none focus:border-vermilion disabled:opacity-50"
-              />
-              <VoiceInputButton
-                onResult={(text) => setDraft((prev) => (prev ? `${prev}${text}` : text))}
-                disabled={status === 'streaming'}
-              />
+              <div className="relative flex-1 min-w-0">
+                <input
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  placeholder="继续对话…"
+                  disabled={status === 'streaming'}
+                  className="w-full border border-ink/15 rounded-lg pl-3 pr-11 py-2 text-sm bg-white/60 focus:outline-none focus:border-vermilion disabled:opacity-50"
+                />
+                <VoiceInputButton
+                  onResult={(text) => setDraft((prev) => (prev ? `${prev}${text}` : text))}
+                  disabled={status === 'streaming'}
+                  compact
+                />
+              </div>
               <button
                 type="submit"
                 disabled={status === 'streaming' || !draft.trim()}
