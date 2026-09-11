@@ -111,6 +111,9 @@ if (!skillColumns.includes('tags')) {
 if (!skillColumns.includes('status')) {
   db.exec(`ALTER TABLE skills ADD COLUMN status TEXT NOT NULL DEFAULT 'published'`);
 }
+if (!skillColumns.includes('insight_audio_url')) {
+  db.exec(`ALTER TABLE skills ADD COLUMN insight_audio_url TEXT NOT NULL DEFAULT ''`);
+}
 
 function setSkillTags(skillId, tags) {
   db.prepare('DELETE FROM skill_tags WHERE skill_id = ?').run(skillId);

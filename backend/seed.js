@@ -7,6 +7,7 @@ const skills = [
     title: '第1周 · 把模糊的烦躁翻译成具体的问题',
     skill_name: '烦躁翻译法',
     category: '认知类',
+    insight_audio_url: 'https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-1.mp3',
     trigger_condition: '当你说不清自己为什么心烦、只觉得"很乱""很累"，却指不出具体原因时',
     step_one: '停：不要继续做手头的事，停下来30秒',
     step_two: '问：问自己一个问题："我现在烦的，到底是哪一件具体的事？"不允许回答"很多事"，必须指出一件',
@@ -22,6 +23,7 @@ const skills = [
     title: '第2周 · 看见第一反应背后的思维惯性',
     skill_name: '惯性识别器',
     category: '认知类',
+    insight_audio_url: 'https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-2.mp3',
     trigger_condition: '当你面对一个问题，发现自己的第一反应总是同一种解法，或者总是陷入同样的情绪模式时',
     step_one: '抓：抓住你刚才的第一反应，把它说出来或写下来，不加评判',
     step_two: '问：问自己："我上一次遇到类似情况，是不是也是这个反应？"',
@@ -37,6 +39,7 @@ const skills = [
     title: '第3周 · 分清事实与你编的故事',
     skill_name: '故事拆弹器',
     category: '认知类',
+    insight_audio_url: 'https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-3.mp3',
     trigger_condition: '当你对一件事或一个人产生强烈的负面判断，感到愤怒、委屈、或深度失望时',
     step_one: '分：把"发生了什么事实"和"我对这件事的解读"分开写出来。事实只写能被录像机拍到的内容，解读是你加上去的部分',
     step_two: '问：问自己："我的这个解读，有没有可能是错的？"不要求你接受另一种解读，只要承认"有可能"就够了',
@@ -52,6 +55,7 @@ const skills = [
     title: '第4周 · 用对朋友的方式对待自己',
     skill_name: '自我教练法',
     category: '认知类',
+    insight_audio_url: 'https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-4.mp3',
     trigger_condition: '当你搞砸了一件事、被人否定、或者发现自己又陷入了老模式，开始自我批评甚至自我攻击时',
     step_one: '暂停：注意到自己正在自我攻击，说出来："我现在在攻击自己。"不评判，只是说出来',
     step_two: '换位：想象你最好的朋友正在经历同样的事，你会对他说什么？把那句话说给自己听',
@@ -67,6 +71,7 @@ const skills = [
     title: '第5周 · 看懂立场背后的真实需求',
     skill_name: '需求透视镜',
     category: '认知类',
+    insight_audio_url: 'https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-5.mp3',
     trigger_condition: '当你和别人发生冲突、谈判陷入僵局、或者不理解对方为什么这样做时',
     step_one: '搁置：暂时搁置对方的立场和你自己的立场，问自己："这件事背后，他真正想要的是什么？"',
     step_two: '区分：区分对方的"表达诉求"和"深层需求"。表达诉求是他说出来的，深层需求是他真正在乎的',
@@ -82,6 +87,7 @@ const skills = [
     title: '第6周 · 在信息噪音里只猎取一件事',
     skill_name: '重点猎人',
     category: '决策类',
+    insight_audio_url: 'https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-6.mp3',
     trigger_condition: '当你面对大量信息、会议内容、或别人长篇大论，感到抓不住核心、不知道该记什么、该做什么时',
     step_one: '等：不要急着记录或回应，先听完或看完，给自己30秒沉默',
     step_two: '问：问自己一个问题："如果这些内容里只有一件事是真正重要的，那件事是什么？"',
@@ -97,6 +103,7 @@ const skills = [
     title: '第7周 · 用一个五分钟动作打破拖延',
     skill_name: '最小启动器',
     category: '行动类',
+    insight_audio_url: 'https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-7.mp3',
     trigger_condition: '当你有一件重要的事一直想做但迟迟没有开始，或者每次准备开始就感到阻力、找借口推迟时',
     step_one: '缩：把这件事缩小到"五分钟之内能完成的第一个动作"，不是计划，是一个具体动作',
     step_two: '只做这一个：告诉自己：我现在只做这一个动作，做完就可以停。不承诺后续，只承诺这一个',
@@ -112,6 +119,7 @@ const skills = [
     title: '第8周 · 每次只砍一刀，留最产出的',
     skill_name: '砍刀时刻',
     category: '决策类',
+    insight_audio_url: 'https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-8.mp3',
     trigger_condition: '当你感到忙但没有结果、做了很多但收入没有增长、精力快撑不住却不知道该停掉什么时',
     step_one: '列：把你现在所有在做的事情列出来，不超过5分钟，想到什么写什么',
     step_two: '问：对着这张清单问一个问题："如果只能留一件，哪件事带来了最多结果？"不是最重要，不是最喜欢，是结果最多',
@@ -3802,9 +3810,9 @@ const skills = [
 
 const insertSkill = db.prepare(`
   INSERT INTO skills (week_number, title, skill_name, category, trigger_condition, key_question,
-    step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, tags, status)
+    step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, tags, status, insight_audio_url)
   VALUES (@week_number, @title, @skill_name, @category, @trigger_condition, @key_question,
-    @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @tags, @status)
+    @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @tags, @status, @insight_audio_url)
 `);
 
 const existingCount = db.prepare('SELECT COUNT(*) AS c FROM skills').get().c;
@@ -3813,7 +3821,7 @@ if (existingCount === 0) {
     for (const s of skills) {
       const tags = s.tags || [];
       const status = s.status || 'published';
-      const info = insertSkill.run({ key_question: '', ...s, tags: JSON.stringify(tags), status });
+      const info = insertSkill.run({ key_question: '', insight_audio_url: '', ...s, tags: JSON.stringify(tags), status });
       db.setSkillTags(info.lastInsertRowid, tags);
     }
   });

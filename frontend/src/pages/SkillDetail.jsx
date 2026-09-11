@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api';
 import CoachPanel from '../components/CoachPanel';
+import InsightAudioButton from '../components/InsightAudioButton';
 
 export default function SkillDetail() {
   const { id } = useParams();
@@ -155,7 +156,10 @@ export default function SkillDetail() {
 
         {/* 2. 洞察 */}
         <section>
-          <h2 className="text-sm font-semibold text-ink/70 mb-3">洞察</h2>
+          <div className="flex items-center gap-2 mb-3">
+            <h2 className="text-sm font-semibold text-ink/70">洞察</h2>
+            <InsightAudioButton src={skill.insight_audio_url} />
+          </div>
           <p className="text-sm text-ink leading-loose whitespace-pre-line">{skill.insight}</p>
         </section>
 

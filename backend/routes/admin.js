@@ -76,10 +76,10 @@ router.post('/skills', (req, res) => {
   const status = s.status === 'draft' ? 'draft' : 'published';
   const info = db.prepare(`
     INSERT INTO skills (week_number, title, skill_name, category, trigger_condition, key_question,
-      step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, tags, status)
+      step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, tags, status, insight_audio_url)
     VALUES (@week_number, @title, @skill_name, @category, @trigger_condition, @key_question,
-      @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @tags, @status)
-  `).run({ growth_friction: '', key_question: '', ...s, tags: JSON.stringify(tags), status });
+      @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @tags, @status, @insight_audio_url)
+  `).run({ growth_friction: '', key_question: '', insight_audio_url: '', ...s, tags: JSON.stringify(tags), status });
   db.setSkillTags(info.lastInsertRowid, tags);
   res.json(withParsedTags(db.prepare('SELECT * FROM skills WHERE id = ?').get(info.lastInsertRowid)));
 });
@@ -95,7 +95,7 @@ router.put('/skills/:id', (req, res) => {
       category=@category, trigger_condition=@trigger_condition, key_question=@key_question,
       step_one=@step_one, step_two=@step_two, step_three=@step_three, memory_anchor=@memory_anchor,
       insight=@insight, case_study=@case_study, cognitive_reframe=@cognitive_reframe,
-      growth_friction=@growth_friction, tags=@tags, status=@status
+      growth_friction=@growth_friction, tags=@tags, status=@status, insight_audio_url=@insight_audio_url
     WHERE id=@id
   `).run(merged);
   db.setSkillTags(existing.id, tags);
