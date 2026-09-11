@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { api } from '../api';
+import VoiceInputButton from './VoiceInputButton';
 
 const PRIVACY_NOTE = '你输入的内容将发送给AI处理，请勿填写敏感个人信息';
 
@@ -93,13 +94,18 @@ export default function CoachPanel({ skill }) {
 
       {!started && (
         <form onSubmit={handleStart} className="space-y-2">
-          <textarea
-            value={situation}
-            onChange={(e) => setSituation(e.target.value)}
-            placeholder="描述你现在面对的真实情况，越具体越好"
-            className="w-full border border-ink/15 rounded-lg p-3 text-sm bg-white/60 focus:outline-none focus:border-vermilion"
-            rows={3}
-          />
+          <div className="flex gap-2 items-start">
+            <textarea
+              value={situation}
+              onChange={(e) => setSituation(e.target.value)}
+              placeholder="描述你现在面对的真实情况，越具体越好"
+              className="flex-1 min-w-0 border border-ink/15 rounded-lg p-3 text-sm bg-white/60 focus:outline-none focus:border-vermilion"
+              rows={3}
+            />
+            <VoiceInputButton
+              onResult={(text) => setSituation((prev) => (prev ? `${prev}${text}` : text))}
+            />
+          </div>
           <p className="text-xs text-ink/35">{PRIVACY_NOTE}</p>
           <button
             type="submit"
@@ -141,6 +147,10 @@ export default function CoachPanel({ skill }) {
                 placeholder="继续对话…"
                 disabled={status === 'streaming'}
                 className="flex-1 min-w-0 border border-ink/15 rounded-lg px-3 py-2 text-sm bg-white/60 focus:outline-none focus:border-vermilion disabled:opacity-50"
+              />
+              <VoiceInputButton
+                onResult={(text) => setDraft((prev) => (prev ? `${prev}${text}` : text))}
+                disabled={status === 'streaming'}
               />
               <button
                 type="submit"
