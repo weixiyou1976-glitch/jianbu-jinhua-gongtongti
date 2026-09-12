@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import UpdatePrompt from './components/UpdatePrompt';
 import Login from './pages/Login';
@@ -12,6 +13,8 @@ import Stamp from './pages/Stamp';
 import Progress from './pages/Progress';
 import Admin from './pages/Admin';
 
+const LAST_PATH_KEY = 'lastPath';
+
 function ProtectedRoute({ children }) {
   const { user, ready } = useAuth();
   if (!ready) return null;
@@ -19,11 +22,29 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+function RootRedirect() {
+  const saved = localStorage.getItem(LAST_PATH_KEY);
+  const target = saved && saved !== '/' && saved !== '/login' ? saved : '/dashboard';
+  return <Navigate to={target} replace />;
+}
+
+function PathRecorder() {
+  const location = useLocation();
+  useEffect(() => {
+    if (location.pathname !== '/login' && location.pathname !== '/') {
+      localStorage.setItem(LAST_PATH_KEY, location.pathname);
+    }
+  }, [location.pathname]);
+  return null;
+}
+
 export default function App() {
   return (
     <>
       <UpdatePrompt />
+      <PathRecorder />
       <Routes>
+        <Route path="/" element={<RootRedirect />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/skills" element={<ProtectedRoute><Skills /></ProtectedRoute>} />

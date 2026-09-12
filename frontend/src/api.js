@@ -63,9 +63,9 @@ export const api = {
   submitStamp: (id, payload) => request(`/skills/${id}/stamp`, { method: 'POST', body: payload }),
   getStamps: () => request('/stamps'),
   getProgress: () => request('/progress'),
-  coachStart: (skill_id, user_message) => streamRequest('/coach/start', { skill_id, user_message }),
-  coachReply: (skill_id, conversation_history, user_message) =>
-    streamRequest('/coach/reply', { skill_id, conversation_history, user_message }),
+  getCoachHistory: (skill_id) => request(`/coach/${skill_id}/history`),
+  resetCoach: (skill_id) => request(`/coach/${skill_id}`, { method: 'DELETE' }),
+  coachMessage: (skill_id, message) => streamRequest('/coach/message', { skill_id, message }),
 
   adminGenerateCodes: (count) => request('/admin/activation-codes', { method: 'POST', body: { count }, admin: true }),
   adminListCodes: () => request('/admin/activation-codes', { admin: true }),

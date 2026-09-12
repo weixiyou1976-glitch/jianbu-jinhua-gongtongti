@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../api';
 import VoiceInputButton from './VoiceInputButton';
 
@@ -19,6 +19,12 @@ function renderLiteMarkdown(text) {
   ));
 }
 
+function formatLastActive(isoLike) {
+  if (!isoLike) return '';
+  const date = new Date(isoLike.replace(' ', 'T') + 'Z');
+  return date.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
 export default function CoachPanel({ skill }) {
   const [situation, setSituation] = useState('');
   const [conversation, setConversation] = useState([]);
@@ -26,6 +32,39 @@ export default function CoachPanel({ skill }) {
   const [started, setStarted] = useState(false);
   const [status, setStatus] = useState('idle'); // idle | streaming | error
   const [errorMsg, setErrorMsg] = useState('');
+  const [lastMessageAt, setLastMessageAt] = useState(null);
+  const [loadingHistory, setLoadingHistory] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoadingHistory(true);
+    setConversation([]);
+    setStarted(false);
+    setLastMessageAt(null);
+    setSituation('');
+    setDraft('');
+    setErrorMsg('');
+    setStatus('idle');
+
+    api
+      .getCoachHistory(skill.id)
+      .then((data) => {
+        if (cancelled) return;
+        if (data.messages && data.messages.length > 0) {
+          setConversation(data.messages.map(({ role, content }) => ({ role, content })));
+          setStarted(true);
+          setLastMessageAt(data.last_message_at);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoadingHistory(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [skill.id]);
 
   async function consumeStream(streamPromise) {
     setConversation((c) => [...c, { role: 'assistant', content: '' }]);
@@ -55,32 +94,48 @@ export default function CoachPanel({ skill }) {
   async function handleStart(e) {
     e.preventDefault();
     if (!situation.trim() || status === 'streaming') return;
+    const message = situation;
     setErrorMsg('');
     setStarted(true);
     setStatus('streaming');
-    setConversation([{ role: 'user', content: situation }]);
-    await consumeStream(api.coachStart(skill.id, situation));
+    setConversation([{ role: 'user', content: message }]);
+    setSituation('');
+    await consumeStream(api.coachMessage(skill.id, message));
   }
 
   async function handleContinue(e) {
     e.preventDefault();
     if (!draft.trim() || status === 'streaming') return;
     const message = draft;
-    const history = conversation.map(({ role, content }) => ({ role, content }));
     setDraft('');
     setErrorMsg('');
     setStatus('streaming');
     setConversation((c) => [...c, { role: 'user', content: message }]);
-    await consumeStream(api.coachReply(skill.id, history, message));
+    await consumeStream(api.coachMessage(skill.id, message));
   }
 
-  function handleReset() {
+  async function handleReset() {
+    setStatus('idle');
+    setErrorMsg('');
+    try {
+      await api.resetCoach(skill.id);
+    } catch {
+      // 即使清空失败，也让学员可以在本地重新开始
+    }
     setSituation('');
     setConversation([]);
     setDraft('');
     setStarted(false);
-    setStatus('idle');
-    setErrorMsg('');
+    setLastMessageAt(null);
+  }
+
+  if (loadingHistory) {
+    return (
+      <section className="border border-vermilion/20 rounded-2xl p-6 bg-white/50">
+        <h2 className="text-sm font-semibold text-vermilion mb-1">AI陪练</h2>
+        <p className="text-sm text-ink/40">加载中…</p>
+      </section>
+    );
   }
 
   return (
@@ -119,6 +174,15 @@ export default function CoachPanel({ skill }) {
 
       {started && (
         <div className="space-y-4">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs text-ink/40">
+              {lastMessageAt ? `继续上次的对话 · ${formatLastActive(lastMessageAt)}` : ''}
+            </p>
+            <button type="button" onClick={handleReset} className="text-xs text-ink/40 underline shrink-0">
+              开始新对话
+            </button>
+          </div>
+
           <div className="space-y-3">
             {conversation.map((m, i) => (
               <div key={i} className={m.role === 'user' ? 'text-right' : 'text-left'}>
@@ -165,10 +229,6 @@ export default function CoachPanel({ skill }) {
             </div>
             <p className="text-xs text-ink/35">{PRIVACY_NOTE}</p>
           </form>
-
-          <button type="button" onClick={handleReset} className="text-xs text-ink/40 underline">
-            重新开始
-          </button>
         </div>
       )}
     </section>

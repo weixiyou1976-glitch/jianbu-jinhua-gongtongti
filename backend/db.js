@@ -96,6 +96,17 @@ CREATE TABLE IF NOT EXISTS module_items (
 
 CREATE INDEX IF NOT EXISTS idx_module_items_module ON module_items(module_id);
 CREATE INDEX IF NOT EXISTS idx_module_items_skill ON module_items(skill_id);
+
+CREATE TABLE IF NOT EXISTS coach_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+  content TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_coach_messages_user_skill ON coach_messages(user_id, skill_id, id);
 `);
 
 const skillColumns = db.prepare(`PRAGMA table_info(skills)`).all().map((c) => c.name);
