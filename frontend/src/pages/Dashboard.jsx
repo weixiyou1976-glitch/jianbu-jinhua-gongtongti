@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import ProgressRing from '../components/ProgressRing';
 import BottomNav from '../components/BottomNav';
 
+const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
+
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const [current, setCurrent] = useState(null);
@@ -12,6 +14,7 @@ export default function Dashboard() {
   const [stamps, setStamps] = useState([]);
   const [modules, setModules] = useState([]);
   const [error, setError] = useState('');
+  const [showAddBanner, setShowAddBanner] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getCurrentSkill(), api.getProgress(), api.getStamps()])
@@ -22,7 +25,21 @@ export default function Dashboard() {
       })
       .catch((err) => setError(err.message));
     api.getModules().then(setModules).catch(() => {});
+    try {
+      if (localStorage.getItem(HIDE_ADD_BANNER_KEY) !== 'true') setShowAddBanner(true);
+    } catch {
+      // 忽略隐私模式下localStorage不可用的情况
+    }
   }, []);
+
+  function dismissAddBanner() {
+    setShowAddBanner(false);
+    try {
+      localStorage.setItem(HIDE_ADD_BANNER_KEY, 'true');
+    } catch {
+      // 忽略隐私模式下localStorage不可用的情况
+    }
+  }
 
   return (
     <div className="min-h-screen bg-paper pb-24">
@@ -38,6 +55,26 @@ export default function Dashboard() {
 
       <main className="max-w-content mx-auto px-6">
         {error && <p className="text-vermilion text-sm mb-4">{error}</p>}
+
+        {showAddBanner && (
+          <div className="flex items-center gap-3 border border-vermilion/20 rounded-2xl px-4 py-3 mb-6 bg-vermilion/5">
+            <span className="text-xl shrink-0">📲</span>
+            <p className="flex-1 text-xs text-ink/70 leading-relaxed">
+              把渐步添加到手机桌面，打开更快，学习进度更稳。
+              <Link to="/add-to-home" className="text-vermilion font-semibold ml-1">
+                查看教程 →
+              </Link>
+            </p>
+            <button
+              type="button"
+              onClick={dismissAddBanner}
+              aria-label="关闭"
+              className="text-ink/30 text-lg leading-none shrink-0 px-1"
+            >
+              ×
+            </button>
+          </div>
+        )}
 
         {current?.skill ? (
           <Link

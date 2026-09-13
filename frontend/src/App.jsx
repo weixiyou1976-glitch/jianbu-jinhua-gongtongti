@@ -11,6 +11,7 @@ import Modules from './pages/Modules';
 import ModuleDetail from './pages/ModuleDetail';
 import Stamp from './pages/Stamp';
 import Progress from './pages/Progress';
+import AddToHomeScreen from './pages/AddToHomeScreen';
 import Admin from './pages/Admin';
 
 const LAST_PATH_KEY = 'lastPath';
@@ -54,6 +55,7 @@ export default function App() {
         <Route path="/modules/:slug" element={<ProtectedRoute><ModuleDetail /></ProtectedRoute>} />
         <Route path="/stamp" element={<ProtectedRoute><Stamp /></ProtectedRoute>} />
         <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+        <Route path="/add-to-home" element={<ProtectedRoute><AddToHomeScreen /></ProtectedRoute>} />
         <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

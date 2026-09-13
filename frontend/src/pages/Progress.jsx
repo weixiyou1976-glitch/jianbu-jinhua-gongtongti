@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../api';
 import BottomNav from '../components/BottomNav';
 
@@ -51,6 +52,17 @@ export default function Progress() {
             </div>
           </>
         )}
+
+        <Link
+          to="/add-to-home"
+          className="flex items-center justify-between border border-ink/10 rounded-2xl p-4 mt-8 bg-white/40"
+        >
+          <span className="flex items-center gap-2 text-sm text-ink">
+            <span className="text-lg">📲</span>
+            添加到桌面教程
+          </span>
+          <span className="text-xs text-ink/40">→</span>
+        </Link>
       </main>
 
       <BottomNav />
