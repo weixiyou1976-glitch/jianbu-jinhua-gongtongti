@@ -53,7 +53,7 @@ const iosSteps = [
   },
 ];
 
-const androidSteps = [
+const androidStepsChrome = [
   {
     icon: '🌐',
     title: (
@@ -95,6 +95,52 @@ const androidSteps = [
   },
 ];
 
+const androidStepsBookmark = [
+  {
+    icon: '🌐',
+    title: (
+      <>
+        用 <span className="text-vermilion font-semibold">任意浏览器</span> 打开{' '}
+        <span className="font-mono text-ink">{SITE_URL}</span> 并登录
+      </>
+    ),
+    detail: '不限定 Chrome，手机自带的浏览器也可以',
+  },
+  {
+    icon: '⭐',
+    title: (
+      <>
+        把这个网址 <span className="text-vermilion font-semibold">收藏/添加书签</span>
+      </>
+    ),
+    detail: '通常点击地址栏旁的星标图标，或浏览器菜单里的"收藏"',
+  },
+  {
+    icon: '📑',
+    title: (
+      <>
+        找到浏览器的 <span className="text-vermilion font-semibold">书签管理页面</span>
+      </>
+    ),
+    detail: '一般在浏览器菜单的"书签"或"收藏夹"里',
+  },
+  {
+    icon: '👆',
+    title: (
+      <>
+        长按渐步的书签，选择 <span className="text-vermilion font-semibold">"添加到桌面"</span> 或{' '}
+        <span className="text-vermilion font-semibold">"发送到桌面"</span>
+      </>
+    ),
+    detail: '不同浏览器叫法略有不同，意思相同',
+  },
+  {
+    icon: '🏠',
+    title: '桌面会出现渐步的快捷方式',
+    detail: '点击直接打开，不用再找网址',
+  },
+];
+
 function StepList({ steps }) {
   return (
     <ol className="space-y-4">
@@ -132,6 +178,10 @@ export default function AddToHomeScreen() {
             把渐步添加到桌面之后，<span className="text-vermilion font-semibold">像App一样使用</span>：
             打开更快，还能<span className="text-vermilion font-semibold">保存你的学习进度</span>，不用每次重新登录、重新找网址。
           </p>
+          <p className="text-sm text-ink/70 leading-relaxed mt-2">
+            安卓手机有<span className="text-vermilion font-semibold">两种方法</span>可选：Chrome浏览器效果最好，
+            不想下载Chrome的话，用任意浏览器的书签功能也能添加成功。
+          </p>
         </div>
 
         <div className="flex border border-ink/15 rounded-full p-1 mb-6 bg-white/40">
@@ -155,7 +205,31 @@ export default function AddToHomeScreen() {
           </button>
         </div>
 
-        <StepList steps={platform === 'ios' ? iosSteps : androidSteps} />
+        {platform === 'ios' && <StepList steps={iosSteps} />}
+
+        {platform === 'android' && (
+          <div className="space-y-8">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-sm font-semibold text-ink">方案一：Chrome浏览器</h2>
+                <span className="text-[10px] text-vermilion bg-vermilion/10 rounded-full px-2 py-0.5 font-semibold">
+                  推荐
+                </span>
+              </div>
+              <p className="text-xs text-ink/50 mb-3">效果最好，图标最漂亮，体验和App一样。</p>
+              <StepList steps={androidStepsChrome} />
+            </div>
+
+            <div>
+              <h2 className="text-sm font-semibold text-ink mb-1">方案二：任意浏览器都可以用的方法</h2>
+              <p className="text-xs text-ink/50 mb-3">如果不想下载Chrome，可以用这个方法：</p>
+              <StepList steps={androidStepsBookmark} />
+              <p className="text-xs text-ink/40 leading-relaxed mt-3">
+                不同浏览器的操作略有不同，但大多数安卓浏览器都支持把书签发送到桌面。
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="mt-8 border border-vermilion/20 rounded-2xl p-5 bg-vermilion/5">
           <p className="text-sm text-ink/70 leading-relaxed">
