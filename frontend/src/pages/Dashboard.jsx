@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [modules, setModules] = useState([]);
   const [error, setError] = useState('');
   const [showAddBanner, setShowAddBanner] = useState(false);
+  const [checkinToast, setCheckinToast] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getCurrentSkill(), api.getProgress(), api.getStamps()])
@@ -26,6 +27,15 @@ export default function Dashboard() {
       })
       .catch((err) => setError(err.message));
     api.getModules().then(setModules).catch(() => {});
+    api
+      .checkin()
+      .then((res) => {
+        if (res.is_new) {
+          setCheckinToast(true);
+          setTimeout(() => setCheckinToast(false), 2000);
+        }
+      })
+      .catch(() => {});
     try {
       if (localStorage.getItem(HIDE_ADD_BANNER_KEY) !== 'true') setShowAddBanner(true);
     } catch {
@@ -44,6 +54,11 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-paper pb-24">
+      {checkinToast && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-ink text-paper text-xs px-4 py-2 rounded-full shadow-lg">
+          今天还没打卡，你来了 ✓
+        </div>
+      )}
       <header className="max-w-content mx-auto px-6 pt-8 pb-4 flex items-center justify-between">
         <div>
           <p className="text-ink/40 text-xs">欢迎回来</p>
@@ -107,7 +122,10 @@ export default function Dashboard() {
           <div className="flex items-center justify-center gap-8 border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40">
             <ProgressRing percent={progress.percent} label={`${progress.completed}`} sublabel={`/ ${progress.total} 枚策印`} />
             <div className="text-sm text-ink/60 space-y-1">
-              <p>连续打卡 <span className="text-vermilion font-semibold">{progress.streak}</span> 天</p>
+              <div>
+                <p>连续打卡 <span className="text-vermilion font-semibold">{progress.streak}</span> 天</p>
+                <p className="text-[11px] text-ink/35 mt-0.5">每天打开渐步自动打卡</p>
+              </div>
               <p>已完成 <span className="text-vermilion font-semibold">{progress.percent}%</span></p>
             </div>
           </div>

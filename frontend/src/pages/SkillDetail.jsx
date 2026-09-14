@@ -6,6 +6,9 @@ import InsightAudioButton from '../components/InsightAudioButton';
 import ShareModal from '../components/ShareModal';
 import AoLongAvatar from '../components/AoLongAvatar';
 
+const STAMP_EXPLAIN_TEXT =
+  '每次在真实场景里用了这个Skill，就提交一枚策印。同一个Skill可以多次提交，每次记录不同的经历。';
+
 export default function SkillDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -13,9 +16,11 @@ export default function SkillDetail() {
   const [error, setError] = useState('');
   const [form, setForm] = useState({ learned: '', practiced: '', gained: '' });
   const [submitting, setSubmitting] = useState(false);
-  const [stampNumber, setStampNumber] = useState(null);
   const [insightExpanded, setInsightExpanded] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const [stampHistory, setStampHistory] = useState([]);
+  const [showAllHistory, setShowAllHistory] = useState(false);
+  const [showStampForm, setShowStampForm] = useState(false);
 
   function load() {
     api
@@ -24,12 +29,22 @@ export default function SkillDetail() {
       .catch((err) => setError(err.message));
   }
 
+  function loadHistory() {
+    api
+      .getSkillStamps(id)
+      .then(setStampHistory)
+      .catch(() => {});
+  }
+
   useEffect(() => {
     setSkill(null);
-    setStampNumber(null);
+    setStampHistory([]);
+    setShowAllHistory(false);
+    setShowStampForm(false);
     setForm({ learned: '', practiced: '', gained: '' });
     setInsightExpanded(false);
     load();
+    loadHistory();
     window.scrollTo(0, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -40,7 +55,9 @@ export default function SkillDetail() {
     setError('');
     try {
       const res = await api.submitStamp(id, form);
-      setStampNumber(res.stamp_number);
+      setStampHistory((h) => [res.stamp, ...h]);
+      setForm({ learned: '', practiced: '', gained: '' });
+      setShowStampForm(false);
       load();
     } catch (err) {
       setError(err.message);
@@ -103,7 +120,7 @@ export default function SkillDetail() {
     );
   }
 
-  const stamp = skill.stamp;
+  const visibleHistory = showAllHistory ? stampHistory : stampHistory.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-paper pb-16">
@@ -232,29 +249,42 @@ export default function SkillDetail() {
 
         {/* 5. 策印提交区 */}
         <section className="border border-ink/10 rounded-2xl p-6">
-          <h2 className="text-sm font-semibold text-ink mb-4">策印提交</h2>
+          <h2 className="text-sm font-semibold text-ink mb-2">策印提交</h2>
+          <p className="text-xs text-ink/40 leading-relaxed mb-4">{STAMP_EXPLAIN_TEXT}</p>
 
-          {stamp || stampNumber ? (
-            <div>
-              <p className="text-vermilion font-semibold mb-4">
-                第 {stampNumber ?? '—'} 枚策印{stampNumber ? '已生成' : ''}
-              </p>
-              <div className="space-y-4 text-sm">
-                <div>
-                  <p className="text-xs text-ink/50 mb-1">我学了</p>
-                  <p className="text-ink">{stamp?.learned ?? form.learned}</p>
+          {stampHistory.length > 0 && (
+            <div className="space-y-3 mb-4">
+              {visibleHistory.map((s) => (
+                <div key={s.id} className="border border-ink/10 rounded-xl p-3 bg-white/40">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs text-ink/40">{s.submitted_at?.slice(0, 10)}</span>
+                  </div>
+                  <p className="text-sm text-ink/70 line-clamp-1">我得到了：{s.gained}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-ink/50 mb-1">我练了</p>
-                  <p className="text-ink">{stamp?.practiced ?? form.practiced}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-ink/50 mb-1">我得到了</p>
-                  <p className="text-ink">{stamp?.gained ?? form.gained}</p>
-                </div>
-              </div>
+              ))}
+              {stampHistory.length > 3 && !showAllHistory && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllHistory(true)}
+                  className="text-xs text-vermilion"
+                >
+                  查看全部 {stampHistory.length} 条 →
+                </button>
+              )}
             </div>
-          ) : (
+          )}
+
+          {stampHistory.length > 0 && !showStampForm && (
+            <button
+              type="button"
+              onClick={() => setShowStampForm(true)}
+              className="w-full border border-vermilion/30 text-vermilion rounded-lg py-3 text-sm font-medium"
+            >
+              再练一次，再提一枚
+            </button>
+          )}
+
+          {(stampHistory.length === 0 || showStampForm) && (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-xs text-ink/50 mb-1 block">我学了</label>
@@ -287,13 +317,24 @@ export default function SkillDetail() {
                 />
               </div>
               {error && <p className="text-vermilion text-sm">{error}</p>}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-vermilion text-paper rounded-lg py-3 text-sm font-medium disabled:opacity-50"
-              >
-                {submitting ? '提交中…' : '提交策印'}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 bg-vermilion text-paper rounded-lg py-3 text-sm font-medium disabled:opacity-50"
+                >
+                  {submitting ? '提交中…' : '提交策印'}
+                </button>
+                {stampHistory.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowStampForm(false)}
+                    className="text-xs text-ink/40 px-3 shrink-0"
+                  >
+                    取消
+                  </button>
+                )}
+              </div>
             </form>
           )}
         </section>
@@ -330,8 +371,8 @@ export default function SkillDetail() {
       {showShare && (
         <ShareModal
           skill={skill}
-          shareType={stamp || stampNumber ? 'stamped' : 'basic'}
-          gainedText={stamp?.gained ?? form.gained}
+          shareType={stampHistory.length > 0 ? 'stamped' : 'basic'}
+          gainedText={stampHistory[0]?.gained ?? form.gained}
           onClose={() => setShowShare(false)}
         />
       )}

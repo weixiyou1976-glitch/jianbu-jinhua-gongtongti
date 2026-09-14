@@ -12,29 +12,24 @@ router.post('/skills/:id/stamp', requireAuth, (req, res) => {
   const skill = db.prepare('SELECT id FROM skills WHERE id = ?').get(req.params.id);
   if (!skill) return res.status(404).json({ error: 'Skill不存在' });
 
-  const existing = db
-    .prepare('SELECT id FROM stamps WHERE user_id = ? AND skill_id = ?')
-    .get(req.user.id, skill.id);
-  if (existing) return res.status(400).json({ error: '该Skill已提交过策印' });
+  const info = db
+    .prepare(
+      'INSERT INTO stamps (user_id, skill_id, learned, practiced, gained) VALUES (?, ?, ?, ?, ?)'
+    )
+    .run(req.user.id, skill.id, learned, practiced, gained);
 
-  const tx = db.transaction(() => {
-    const info = db
-      .prepare(
-        'INSERT INTO stamps (user_id, skill_id, learned, practiced, gained) VALUES (?, ?, ?, ?, ?)'
-      )
-      .run(req.user.id, skill.id, learned, practiced, gained);
-    db.prepare(
-      'INSERT OR IGNORE INTO checkins (user_id, skill_id) VALUES (?, ?)'
-    ).run(req.user.id, skill.id);
-    return info.lastInsertRowid;
-  });
-
-  const stampId = tx();
   const count = db
     .prepare('SELECT COUNT(*) AS c FROM stamps WHERE user_id = ?')
     .get(req.user.id).c;
-  const stamp = db.prepare('SELECT * FROM stamps WHERE id = ?').get(stampId);
+  const stamp = db.prepare('SELECT * FROM stamps WHERE id = ?').get(info.lastInsertRowid);
   res.json({ stamp, stamp_number: count });
+});
+
+router.get('/skills/:id/stamps', requireAuth, (req, res) => {
+  const rows = db
+    .prepare('SELECT * FROM stamps WHERE user_id = ? AND skill_id = ? ORDER BY submitted_at DESC')
+    .all(req.user.id, req.params.id);
+  res.json(rows);
 });
 
 router.get('/stamps', requireAuth, (req, res) => {

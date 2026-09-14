@@ -65,9 +65,10 @@ CREATE TABLE IF NOT EXISTS stamps (
   learned TEXT NOT NULL,
   practiced TEXT NOT NULL,
   gained TEXT NOT NULL,
-  submitted_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE(user_id, skill_id)
+  submitted_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE INDEX IF NOT EXISTS idx_stamps_user_skill ON stamps(user_id, skill_id, submitted_at);
 
 CREATE TABLE IF NOT EXISTS checkins (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -150,7 +151,38 @@ CREATE TABLE IF NOT EXISTS referral_settings (
   commission_per_conversion REAL NOT NULL DEFAULT 0
 );
 INSERT OR IGNORE INTO referral_settings (id, commission_per_conversion) VALUES (1, 0);
+
+CREATE TABLE IF NOT EXISTS daily_checkins (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  checkin_date TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(user_id, checkin_date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_daily_checkins_user ON daily_checkins(user_id, checkin_date);
 `);
+
+const stampIndexes = db.prepare(`PRAGMA index_list(stamps)`).all();
+const stampsHasOldUniqueConstraint = stampIndexes.some((idx) => idx.unique === 1 && idx.origin === 'u');
+if (stampsHasOldUniqueConstraint) {
+  db.exec(`
+    CREATE TABLE stamps_new (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL REFERENCES users(id),
+      skill_id INTEGER NOT NULL REFERENCES skills(id),
+      learned TEXT NOT NULL,
+      practiced TEXT NOT NULL,
+      gained TEXT NOT NULL,
+      submitted_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    INSERT INTO stamps_new (id, user_id, skill_id, learned, practiced, gained, submitted_at)
+      SELECT id, user_id, skill_id, learned, practiced, gained, submitted_at FROM stamps;
+    DROP TABLE stamps;
+    ALTER TABLE stamps_new RENAME TO stamps;
+    CREATE INDEX IF NOT EXISTS idx_stamps_user_skill ON stamps(user_id, skill_id, submitted_at);
+  `);
+}
 
 const skillColumns = db.prepare(`PRAGMA table_info(skills)`).all().map((c) => c.name);
 if (!skillColumns.includes('growth_friction')) {

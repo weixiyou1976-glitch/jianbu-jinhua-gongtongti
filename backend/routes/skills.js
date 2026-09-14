@@ -213,11 +213,11 @@ router.get('/skills/:id', requireAuth, (req, res) => {
 
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
-  const stamp = db
-    .prepare('SELECT * FROM stamps WHERE user_id = ? AND skill_id = ?')
+  const stamped = !!db
+    .prepare('SELECT 1 FROM stamps WHERE user_id = ? AND skill_id = ? LIMIT 1')
     .get(req.user.id, skill.id);
   const inModule = !!db.prepare('SELECT 1 FROM module_items WHERE skill_id = ?').get(skill.id);
-  const unlocked = skill.week_number <= currentWeek || !!stamp || inModule;
+  const unlocked = skill.week_number <= currentWeek || stamped || inModule;
 
   if (!unlocked) {
     const currentSkill = db.prepare('SELECT id, skill_name FROM skills WHERE week_number = ?').get(currentWeek);
@@ -236,7 +236,7 @@ router.get('/skills/:id', requireAuth, (req, res) => {
   const next = db
     .prepare('SELECT id, title FROM skills WHERE week_number > ? ORDER BY week_number ASC LIMIT 1')
     .get(skill.week_number);
-  res.json({ ...withParsedTags(skill), locked: false, stamp: stamp || null, prev: prev || null, next: next || null });
+  res.json({ ...withParsedTags(skill), locked: false, stamped, prev: prev || null, next: next || null });
 });
 
 module.exports = router;

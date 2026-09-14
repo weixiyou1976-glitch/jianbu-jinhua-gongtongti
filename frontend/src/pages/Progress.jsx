@@ -22,20 +22,28 @@ export default function Progress() {
 
         {progress && (
           <>
-            <div className="flex justify-around border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40 text-center">
-              <div>
-                <p className="text-2xl font-bold text-vermilion">{progress.completed}/{progress.total}</p>
-                <p className="text-xs text-ink/50 mt-1">已完成策印</p>
+            <section className="border border-ink/10 rounded-2xl p-6 mb-4 bg-white/40">
+              <h2 className="text-sm font-semibold text-ink mb-1">连续打卡</h2>
+              <p className="text-xs text-ink/40 mb-4">每天打开渐步自动记录，保持学习节奏</p>
+              <p className="text-3xl font-bold text-vermilion text-center">
+                {progress.streak} <span className="text-sm font-normal text-ink/50">天</span>
+              </p>
+            </section>
+
+            <section className="border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40">
+              <h2 className="text-sm font-semibold text-ink mb-1">策印记录</h2>
+              <p className="text-xs text-ink/40 mb-4">每次在真实场景里用了Skill，就提交一枚策印</p>
+              <div className="flex justify-around text-center">
+                <div>
+                  <p className="text-2xl font-bold text-vermilion">{progress.completed}/{progress.total}</p>
+                  <p className="text-xs text-ink/50 mt-1">已完成周数</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-vermilion">{progress.percent}%</p>
+                  <p className="text-xs text-ink/50 mt-1">完成百分比</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-vermilion">{progress.percent}%</p>
-                <p className="text-xs text-ink/50 mt-1">完成百分比</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-vermilion">{progress.streak}</p>
-                <p className="text-xs text-ink/50 mt-1">连续打卡天数</p>
-              </div>
-            </div>
+            </section>
 
             <div className="grid grid-cols-8 gap-2 sm:grid-cols-10">
               {progress.grid.map((cell) => (
