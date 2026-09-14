@@ -7,9 +7,25 @@ function getSaveInstruction() {
   const ua = navigator.userAgent || '';
   const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const isAndroid = /Android/.test(ua);
-  if (isIOS) return "长按图片 → 选择'存储图像' → 保存到相册 → 发到微信让朋友扫码";
-  if (isAndroid) return "长按图片 → 选择'保存图片' → 发到微信让朋友扫码";
-  return '长按或右键图片保存，发到微信让朋友扫码';
+  if (isIOS) {
+    return (
+      <>
+        👇 长按下方图片 → 选择&apos;共享&apos;→ 发给微信好友
+        <br />
+        朋友在微信里长按图片即可扫码体验
+      </>
+    );
+  }
+  if (isAndroid) {
+    return (
+      <>
+        👇 长按下方图片 → 选择&apos;保存图片&apos;→ 打开微信发给好友
+        <br />
+        朋友在微信里长按图片即可扫码体验
+      </>
+    );
+  }
+  return '👇 长按下方图片保存，发到微信让朋友扫码体验';
 }
 
 export default function ShareModal({ skill, shareType, gainedText, onClose }) {
@@ -68,16 +84,18 @@ export default function ShareModal({ skill, shareType, gainedText, onClose }) {
 
         {imageUrl && (
           <>
-            <p className="text-xs text-ink/60 bg-vermilion/5 border border-vermilion/15 rounded-lg py-2 text-center mb-3">
-              👇 长按下方图片保存
+            <p
+              className="text-center leading-relaxed mb-3"
+              style={{ fontSize: 12, color: '#888888', backgroundColor: '#FFFBE6', borderRadius: 6, padding: 10 }}
+            >
+              {getSaveInstruction()}
             </p>
             <img
               src={imageUrl}
               alt="分享图片"
-              className="w-full mx-auto rounded-xl border border-ink/10 mb-2 block"
+              className="w-full mx-auto rounded-xl border border-ink/10 mb-4 block"
               style={{ maxWidth: 375 }}
             />
-            <p className="text-xs text-ink/40 text-center mb-4 leading-relaxed">{getSaveInstruction()}</p>
 
             <button
               onClick={handleCopyLink}
