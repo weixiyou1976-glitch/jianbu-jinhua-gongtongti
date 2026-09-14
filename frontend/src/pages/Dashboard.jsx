@@ -4,6 +4,7 @@ import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 import ProgressRing from '../components/ProgressRing';
 import BottomNav from '../components/BottomNav';
+import AoLongAvatar from '../components/AoLongAvatar';
 
 const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
 
@@ -52,6 +53,12 @@ export default function Dashboard() {
           退出
         </button>
       </header>
+
+      <div className="max-w-content mx-auto px-6 pt-2 pb-6 flex flex-col items-center text-center">
+        <AoLongAvatar size={48} />
+        <p className="text-ink text-sm font-bold mt-2">傲龙</p>
+        <p className="text-ink/40 text-xs mt-0.5">敕名策运师 · 渐步进化共同体创始人</p>
+      </div>
 
       <main className="max-w-content mx-auto px-6">
         {error && <p className="text-vermilion text-sm mb-4">{error}</p>}

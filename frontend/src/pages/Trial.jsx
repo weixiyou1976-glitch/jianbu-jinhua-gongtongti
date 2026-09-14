@@ -3,6 +3,7 @@ import { api } from '../api';
 import TrialCoachPanel from '../components/TrialCoachPanel';
 import TrialJoinCard from '../components/TrialJoinCard';
 import InsightAudioButton from '../components/InsightAudioButton';
+import AoLongAvatar from '../components/AoLongAvatar';
 
 const TRIAL_TOKEN_KEY = 'trialToken';
 const REFERRAL_KEY = 'trialReferral';
@@ -232,21 +233,35 @@ function SkillScreen({ skill, onDone, onExpired }) {
         </section>
 
         <section>
-          <div className="flex items-center gap-2 mb-3">
-            <h2 className="text-sm font-semibold text-ink/70">洞察</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2
+              className="text-base font-bold pl-2.5"
+              style={{ color: '#C41E1E', borderLeft: '3px solid #C41E1E' }}
+            >
+              洞察
+            </h2>
             {skill.insight_audio_url && (
-              <>
-                <InsightAudioButton src={skill.insight_audio_url} />
-                <button
-                  type="button"
-                  onClick={() => setInsightExpanded((v) => !v)}
-                  className="text-xs text-vermilion border border-vermilion/30 rounded-full px-2.5 py-1 hover:bg-vermilion/5"
-                >
-                  {insightExpanded ? '收起' : '展开'}
-                </button>
-              </>
+              <button
+                type="button"
+                onClick={() => setInsightExpanded((v) => !v)}
+                className="text-xs text-vermilion border border-vermilion/30 rounded-full px-2.5 py-1 hover:bg-vermilion/5"
+              >
+                {insightExpanded ? '收起' : '展开'}
+              </button>
             )}
           </div>
+          {skill.insight_audio_url && (
+            <div
+              className="flex items-center justify-between rounded-lg p-3 mb-3"
+              style={{ backgroundColor: '#FFF5F5' }}
+            >
+              <div className="flex items-center gap-2">
+                <AoLongAvatar size={32} />
+                <span className="text-xs text-ink/50">傲龙 · 语音洞察</span>
+              </div>
+              <InsightAudioButton src={skill.insight_audio_url} />
+            </div>
+          )}
           {skill.insight_audio_url ? (
             <div
               className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
 import VoiceInputButton from './VoiceInputButton';
+import AoLongAvatar from './AoLongAvatar';
 
 const PRIVACY_NOTE = '你输入的内容将发送给AI处理，请勿填写敏感个人信息';
 
@@ -132,7 +133,10 @@ export default function CoachPanel({ skill }) {
   if (loadingHistory) {
     return (
       <section className="border border-vermilion/20 rounded-2xl p-6 bg-white/50">
-        <h2 className="text-sm font-semibold text-vermilion mb-1">AI陪练</h2>
+        <div className="flex items-center gap-2 mb-1">
+          <AoLongAvatar size={24} />
+          <h2 className="text-sm font-bold text-vermilion">傲龙的数字分身</h2>
+        </div>
         <p className="text-sm text-ink/40">加载中…</p>
       </section>
     );
@@ -140,7 +144,11 @@ export default function CoachPanel({ skill }) {
 
   return (
     <section className="border border-vermilion/20 rounded-2xl p-6 bg-white/50">
-      <h2 className="text-sm font-semibold text-vermilion mb-1">AI陪练</h2>
+      <div className="flex items-center gap-2 mb-1">
+        <AoLongAvatar size={24} />
+        <h2 className="text-sm font-bold text-vermilion">傲龙的数字分身</h2>
+      </div>
+      <p className="text-xs text-ink/40 mb-3">装载了傲龙多年对人性和成长的研究</p>
       <p className="text-sm text-ink/60 leading-relaxed mb-4">
         告诉我你现在的真实处境，
         <br />

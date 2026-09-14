@@ -44,9 +44,8 @@ export default function InsightAudioButton({ src }) {
       onClick={toggle}
       aria-label={playing ? '暂停音频' : '播放音频'}
       aria-pressed={playing}
-      className={`inline-flex items-center justify-center w-7 h-7 rounded-full transition-colors shrink-0 ${
-        playing ? 'bg-vermilion text-white' : 'bg-vermilion/10 text-vermilion hover:bg-vermilion/20'
-      }`}
+      style={{ width: 44, height: 44, backgroundColor: '#C41E1E' }}
+      className="inline-flex items-center justify-center rounded-full text-white shrink-0"
     >
       <audio
         ref={audioRef}
@@ -56,7 +55,7 @@ export default function InsightAudioButton({ src }) {
         onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)}
       />
-      {playing ? <PauseIcon className="w-3.5 h-3.5" /> : <PlayIcon className="w-3.5 h-3.5 ml-0.5" />}
+      {playing ? <PauseIcon className="w-5 h-5" /> : <PlayIcon className="w-5 h-5 ml-0.5" />}
     </button>
   );
 }
