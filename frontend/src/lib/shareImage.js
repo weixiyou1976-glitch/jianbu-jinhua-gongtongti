@@ -1,3 +1,5 @@
+import QRCode from 'qrcode';
+
 const CANVAS_W = 750;
 const CANVAS_H = 1000;
 const PAPER = '#F2EDE4';
@@ -7,6 +9,10 @@ const INK_MUTED = '#8A8478';
 const QUOTE_BG = '#E8E2D6';
 const MARGIN_X = 70;
 const CONTENT_W = CANVAS_W - MARGIN_X * 2;
+
+const QR_OUTER = 200;
+const QR_MARGIN = 16;
+const QR_INNER = QR_OUTER - QR_MARGIN * 2;
 
 function loadImage(src) {
   return new Promise((resolve, reject) => {
@@ -56,6 +62,43 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+function drawCircularImage(ctx, img, x, y, size) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+  ctx.drawImage(img, x, y, size, size);
+  ctx.restore();
+}
+
+function drawAvatarPlaceholder(ctx, x, y, size) {
+  ctx.fillStyle = VERMILION;
+  ctx.beginPath();
+  ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = `bold ${Math.round(size * 0.5)}px "Noto Serif SC", serif`;
+  const prevAlign = ctx.textAlign;
+  const prevBaseline = ctx.textBaseline;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('龙', x + size / 2, y + size / 2 + 1);
+  ctx.textAlign = prevAlign;
+  ctx.textBaseline = prevBaseline;
+}
+
+async function generateQrCanvas(url, size) {
+  const canvas = document.createElement('canvas');
+  await QRCode.toCanvas(canvas, url, {
+    errorCorrectionLevel: 'H',
+    width: size,
+    margin: 0,
+    color: { dark: '#000000', light: '#FFFFFF' },
+  });
+  return canvas;
+}
+
 export async function generateShareImage({ skill, gainedText, referralCode }) {
   const canvas = document.createElement('canvas');
   canvas.width = CANVAS_W;
@@ -72,51 +115,64 @@ export async function generateShareImage({ skill, gainedText, referralCode }) {
   } catch {
     logo = null;
   }
+  let avatar = null;
+  try {
+    avatar = await loadImage('/avatar/aolong.jpg');
+  } catch {
+    avatar = null;
+  }
 
-  let y = 64;
-  const logoSize = 48;
+  const trialUrl = `https://jianbu.ceyunju.com/trial?ref=${referralCode}`;
+  let qrCanvas = null;
+  try {
+    qrCanvas = await generateQrCanvas(trialUrl, QR_INNER);
+  } catch {
+    qrCanvas = null;
+  }
+
+  let y = 60;
+  const logoSize = 44;
   if (logo) ctx.drawImage(logo, MARGIN_X, y, logoSize, logoSize);
   ctx.fillStyle = INK;
   ctx.font = '600 26px "Noto Serif SC", serif';
   ctx.textAlign = 'left';
-  ctx.fillText('渐步进化共同体', MARGIN_X + logoSize + 16, y + 11);
-  y += logoSize + 36;
+  ctx.fillText('渐步进化共同体', MARGIN_X + logoSize + 16, y + 9);
+  y += logoSize + 28;
 
-  ctx.strokeStyle = 'rgba(192,57,43,0.2)';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(MARGIN_X, y);
-  ctx.lineTo(CANVAS_W - MARGIN_X, y);
-  ctx.stroke();
-  y += 46;
+  const avatarSize = 32;
+  if (avatar) {
+    drawCircularImage(ctx, avatar, MARGIN_X, y, avatarSize);
+  } else {
+    drawAvatarPlaceholder(ctx, MARGIN_X, y, avatarSize);
+  }
+  ctx.textAlign = 'left';
+  ctx.fillStyle = INK;
+  ctx.font = '600 18px "Noto Serif SC", serif';
+  ctx.fillText('傲龙推荐', MARGIN_X + avatarSize + 12, y + 6);
+  y += avatarSize + 30;
 
   ctx.textAlign = 'center';
-  ctx.fillStyle = INK_MUTED;
-  ctx.font = '18px "Noto Serif SC", serif';
-  ctx.fillText(`第${skill.week_number}周 · ${skill.category}`, CANVAS_W / 2, y);
-  y += 46;
-
   ctx.fillStyle = VERMILION;
-  ctx.font = 'bold 48px "Noto Serif SC", serif';
+  ctx.font = 'bold 46px "Noto Serif SC", serif';
   const anchorLines = wrapParagraph(ctx, skill.memory_anchor, CONTENT_W);
-  y = drawCenteredLines(ctx, anchorLines, CANVAS_W / 2, y, 60) + 30;
+  y = drawCenteredLines(ctx, anchorLines, CANVAS_W / 2, y, 58) + 26;
 
   ctx.fillStyle = INK;
-  ctx.font = '600 28px "Noto Serif SC", serif';
+  ctx.font = '600 27px "Noto Serif SC", serif';
   const nameLines = wrapParagraph(ctx, skill.skill_name, CONTENT_W);
-  y = drawCenteredLines(ctx, nameLines, CANVAS_W / 2, y, 38) + 40;
+  y = drawCenteredLines(ctx, nameLines, CANVAS_W / 2, y, 36) + 32;
 
   if (gainedText) {
-    ctx.font = '17px "Noto Serif SC", serif';
+    ctx.font = '16px "Noto Serif SC", serif';
     let quoteLines = wrapParagraph(ctx, gainedText, CONTENT_W - 80);
-    const maxLines = 5;
+    const maxLines = 4;
     if (quoteLines.length > maxLines) {
       quoteLines = quoteLines.slice(0, maxLines);
       quoteLines[maxLines - 1] = quoteLines[maxLines - 1].slice(0, -1) + '…';
     }
-    const labelH = 30;
-    const lineH = 28;
-    const boxPadding = 28;
+    const labelH = 28;
+    const lineH = 26;
+    const boxPadding = 22;
     const boxH = labelH + quoteLines.length * lineH + boxPadding * 2;
     const boxY = y;
     ctx.fillStyle = QUOTE_BG;
@@ -125,36 +181,53 @@ export async function generateShareImage({ skill, gainedText, referralCode }) {
 
     ctx.textAlign = 'left';
     ctx.fillStyle = VERMILION;
-    ctx.font = '600 16px "Noto Serif SC", serif';
-    ctx.fillText('我得到了', MARGIN_X + 40, boxY + boxPadding);
+    ctx.font = '600 15px "Noto Serif SC", serif';
+    ctx.fillText('我得到了', MARGIN_X + 36, boxY + boxPadding);
 
     ctx.fillStyle = '#5A5548';
-    ctx.font = '17px "Noto Serif SC", serif';
+    ctx.font = '16px "Noto Serif SC", serif';
     quoteLines.forEach((line, i) => {
-      ctx.fillText(line, MARGIN_X + 40, boxY + boxPadding + labelH + i * lineH);
+      ctx.fillText(line, MARGIN_X + 36, boxY + boxPadding + labelH + i * lineH);
     });
     y = boxY + boxH;
   }
 
-  const footerDividerY = 850;
+  const dividerY = Math.min(y + 24, 654);
   ctx.strokeStyle = 'rgba(43,43,43,0.12)';
+  ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(MARGIN_X, footerDividerY);
-  ctx.lineTo(CANVAS_W - MARGIN_X, footerDividerY);
+  ctx.moveTo(MARGIN_X, dividerY);
+  ctx.lineTo(CANVAS_W - MARGIN_X, dividerY);
   ctx.stroke();
 
+  const cardY = dividerY + 26;
+  const cardPadding = 16;
+  const topTextH = 20;
+  const gapAfterTopText = 10;
+  const gapAfterQr = 10;
+  const bottomTextH = 16;
+  const cardH = cardPadding * 2 + topTextH + gapAfterTopText + QR_OUTER + gapAfterQr + bottomTextH;
+
+  ctx.fillStyle = '#FFFFFF';
+  roundRect(ctx, MARGIN_X, cardY, CONTENT_W, cardH, 8);
+  ctx.fill();
+
   ctx.textAlign = 'center';
-  ctx.fillStyle = VERMILION;
-  ctx.font = '600 24px "Noto Serif SC", serif';
-  ctx.fillText('免费体验一次渐步', CANVAS_W / 2, footerDividerY + 34);
-
-  ctx.fillStyle = INK;
-  ctx.font = '18px monospace';
-  ctx.fillText(`jianbu.ceyunju.com/trial?ref=${referralCode}`, CANVAS_W / 2, footerDividerY + 74);
-
   ctx.fillStyle = INK_MUTED;
-  ctx.font = '16px "Noto Serif SC", serif';
-  ctx.fillText('渐小而坚，步步在前', CANVAS_W / 2, footerDividerY + 112);
+  ctx.font = '14px "Noto Serif SC", serif';
+  ctx.fillText('扫码免费体验渐步', CANVAS_W / 2, cardY + cardPadding);
+
+  const qrX = CANVAS_W / 2 - QR_OUTER / 2;
+  const qrY = cardY + cardPadding + topTextH + gapAfterTopText;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(qrX, qrY, QR_OUTER, QR_OUTER);
+  if (qrCanvas) {
+    ctx.drawImage(qrCanvas, qrX + QR_MARGIN, qrY + QR_MARGIN, QR_INNER, QR_INNER);
+  }
+
+  ctx.fillStyle = VERMILION;
+  ctx.font = '12px "Noto Serif SC", serif';
+  ctx.fillText('渐小而坚，步步在前', CANVAS_W / 2, qrY + QR_OUTER + gapAfterQr);
 
   return canvas.toDataURL('image/png');
 }
