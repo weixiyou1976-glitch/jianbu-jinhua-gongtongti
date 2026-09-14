@@ -22,4 +22,18 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-module.exports = { requireAuth, requireAdmin };
+function requireTrialAuth(req, res, next) {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) return res.status(401).json({ error: '试用信息不存在' });
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    if (payload.type !== 'trial') throw new Error('not a trial token');
+    req.trial = payload;
+    next();
+  } catch {
+    return res.status(401).json({ error: '体验时间已结束，欢迎加入渐步', expired: true });
+  }
+}
+
+module.exports = { requireAuth, requireAdmin, requireTrialAuth };

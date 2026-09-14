@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 
@@ -58,14 +58,19 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'register' && (
-            <input
-              type="text"
-              placeholder="激活码"
-              value={form.activation_code}
-              onChange={(e) => update('activation_code', e.target.value)}
-              className="w-full border border-vermilion/20 bg-white/60 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-vermilion"
-              required
-            />
+            <div>
+              <input
+                type="text"
+                placeholder="激活码"
+                value={form.activation_code}
+                onChange={(e) => update('activation_code', e.target.value)}
+                className="w-full border border-vermilion/20 bg-white/60 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-vermilion"
+                required
+              />
+              <Link to="/trial" className="block text-xs text-ink/40 mt-2">
+                还不确定？先免费体验一次 →
+              </Link>
+            </div>
           )}
           <input
             type="email"

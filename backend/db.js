@@ -107,6 +107,25 @@ CREATE TABLE IF NOT EXISTS coach_messages (
 );
 
 CREATE INDEX IF NOT EXISTS idx_coach_messages_user_skill ON coach_messages(user_id, skill_id, id);
+
+CREATE TABLE IF NOT EXISTS trial_users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  wechat_id TEXT UNIQUE NOT NULL,
+  concern TEXT NOT NULL DEFAULT '',
+  matched_skill_id INTEGER REFERENCES skills(id),
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  converted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS trial_coach_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  trial_user_id INTEGER NOT NULL REFERENCES trial_users(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+  content TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_trial_coach_messages_trial ON trial_coach_messages(trial_user_id, id);
 `);
 
 const skillColumns = db.prepare(`PRAGMA table_info(skills)`).all().map((c) => c.name);

@@ -370,6 +370,82 @@ function ModulesPanel() {
   );
 }
 
+function formatTrialTime(isoLike) {
+  if (!isoLike) return '';
+  const date = new Date(isoLike.replace(' ', 'T') + 'Z');
+  return date.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function TrialUsersPanel() {
+  const [trialUsers, setTrialUsers] = useState([]);
+  const [error, setError] = useState('');
+  const [updatingId, setUpdatingId] = useState(null);
+
+  function refresh() {
+    api.adminListTrialUsers().then(setTrialUsers).catch((err) => setError(err.message));
+  }
+  useEffect(refresh, []);
+
+  async function toggleConverted(row) {
+    setUpdatingId(row.id);
+    try {
+      await api.adminUpdateTrialUser(row.id, { converted: !row.converted });
+      setTrialUsers((list) =>
+        list.map((t) => (t.id === row.id ? { ...t, converted: !row.converted } : t))
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setUpdatingId(null);
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      {error && <p className="text-vermilion text-sm">{error}</p>}
+      {trialUsers.length === 0 && <p className="text-sm text-ink/40">还没有体验用户</p>}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-left text-ink/40 border-b border-ink/10">
+              <th className="py-2 font-normal">微信号</th>
+              <th className="py-2 font-normal">困扰内容</th>
+              <th className="py-2 font-normal">匹配Skill</th>
+              <th className="py-2 font-normal">体验时间</th>
+              <th className="py-2 font-normal">转化状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            {trialUsers.map((t) => (
+              <tr key={t.id} className="border-b border-ink/5 align-top">
+                <td className="py-2 whitespace-nowrap">{t.wechat_id}</td>
+                <td className="py-2 max-w-xs text-ink/70">{t.concern || '—'}</td>
+                <td className="py-2 whitespace-nowrap text-ink/70">
+                  {t.matched_skill_name ? `第${t.matched_week_number}周 · ${t.matched_skill_name}` : '—'}
+                </td>
+                <td className="py-2 text-ink/50 whitespace-nowrap">{formatTrialTime(t.created_at)}</td>
+                <td className="py-2 whitespace-nowrap">
+                  <button
+                    onClick={() => toggleConverted(t)}
+                    disabled={updatingId === t.id}
+                    className={`text-xs rounded-full px-3 py-1 border disabled:opacity-40 ${
+                      t.converted
+                        ? 'text-vermilion border-vermilion/30 bg-vermilion/5'
+                        : 'text-ink/40 border-ink/15'
+                    }`}
+                  >
+                    {t.converted ? '✓ 已转化' : '未转化'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export default function Admin() {
   const [unlocked, setUnlocked] = useState(!!localStorage.getItem('adminPassword'));
   const [tab, setTab] = useState('codes');
@@ -384,6 +460,7 @@ export default function Admin() {
           {[
             ['codes', '激活码'],
             ['students', '学员'],
+            ['trial', '试用用户'],
             ['skills', 'Skill内容'],
             ['modules', '学习模块'],
           ].map(([key, label]) => (
@@ -400,6 +477,7 @@ export default function Admin() {
       <main className="max-w-3xl mx-auto px-6">
         {tab === 'codes' && <CodesPanel />}
         {tab === 'students' && <StudentsPanel />}
+        {tab === 'trial' && <TrialUsersPanel />}
         {tab === 'skills' && <SkillsPanel />}
         {tab === 'modules' && <ModulesPanel />}
       </main>

@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import UpdatePrompt from './components/UpdatePrompt';
 import Login from './pages/Login';
+import Trial from './pages/Trial';
 import Dashboard from './pages/Dashboard';
 import Skills from './pages/Skills';
 import SkillDetail from './pages/SkillDetail';
@@ -32,7 +33,7 @@ function RootRedirect() {
 function PathRecorder() {
   const location = useLocation();
   useEffect(() => {
-    if (location.pathname !== '/login' && location.pathname !== '/') {
+    if (location.pathname !== '/login' && location.pathname !== '/' && location.pathname !== '/trial') {
       localStorage.setItem(LAST_PATH_KEY, location.pathname);
     }
   }, [location.pathname]);
@@ -47,6 +48,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/trial" element={<Trial />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/skills" element={<ProtectedRoute><Skills /></ProtectedRoute>} />
         <Route path="/skill/:id" element={<ProtectedRoute><SkillDetail /></ProtectedRoute>} />

@@ -1,8 +1,12 @@
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
-async function request(path, { method = 'GET', body, token, admin } = {}) {
+async function request(path, { method = 'GET', body, token, admin, trial } = {}) {
   const headers = { 'Content-Type': 'application/json' };
-  const authToken = admin ? localStorage.getItem('adminPassword') : token || localStorage.getItem('token');
+  const authToken = admin
+    ? localStorage.getItem('adminPassword')
+    : trial
+    ? localStorage.getItem('trialToken')
+    : token || localStorage.getItem('token');
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
 
   const res = await fetch(`${API_BASE}${path}`, {
@@ -20,8 +24,8 @@ async function request(path, { method = 'GET', body, token, admin } = {}) {
   return data;
 }
 
-async function streamRequest(path, body) {
-  const token = localStorage.getItem('token');
+async function streamRequest(path, body, { trial } = {}) {
+  const token = trial ? localStorage.getItem('trialToken') : localStorage.getItem('token');
   const headers = { 'Content-Type': 'application/json' };
   if (token) headers.Authorization = `Bearer ${token}`;
 
@@ -67,10 +71,20 @@ export const api = {
   resetCoach: (skill_id) => request(`/coach/${skill_id}`, { method: 'DELETE' }),
   coachMessage: (skill_id, message) => streamRequest('/coach/message', { skill_id, message }),
 
+  trialStart: (wechat_id) => request('/trial/start', { method: 'POST', body: { wechat_id } }),
+  trialMatch: (concern) => request('/trial/match', { method: 'POST', body: { concern }, trial: true }),
+  getTrialSkill: () => request('/trial/skill', { trial: true }),
+  getTrialCoachHistory: () => request('/trial/coach/history', { trial: true }),
+  trialCoachMessage: (skill_id, message) =>
+    streamRequest('/trial/coach/message', { skill_id, message }, { trial: true }),
+
   adminGenerateCodes: (count) => request('/admin/activation-codes', { method: 'POST', body: { count }, admin: true }),
   adminListCodes: () => request('/admin/activation-codes', { admin: true }),
   adminListStudents: () => request('/admin/students', { admin: true }),
   adminResetPassword: (id) => request(`/admin/students/${id}/reset-password`, { method: 'POST', admin: true }),
+  adminListTrialUsers: () => request('/admin/trial-users', { admin: true }),
+  adminUpdateTrialUser: (id, payload) =>
+    request(`/admin/trial-users/${id}`, { method: 'PUT', body: payload, admin: true }),
   adminListSkills: () => request('/admin/skills', { admin: true }),
   adminCreateSkill: (payload) => request('/admin/skills', { method: 'POST', body: payload, admin: true }),
   adminUpdateSkill: (id, payload) => request(`/admin/skills/${id}`, { method: 'PUT', body: payload, admin: true }),

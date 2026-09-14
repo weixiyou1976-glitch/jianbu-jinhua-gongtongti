@@ -55,6 +55,28 @@ router.get('/students', (req, res) => {
   res.json(withProgress);
 });
 
+router.get('/trial-users', (req, res) => {
+  const rows = db
+    .prepare(
+      `SELECT t.id, t.wechat_id, t.concern, t.matched_skill_id, t.created_at, t.converted,
+              s.skill_name AS matched_skill_name, s.week_number AS matched_week_number
+       FROM trial_users t
+       LEFT JOIN skills s ON s.id = t.matched_skill_id
+       ORDER BY t.created_at DESC`
+    )
+    .all();
+  res.json(rows.map((r) => ({ ...r, converted: !!r.converted })));
+});
+
+router.put('/trial-users/:id', (req, res) => {
+  const { converted } = req.body || {};
+  const info = db
+    .prepare('UPDATE trial_users SET converted = ? WHERE id = ?')
+    .run(converted ? 1 : 0, req.params.id);
+  if (info.changes === 0) return res.status(404).json({ error: '记录不存在' });
+  res.json({ ok: true });
+});
+
 router.post('/students/:id/reset-password', (req, res) => {
   const user = db.prepare('SELECT id, email FROM users WHERE id = ?').get(req.params.id);
   if (!user) return res.status(404).json({ error: '学员不存在' });
