@@ -446,6 +446,119 @@ function TrialUsersPanel() {
   );
 }
 
+function ReferralsPanel() {
+  const [data, setData] = useState({ commission_per_conversion: 0, rows: [] });
+  const [rateDraft, setRateDraft] = useState('0');
+  const [error, setError] = useState('');
+  const [savingRate, setSavingRate] = useState(false);
+  const [settlingId, setSettlingId] = useState(null);
+
+  function refresh() {
+    api
+      .adminListReferrals()
+      .then((res) => {
+        setData(res);
+        setRateDraft(String(res.commission_per_conversion));
+      })
+      .catch((err) => setError(err.message));
+  }
+  useEffect(refresh, []);
+
+  async function handleSaveRate(e) {
+    e.preventDefault();
+    const rate = Number(rateDraft);
+    if (!Number.isFinite(rate) || rate < 0) return;
+    setSavingRate(true);
+    try {
+      await api.adminUpdateReferralSettings(rate);
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSavingRate(false);
+    }
+  }
+
+  async function handleSettle(userId) {
+    if (!confirm('确认把这位学员当前待结算的分润都标记为已结算？')) return;
+    setSettlingId(userId);
+    try {
+      await api.adminSettleReferrals(userId);
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSettlingId(null);
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      {error && <p className="text-vermilion text-sm">{error}</p>}
+
+      <form onSubmit={handleSaveRate} className="flex items-center gap-3 border border-ink/10 rounded-xl p-4">
+        <label className="text-sm text-ink/60 shrink-0">每次转化分润金额（¥）</label>
+        <input
+          type="number"
+          min={0}
+          step="0.01"
+          value={rateDraft}
+          onChange={(e) => setRateDraft(e.target.value)}
+          className="border border-ink/15 rounded-lg px-3 py-1.5 text-sm w-28"
+        />
+        <button
+          type="submit"
+          disabled={savingRate}
+          className="bg-vermilion text-paper rounded-lg px-4 py-1.5 text-sm disabled:opacity-50 shrink-0"
+        >
+          保存
+        </button>
+      </form>
+
+      {data.rows.length === 0 && <p className="text-sm text-ink/40">还没有分享数据</p>}
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-left text-ink/40 border-b border-ink/10">
+              <th className="py-2 font-normal">学员</th>
+              <th className="py-2 font-normal">推荐码</th>
+              <th className="py-2 font-normal">分享次数</th>
+              <th className="py-2 font-normal">点击次数</th>
+              <th className="py-2 font-normal">体验次数</th>
+              <th className="py-2 font-normal">转化次数</th>
+              <th className="py-2 font-normal">待结算分润</th>
+              <th className="py-2 font-normal">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.rows.map((r) => (
+              <tr key={r.user_id} className="border-b border-ink/5">
+                <td className="py-2 whitespace-nowrap">{r.email}</td>
+                <td className="py-2 font-mono text-xs whitespace-nowrap">{r.referral_code}</td>
+                <td className="py-2">{r.share_count}</td>
+                <td className="py-2">{r.click_count}</td>
+                <td className="py-2">{r.trial_count}</td>
+                <td className="py-2">{r.converted_count}</td>
+                <td className="py-2 text-vermilion whitespace-nowrap">¥{r.pending_commission.toFixed(2)}</td>
+                <td className="py-2 whitespace-nowrap">
+                  <button
+                    onClick={() => handleSettle(r.user_id)}
+                    disabled={settlingId === r.user_id || r.pending_commission <= 0}
+                    className="text-xs text-vermilion disabled:opacity-30"
+                  >
+                    {settlingId === r.user_id ? '处理中…' : '标记已结算'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export default function Admin() {
   const [unlocked, setUnlocked] = useState(!!localStorage.getItem('adminPassword'));
   const [tab, setTab] = useState('codes');
@@ -461,6 +574,7 @@ export default function Admin() {
             ['codes', '激活码'],
             ['students', '学员'],
             ['trial', '试用用户'],
+            ['referrals', '分享数据'],
             ['skills', 'Skill内容'],
             ['modules', '学习模块'],
           ].map(([key, label]) => (
@@ -478,6 +592,7 @@ export default function Admin() {
         {tab === 'codes' && <CodesPanel />}
         {tab === 'students' && <StudentsPanel />}
         {tab === 'trial' && <TrialUsersPanel />}
+        {tab === 'referrals' && <ReferralsPanel />}
         {tab === 'skills' && <SkillsPanel />}
         {tab === 'modules' && <ModulesPanel />}
       </main>

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { api } from '../api';
 
 const AuthContext = createContext(null);
 
@@ -11,7 +12,18 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem('token');
     if (raw && token) {
       try {
-        setUser(JSON.parse(raw));
+        const parsed = JSON.parse(raw);
+        setUser(parsed);
+        if (!parsed.referral_code) {
+          api
+            .getMe()
+            .then(({ user: fresh }) => {
+              const merged = { ...parsed, referral_code: fresh.referral_code };
+              localStorage.setItem('user', JSON.stringify(merged));
+              setUser(merged);
+            })
+            .catch(() => {});
+        }
       } catch {
         localStorage.removeItem('user');
       }

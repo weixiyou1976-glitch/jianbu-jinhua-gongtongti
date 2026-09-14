@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { requireTrialAuth } = require('../middleware/auth');
 const { buildSystemPrompt } = require('../lib/coachPrompt');
+const { findReferrerByCode, upsertRecord } = require('./referral');
 
 const router = express.Router();
 
@@ -27,7 +28,21 @@ router.post('/trial/start', (req, res) => {
     return res.status(409).json({ error: '你已经体验过了，欢迎加入渐步', already_used: true });
   }
 
-  const info = db.prepare('INSERT INTO trial_users (wechat_id) VALUES (?)').run(wechatId);
+  const { ref, skill_id: refSkillId, share_type: refShareType } = req.body || {};
+  const referrer = ref ? findReferrerByCode(ref) : null;
+  const hasReferral = referrer && refSkillId && (refShareType === 'stamped' || refShareType === 'basic');
+
+  const info = db
+    .prepare(
+      'INSERT INTO trial_users (wechat_id, referred_by, referred_skill_id, referred_share_type) VALUES (?, ?, ?, ?)'
+    )
+    .run(wechatId, hasReferral ? referrer.referral_code : null, hasReferral ? refSkillId : null, hasReferral ? refShareType : null);
+
+  if (hasReferral) {
+    const recordId = upsertRecord(referrer.id, referrer.referral_code, refSkillId, refShareType);
+    db.prepare('UPDATE referral_records SET trial_count = trial_count + 1 WHERE id = ?').run(recordId);
+  }
+
   res.json({ token: signTrialToken(info.lastInsertRowid) });
 });
 

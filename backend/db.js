@@ -126,6 +126,30 @@ CREATE TABLE IF NOT EXISTS trial_coach_messages (
 );
 
 CREATE INDEX IF NOT EXISTS idx_trial_coach_messages_trial ON trial_coach_messages(trial_user_id, id);
+
+CREATE TABLE IF NOT EXISTS referral_records (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  referrer_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  referral_code TEXT NOT NULL,
+  skill_id INTEGER NOT NULL REFERENCES skills(id),
+  share_type TEXT NOT NULL CHECK (share_type IN ('stamped', 'basic')),
+  share_count INTEGER NOT NULL DEFAULT 0,
+  click_count INTEGER NOT NULL DEFAULT 0,
+  trial_count INTEGER NOT NULL DEFAULT 0,
+  converted_count INTEGER NOT NULL DEFAULT 0,
+  settled INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(referrer_user_id, skill_id, share_type)
+);
+
+CREATE INDEX IF NOT EXISTS idx_referral_records_code ON referral_records(referral_code);
+CREATE INDEX IF NOT EXISTS idx_referral_records_referrer ON referral_records(referrer_user_id);
+
+CREATE TABLE IF NOT EXISTS referral_settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  commission_per_conversion REAL NOT NULL DEFAULT 0
+);
+INSERT OR IGNORE INTO referral_settings (id, commission_per_conversion) VALUES (1, 0);
 `);
 
 const skillColumns = db.prepare(`PRAGMA table_info(skills)`).all().map((c) => c.name);
@@ -145,6 +169,40 @@ if (!skillColumns.includes('insight_audio_url')) {
   db.exec(`ALTER TABLE skills ADD COLUMN insight_audio_url TEXT NOT NULL DEFAULT ''`);
 }
 
+const userColumns = db.prepare(`PRAGMA table_info(users)`).all().map((c) => c.name);
+if (!userColumns.includes('referral_code')) {
+  db.exec(`ALTER TABLE users ADD COLUMN referral_code TEXT`);
+}
+db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code IS NOT NULL`);
+
+const trialUserColumns = db.prepare(`PRAGMA table_info(trial_users)`).all().map((c) => c.name);
+if (!trialUserColumns.includes('referred_by')) {
+  db.exec(`ALTER TABLE trial_users ADD COLUMN referred_by TEXT`);
+}
+if (!trialUserColumns.includes('referred_skill_id')) {
+  db.exec(`ALTER TABLE trial_users ADD COLUMN referred_skill_id INTEGER`);
+}
+if (!trialUserColumns.includes('referred_share_type')) {
+  db.exec(`ALTER TABLE trial_users ADD COLUMN referred_share_type TEXT`);
+}
+
+const REFERRAL_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function generateReferralCode() {
+  let code;
+  do {
+    code = Array.from({ length: 6 }, () => REFERRAL_CODE_ALPHABET[Math.floor(Math.random() * REFERRAL_CODE_ALPHABET.length)]).join('');
+  } while (db.prepare('SELECT 1 FROM users WHERE referral_code = ?').get(code));
+  return code;
+}
+
+const usersMissingCode = db.prepare('SELECT id FROM users WHERE referral_code IS NULL').all();
+if (usersMissingCode.length > 0) {
+  const assignCode = db.prepare('UPDATE users SET referral_code = ? WHERE id = ?');
+  for (const u of usersMissingCode) {
+    assignCode.run(generateReferralCode(), u.id);
+  }
+}
+
 function setSkillTags(skillId, tags) {
   db.prepare('DELETE FROM skill_tags WHERE skill_id = ?').run(skillId);
   const insert = db.prepare('INSERT INTO skill_tags (skill_id, tag) VALUES (?, ?)');
@@ -158,3 +216,4 @@ function getModuleSkillIdSet() {
 module.exports = db;
 module.exports.setSkillTags = setSkillTags;
 module.exports.getModuleSkillIdSet = getModuleSkillIdSet;
+module.exports.generateReferralCode = generateReferralCode;

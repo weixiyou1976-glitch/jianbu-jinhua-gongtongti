@@ -70,11 +70,72 @@ router.get('/trial-users', (req, res) => {
 
 router.put('/trial-users/:id', (req, res) => {
   const { converted } = req.body || {};
-  const info = db
-    .prepare('UPDATE trial_users SET converted = ? WHERE id = ?')
-    .run(converted ? 1 : 0, req.params.id);
-  if (info.changes === 0) return res.status(404).json({ error: '记录不存在' });
+  const trial = db.prepare('SELECT * FROM trial_users WHERE id = ?').get(req.params.id);
+  if (!trial) return res.status(404).json({ error: '记录不存在' });
+
+  const wasConverted = !!trial.converted;
+  const nowConverted = !!converted;
+  db.prepare('UPDATE trial_users SET converted = ? WHERE id = ?').run(nowConverted ? 1 : 0, trial.id);
+
+  if (nowConverted && !wasConverted && trial.referred_by && trial.referred_skill_id && trial.referred_share_type) {
+    const referrer = db.prepare('SELECT id FROM users WHERE referral_code = ?').get(trial.referred_by);
+    if (referrer) {
+      const record = db
+        .prepare(
+          'SELECT id FROM referral_records WHERE referrer_user_id = ? AND skill_id = ? AND share_type = ?'
+        )
+        .get(referrer.id, trial.referred_skill_id, trial.referred_share_type);
+      if (record) {
+        db.prepare('UPDATE referral_records SET converted_count = converted_count + 1 WHERE id = ?').run(record.id);
+      }
+    }
+  }
+
   res.json({ ok: true });
+});
+
+router.get('/referrals', (req, res) => {
+  const settings = db.prepare('SELECT commission_per_conversion FROM referral_settings WHERE id = 1').get();
+  const rate = settings?.commission_per_conversion || 0;
+
+  const rows = db
+    .prepare(
+      `SELECT u.id AS user_id, u.email, u.referral_code,
+              COALESCE(SUM(r.share_count), 0) AS share_count,
+              COALESCE(SUM(r.click_count), 0) AS click_count,
+              COALESCE(SUM(r.trial_count), 0) AS trial_count,
+              COALESCE(SUM(r.converted_count), 0) AS converted_count,
+              COALESCE(SUM(CASE WHEN r.settled = 0 THEN r.converted_count ELSE 0 END), 0) AS unsettled_converted_count
+       FROM users u
+       JOIN referral_records r ON r.referrer_user_id = u.id
+       GROUP BY u.id
+       ORDER BY converted_count DESC, click_count DESC`
+    )
+    .all();
+
+  res.json({
+    commission_per_conversion: rate,
+    rows: rows.map((r) => ({ ...r, pending_commission: r.unsettled_converted_count * rate })),
+  });
+});
+
+router.put('/referrals/:userId/settle', (req, res) => {
+  const info = db
+    .prepare('UPDATE referral_records SET settled = 1 WHERE referrer_user_id = ? AND settled = 0')
+    .run(req.params.userId);
+  res.json({ ok: true, settled_records: info.changes });
+});
+
+router.get('/referral-settings', (req, res) => {
+  const settings = db.prepare('SELECT commission_per_conversion FROM referral_settings WHERE id = 1').get();
+  res.json(settings || { commission_per_conversion: 0 });
+});
+
+router.put('/referral-settings', (req, res) => {
+  const rate = Number(req.body?.commission_per_conversion);
+  if (!Number.isFinite(rate) || rate < 0) return res.status(400).json({ error: '分润金额需为非负数字' });
+  db.prepare('UPDATE referral_settings SET commission_per_conversion = ? WHERE id = 1').run(rate);
+  res.json({ ok: true, commission_per_conversion: rate });
 });
 
 router.post('/students/:id/reset-password', (req, res) => {

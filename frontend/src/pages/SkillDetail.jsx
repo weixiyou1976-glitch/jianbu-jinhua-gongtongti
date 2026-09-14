@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api';
 import CoachPanel from '../components/CoachPanel';
 import InsightAudioButton from '../components/InsightAudioButton';
+import ShareModal from '../components/ShareModal';
 
 export default function SkillDetail() {
   const { id } = useParams();
@@ -13,6 +14,7 @@ export default function SkillDetail() {
   const [submitting, setSubmitting] = useState(false);
   const [stampNumber, setStampNumber] = useState(null);
   const [insightExpanded, setInsightExpanded] = useState(false);
+  const [showShare, setShowShare] = useState(false);
 
   function load() {
     api
@@ -298,7 +300,26 @@ export default function SkillDetail() {
             <span />
           )}
         </nav>
+
+        {/* 7. 分享 */}
+        <div className="pt-2">
+          <button
+            onClick={() => setShowShare(true)}
+            className="w-full border border-vermilion/30 text-vermilion rounded-lg py-3 text-sm font-medium"
+          >
+            分享给你关心的人
+          </button>
+        </div>
       </main>
+
+      {showShare && (
+        <ShareModal
+          skill={skill}
+          shareType={stamp || stampNumber ? 'stamped' : 'basic'}
+          gainedText={stamp?.gained ?? form.gained}
+          onClose={() => setShowShare(false)}
+        />
+      )}
     </div>
   );
 }

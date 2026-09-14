@@ -5,11 +5,33 @@ import TrialJoinCard from '../components/TrialJoinCard';
 import InsightAudioButton from '../components/InsightAudioButton';
 
 const TRIAL_TOKEN_KEY = 'trialToken';
+const REFERRAL_KEY = 'trialReferral';
+const REFERRAL_CLICK_TRACKED_KEY = 'trialReferralClickTracked';
 const ALREADY_USED_MSG = '你已经体验过了，欢迎加入渐步';
 const EXPIRED_MSG = '体验时间已结束，欢迎加入渐步';
 const NO_MATCH_MSG = '还没有匹配到Skill';
 
-function WechatScreen({ onStarted, onAlreadyUsed }) {
+function readReferralFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get('ref');
+  const skill = params.get('skill');
+  const type = params.get('type');
+  if (ref && skill && (type === 'stamped' || type === 'basic')) {
+    return { ref, skill_id: Number(skill), share_type: type };
+  }
+  return null;
+}
+
+function getStoredReferral() {
+  try {
+    const raw = sessionStorage.getItem(REFERRAL_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function WechatScreen({ onStarted, onAlreadyUsed, referral }) {
   const [wechatId, setWechatId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -20,7 +42,7 @@ function WechatScreen({ onStarted, onAlreadyUsed }) {
     setLoading(true);
     setError('');
     try {
-      const res = await api.trialStart(wechatId.trim());
+      const res = await api.trialStart(wechatId.trim(), referral || undefined);
       localStorage.setItem(TRIAL_TOKEN_KEY, res.token);
       onStarted();
     } catch (err) {
@@ -328,8 +350,30 @@ function DoneScreen({ skill }) {
 export default function Trial() {
   const [phase, setPhase] = useState('loading');
   const [skill, setSkill] = useState(null);
+  const [referral, setReferral] = useState(null);
 
   useEffect(() => {
+    const urlReferral = readReferralFromUrl();
+    const activeReferral = urlReferral || getStoredReferral();
+    setReferral(activeReferral);
+
+    if (urlReferral) {
+      try {
+        sessionStorage.setItem(REFERRAL_KEY, JSON.stringify(urlReferral));
+      } catch {
+        // 忽略隐私模式下sessionStorage不可用的情况
+      }
+      const trackedKey = JSON.stringify(urlReferral);
+      if (sessionStorage.getItem(REFERRAL_CLICK_TRACKED_KEY) !== trackedKey) {
+        api.recordReferralClick(urlReferral.ref, urlReferral.skill_id, urlReferral.share_type).catch(() => {});
+        try {
+          sessionStorage.setItem(REFERRAL_CLICK_TRACKED_KEY, trackedKey);
+        } catch {
+          // 忽略隐私模式下sessionStorage不可用的情况
+        }
+      }
+    }
+
     const token = localStorage.getItem(TRIAL_TOKEN_KEY);
     if (!token) {
       setPhase('wechat');
@@ -356,7 +400,11 @@ export default function Trial() {
   if (phase === 'loading') return <div className="min-h-screen bg-paper" />;
   if (phase === 'wechat') {
     return (
-      <WechatScreen onStarted={() => setPhase('concern')} onAlreadyUsed={() => setPhase('used')} />
+      <WechatScreen
+        referral={referral}
+        onStarted={() => setPhase('concern')}
+        onAlreadyUsed={() => setPhase('used')}
+      />
     );
   }
   if (phase === 'used') return <UsedScreen />;

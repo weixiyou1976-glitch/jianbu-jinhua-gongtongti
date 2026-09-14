@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
+const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -33,22 +34,32 @@ router.post('/register', (req, res) => {
   const now = new Date().toISOString();
 
   const insertUser = db.prepare(`
-    INSERT INTO users (email, password_hash, activation_code, activated_at, enrolled_at)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO users (email, password_hash, activation_code, activated_at, enrolled_at, referral_code)
+    VALUES (?, ?, ?, ?, ?, ?)
   `);
   const markCode = db.prepare(`
     UPDATE activation_codes SET used = 1, used_by = ?, used_at = ? WHERE code = ?
   `);
 
   const tx = db.transaction(() => {
-    const info = insertUser.run(email.trim().toLowerCase(), passwordHash, code.code, now, now);
+    const info = insertUser.run(
+      email.trim().toLowerCase(),
+      passwordHash,
+      code.code,
+      now,
+      now,
+      db.generateReferralCode()
+    );
     markCode.run(info.lastInsertRowid, now, code.code);
     return info.lastInsertRowid;
   });
 
   const userId = tx();
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
-  res.json({ token: signToken(user), user: { id: user.id, email: user.email, enrolled_at: user.enrolled_at } });
+  res.json({
+    token: signToken(user),
+    user: { id: user.id, email: user.email, enrolled_at: user.enrolled_at, referral_code: user.referral_code },
+  });
 });
 
 router.post('/login', (req, res) => {
@@ -60,7 +71,16 @@ router.post('/login', (req, res) => {
     return res.status(401).json({ error: '邮箱或密码错误' });
   }
 
-  res.json({ token: signToken(user), user: { id: user.id, email: user.email, enrolled_at: user.enrolled_at } });
+  res.json({
+    token: signToken(user),
+    user: { id: user.id, email: user.email, enrolled_at: user.enrolled_at, referral_code: user.referral_code },
+  });
+});
+
+router.get('/me', requireAuth, (req, res) => {
+  const user = db.prepare('SELECT id, email, enrolled_at, referral_code FROM users WHERE id = ?').get(req.user.id);
+  if (!user) return res.status(404).json({ error: '用户不存在' });
+  res.json({ user });
 });
 
 module.exports = router;

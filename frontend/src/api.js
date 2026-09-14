@@ -51,6 +51,7 @@ async function streamRequest(path, body, { trial } = {}) {
 export const api = {
   register: (payload) => request('/auth/register', { method: 'POST', body: payload }),
   login: (payload) => request('/auth/login', { method: 'POST', body: payload }),
+  getMe: () => request('/auth/me'),
   getCurrentSkill: () => request('/skills/current'),
   getSkills: (params = {}) => {
     const qs = new URLSearchParams(params).toString();
@@ -71,12 +72,18 @@ export const api = {
   resetCoach: (skill_id) => request(`/coach/${skill_id}`, { method: 'DELETE' }),
   coachMessage: (skill_id, message) => streamRequest('/coach/message', { skill_id, message }),
 
-  trialStart: (wechat_id) => request('/trial/start', { method: 'POST', body: { wechat_id } }),
+  trialStart: (wechat_id, referral) =>
+    request('/trial/start', { method: 'POST', body: { wechat_id, ...referral } }),
   trialMatch: (concern) => request('/trial/match', { method: 'POST', body: { concern }, trial: true }),
   getTrialSkill: () => request('/trial/skill', { trial: true }),
   getTrialCoachHistory: () => request('/trial/coach/history', { trial: true }),
   trialCoachMessage: (skill_id, message) =>
     streamRequest('/trial/coach/message', { skill_id, message }, { trial: true }),
+
+  recordShare: (skill_id, share_type) =>
+    request('/referral/share', { method: 'POST', body: { skill_id, share_type } }),
+  recordReferralClick: (ref, skill_id, share_type) =>
+    request('/referral/click', { method: 'POST', body: { ref, skill_id, share_type } }),
 
   adminGenerateCodes: (count) => request('/admin/activation-codes', { method: 'POST', body: { count }, admin: true }),
   adminListCodes: () => request('/admin/activation-codes', { admin: true }),
@@ -85,6 +92,12 @@ export const api = {
   adminListTrialUsers: () => request('/admin/trial-users', { admin: true }),
   adminUpdateTrialUser: (id, payload) =>
     request(`/admin/trial-users/${id}`, { method: 'PUT', body: payload, admin: true }),
+  adminListReferrals: () => request('/admin/referrals', { admin: true }),
+  adminSettleReferrals: (userId) =>
+    request(`/admin/referrals/${userId}/settle`, { method: 'PUT', admin: true }),
+  adminGetReferralSettings: () => request('/admin/referral-settings', { admin: true }),
+  adminUpdateReferralSettings: (commission_per_conversion) =>
+    request('/admin/referral-settings', { method: 'PUT', body: { commission_per_conversion }, admin: true }),
   adminListSkills: () => request('/admin/skills', { admin: true }),
   adminCreateSkill: (payload) => request('/admin/skills', { method: 'POST', body: payload, admin: true }),
   adminUpdateSkill: (id, payload) => request(`/admin/skills/${id}`, { method: 'PUT', body: payload, admin: true }),
