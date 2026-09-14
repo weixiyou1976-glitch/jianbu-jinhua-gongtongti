@@ -9,18 +9,51 @@ import AoLongAvatar from '../components/AoLongAvatar';
 const STAMP_EXPLAIN_TEXT =
   '每次在真实场景里用了这个Skill，就提交一枚策印。同一个Skill可以多次提交，每次记录不同的经历。';
 
+const EMPTY_FORM = { learned: '', practiced: '', gained: '' };
+
+function readDraft(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const draft = JSON.parse(raw);
+    if (draft && (draft.learned || draft.practiced || draft.gained)) return draft;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function writeDraft(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch {
+    // 忽略隐私模式下localStorage不可用的情况
+  }
+}
+
+function clearDraft(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // 忽略隐私模式下localStorage不可用的情况
+  }
+}
+
 export default function SkillDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [skill, setSkill] = useState(null);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ learned: '', practiced: '', gained: '' });
+  const [form, setForm] = useState(EMPTY_FORM);
   const [submitting, setSubmitting] = useState(false);
   const [insightExpanded, setInsightExpanded] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [stampHistory, setStampHistory] = useState([]);
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [showStampForm, setShowStampForm] = useState(false);
+  const [showRestoreBanner, setShowRestoreBanner] = useState(false);
+
+  const draftKey = stampHistory.length === 0 ? `stamp_draft_${id}` : `stamp_draft_${id}_new`;
 
   function load() {
     api
@@ -32,7 +65,16 @@ export default function SkillDetail() {
   function loadHistory() {
     api
       .getSkillStamps(id)
-      .then(setStampHistory)
+      .then((rows) => {
+        setStampHistory(rows);
+        if (rows.length === 0) {
+          const draft = readDraft(`stamp_draft_${id}`);
+          if (draft) {
+            setForm(draft);
+            setShowRestoreBanner(true);
+          }
+        }
+      })
       .catch(() => {});
   }
 
@@ -41,7 +83,8 @@ export default function SkillDetail() {
     setStampHistory([]);
     setShowAllHistory(false);
     setShowStampForm(false);
-    setForm({ learned: '', practiced: '', gained: '' });
+    setForm(EMPTY_FORM);
+    setShowRestoreBanner(false);
     setInsightExpanded(false);
     load();
     loadHistory();
@@ -49,15 +92,41 @@ export default function SkillDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+  function updateForm(field, value) {
+    setForm((f) => {
+      const next = { ...f, [field]: value };
+      writeDraft(draftKey, next);
+      return next;
+    });
+  }
+
+  function handleStartNewStamp() {
+    setShowStampForm(true);
+    setShowRestoreBanner(false);
+    const draft = readDraft(`stamp_draft_${id}_new`);
+    if (draft) {
+      setForm(draft);
+      setShowRestoreBanner(true);
+    }
+  }
+
+  function handleClearDraft() {
+    clearDraft(draftKey);
+    setForm(EMPTY_FORM);
+    setShowRestoreBanner(false);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
     setError('');
     try {
       const res = await api.submitStamp(id, form);
+      clearDraft(draftKey);
       setStampHistory((h) => [res.stamp, ...h]);
-      setForm({ learned: '', practiced: '', gained: '' });
+      setForm(EMPTY_FORM);
       setShowStampForm(false);
+      setShowRestoreBanner(false);
       load();
     } catch (err) {
       setError(err.message);
@@ -277,7 +346,7 @@ export default function SkillDetail() {
           {stampHistory.length > 0 && !showStampForm && (
             <button
               type="button"
-              onClick={() => setShowStampForm(true)}
+              onClick={handleStartNewStamp}
               className="w-full border border-vermilion/30 text-vermilion rounded-lg py-3 text-sm font-medium"
             >
               再练一次，再提一枚
@@ -286,11 +355,26 @@ export default function SkillDetail() {
 
           {(stampHistory.length === 0 || showStampForm) && (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {showRestoreBanner && (
+                <div
+                  className="flex items-center justify-between text-xs rounded-lg px-3 py-2"
+                  style={{ backgroundColor: '#E8F5E9', color: '#666666' }}
+                >
+                  <span>✓ 已为你恢复上次未提交的内容</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowRestoreBanner(false)}
+                    className="text-ink/30 px-1 shrink-0"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
               <div>
                 <label className="text-xs text-ink/50 mb-1 block">我学了</label>
                 <textarea
                   value={form.learned}
-                  onChange={(e) => setForm((f) => ({ ...f, learned: e.target.value }))}
+                  onChange={(e) => updateForm('learned', e.target.value)}
                   className="w-full border border-ink/15 rounded-lg p-3 text-sm bg-white/60 focus:outline-none focus:border-vermilion"
                   rows={2}
                   required
@@ -300,7 +384,7 @@ export default function SkillDetail() {
                 <label className="text-xs text-ink/50 mb-1 block">我练了</label>
                 <textarea
                   value={form.practiced}
-                  onChange={(e) => setForm((f) => ({ ...f, practiced: e.target.value }))}
+                  onChange={(e) => updateForm('practiced', e.target.value)}
                   className="w-full border border-ink/15 rounded-lg p-3 text-sm bg-white/60 focus:outline-none focus:border-vermilion"
                   rows={2}
                   required
@@ -310,7 +394,7 @@ export default function SkillDetail() {
                 <label className="text-xs text-ink/50 mb-1 block">我得到了</label>
                 <textarea
                   value={form.gained}
-                  onChange={(e) => setForm((f) => ({ ...f, gained: e.target.value }))}
+                  onChange={(e) => updateForm('gained', e.target.value)}
                   className="w-full border border-ink/15 rounded-lg p-3 text-sm bg-white/60 focus:outline-none focus:border-vermilion"
                   rows={2}
                   required
@@ -334,6 +418,11 @@ export default function SkillDetail() {
                     取消
                   </button>
                 )}
+              </div>
+              <div className="text-center">
+                <button type="button" onClick={handleClearDraft} className="text-xs text-ink/30 underline">
+                  清空重写
+                </button>
               </div>
             </form>
           )}
