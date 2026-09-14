@@ -1,5 +1,4 @@
-// TODO: 傲龙提供真实头像图片后，把下面的 AVATAR_URL 换成图片地址即可全站生效
-const AVATAR_URL = null;
+const AVATAR_URL = '/avatar/aolong.jpg';
 
 export default function AoLongAvatar({ size = 32, className = '' }) {
   if (AVATAR_URL) {
