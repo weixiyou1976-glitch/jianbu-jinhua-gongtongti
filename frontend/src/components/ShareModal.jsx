@@ -3,6 +3,15 @@ import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { generateShareImage } from '../lib/shareImage';
 
+function getSaveInstruction() {
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/.test(ua);
+  if (isIOS) return "长按图片 → 选择'存储图像' → 保存到相册 → 发到微信让朋友扫码";
+  if (isAndroid) return "长按图片 → 选择'保存图片' → 发到微信让朋友扫码";
+  return '长按或右键图片保存，发到微信让朋友扫码';
+}
+
 export default function ShareModal({ skill, shareType, gainedText, onClose }) {
   const { user } = useAuth();
   const [imageUrl, setImageUrl] = useState(null);
@@ -34,24 +43,6 @@ export default function ShareModal({ skill, shareType, gainedText, onClose }) {
     ? `${window.location.origin}/trial?ref=${referralCode}&skill=${skill.id}&type=${shareType}`
     : '';
 
-  async function handleSave() {
-    if (!imageUrl) return;
-    try {
-      const res = await fetch(imageUrl);
-      const blob = await res.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = `渐步-${skill.skill_name}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(blobUrl);
-    } catch {
-      // 忽略保存失败，用户仍可长按图片保存
-    }
-  }
-
   function handleCopyLink() {
     if (!shareLink) return;
     navigator.clipboard?.writeText(shareLink).catch(() => {});
@@ -76,25 +67,25 @@ export default function ShareModal({ skill, shareType, gainedText, onClose }) {
         )}
 
         {imageUrl && (
-          <img src={imageUrl} alt="分享图片" className="w-full rounded-xl border border-ink/10 mb-4" />
-        )}
+          <>
+            <p className="text-xs text-ink/60 bg-vermilion/5 border border-vermilion/15 rounded-lg py-2 text-center mb-3">
+              👇 长按下方图片保存
+            </p>
+            <img
+              src={imageUrl}
+              alt="分享图片"
+              className="w-full mx-auto rounded-xl border border-ink/10 mb-2 block"
+              style={{ maxWidth: 375 }}
+            />
+            <p className="text-xs text-ink/40 text-center mb-4 leading-relaxed">{getSaveInstruction()}</p>
 
-        {imageUrl && (
-          <div className="space-y-2">
-            <button
-              onClick={handleSave}
-              className="w-full bg-vermilion text-paper rounded-lg py-3 text-sm font-medium"
-            >
-              保存图片
-            </button>
             <button
               onClick={handleCopyLink}
               className="w-full border border-vermilion/30 text-vermilion rounded-lg py-3 text-sm font-medium"
             >
               {copied ? '✓ 链接已复制' : '复制链接'}
             </button>
-            <p className="text-xs text-ink/35 text-center pt-1">长按图片也可以直接保存</p>
-          </div>
+          </>
         )}
       </div>
     </div>
