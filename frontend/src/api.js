@@ -70,6 +70,7 @@ export const api = {
   adminGenerateCodes: (count) => request('/admin/activation-codes', { method: 'POST', body: { count }, admin: true }),
   adminListCodes: () => request('/admin/activation-codes', { admin: true }),
   adminListStudents: () => request('/admin/students', { admin: true }),
+  adminResetPassword: (id) => request(`/admin/students/${id}/reset-password`, { method: 'POST', admin: true }),
   adminListSkills: () => request('/admin/skills', { admin: true }),
   adminCreateSkill: (payload) => request('/admin/skills', { method: 'POST', body: payload, admin: true }),
   adminUpdateSkill: (id, payload) => request(`/admin/skills/${id}`, { method: 'PUT', body: payload, admin: true }),

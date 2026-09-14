@@ -165,10 +165,30 @@ function CodesPanel() {
 function StudentsPanel() {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState('');
+  const [resetResults, setResetResults] = useState({});
+  const [resettingId, setResettingId] = useState(null);
 
   useEffect(() => {
     api.adminListStudents().then(setStudents).catch((err) => setError(err.message));
   }, []);
+
+  async function handleReset(id, email) {
+    if (!confirm(`确认重置 ${email} 的登录密码？重置后原密码立即失效，需要你手动把新密码告诉学员。`)) return;
+    setResettingId(id);
+    setError('');
+    try {
+      const res = await api.adminResetPassword(id);
+      setResetResults((m) => ({ ...m, [id]: res.password }));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setResettingId(null);
+    }
+  }
+
+  function copyPassword(password) {
+    navigator.clipboard?.writeText(password).catch(() => {});
+  }
 
   return (
     <div className="space-y-2">
@@ -181,15 +201,36 @@ function StudentsPanel() {
               <th className="py-2 font-normal">入学日期</th>
               <th className="py-2 font-normal">策印数</th>
               <th className="py-2 font-normal">完成度</th>
+              <th className="py-2 font-normal">操作</th>
             </tr>
           </thead>
           <tbody>
             {students.map((s) => (
-              <tr key={s.id} className="border-b border-ink/5">
+              <tr key={s.id} className="border-b border-ink/5 align-top">
                 <td className="py-2">{s.email}</td>
                 <td className="py-2 text-ink/50">{s.enrolled_at?.slice(0, 10)}</td>
                 <td className="py-2">{s.stamp_count}</td>
                 <td className="py-2 text-vermilion">{s.percent}%</td>
+                <td className="py-2">
+                  <button
+                    onClick={() => handleReset(s.id, s.email)}
+                    disabled={resettingId === s.id}
+                    className="text-xs text-vermilion disabled:opacity-40"
+                  >
+                    {resettingId === s.id ? '重置中…' : '重置密码'}
+                  </button>
+                  {resetResults[s.id] && (
+                    <div className="mt-1.5 flex items-center gap-2 bg-vermilion/5 border border-vermilion/20 rounded-lg px-2 py-1">
+                      <span className="font-mono text-xs text-ink">{resetResults[s.id]}</span>
+                      <button
+                        onClick={() => copyPassword(resetResults[s.id])}
+                        className="text-[10px] text-ink/40 border border-ink/15 rounded px-1.5 py-0.5 shrink-0"
+                      >
+                        复制
+                      </button>
+                    </div>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

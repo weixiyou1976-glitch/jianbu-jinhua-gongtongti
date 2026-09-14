@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { requireAdmin } = require('../middleware/auth');
 
@@ -52,6 +53,17 @@ router.get('/students', (req, res) => {
     return { ...u, stamp_count: stampCount, percent: Math.round((stampCount / totalWeeks) * 100) };
   });
   res.json(withProgress);
+});
+
+router.post('/students/:id/reset-password', (req, res) => {
+  const user = db.prepare('SELECT id, email FROM users WHERE id = ?').get(req.params.id);
+  if (!user) return res.status(404).json({ error: '学员不存在' });
+
+  const newPassword = crypto.randomBytes(4).toString('hex');
+  const passwordHash = bcrypt.hashSync(newPassword, 10);
+  db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(passwordHash, user.id);
+
+  res.json({ email: user.email, password: newPassword });
 });
 
 function withParsedTags(row) {
