@@ -2,9 +2,12 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
-const { requireAuth } = require('../middleware/auth');
+const { requireAuth, ACCOUNT_LOCKED_MESSAGE } = require('../middleware/auth');
 
 const router = express.Router();
+
+const LOGIN_WHILE_LOCKED_MESSAGE =
+  '你的账号因为在多个设备登录已被锁定，请联系傲龙解锁（微信：751759951）';
 
 function signToken(user) {
   return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
@@ -12,8 +15,38 @@ function signToken(user) {
   });
 }
 
+function registerDevice(userId, fingerprint, deviceName) {
+  db.prepare(
+    `INSERT INTO devices (user_id, device_fingerprint, device_name) VALUES (?, ?, ?)`
+  ).run(userId, fingerprint, deviceName || '');
+}
+
+// 返回 null 表示放行；返回字符串表示登录应被拒绝的原因
+function checkAndTrackDevice(user, fingerprint, deviceName) {
+  if (!fingerprint) return null;
+
+  const existingDevice = db
+    .prepare('SELECT id FROM devices WHERE user_id = ? AND device_fingerprint = ?')
+    .get(user.id, fingerprint);
+
+  if (existingDevice) {
+    db.prepare("UPDATE devices SET last_active_at = datetime('now') WHERE id = ?").run(existingDevice.id);
+    return null;
+  }
+
+  const deviceCount = db.prepare('SELECT COUNT(*) AS c FROM devices WHERE user_id = ?').get(user.id).c;
+  const limit = user.device_limit || 2;
+  if (deviceCount >= limit) {
+    db.prepare('UPDATE users SET account_locked = 1, locked_reason = ? WHERE id = ?').run('多设备登录', user.id);
+    return ACCOUNT_LOCKED_MESSAGE;
+  }
+
+  registerDevice(user.id, fingerprint, deviceName);
+  return null;
+}
+
 router.post('/register', (req, res) => {
-  const { activation_code, email, password } = req.body || {};
+  const { activation_code, email, password, device_fingerprint, device_name } = req.body || {};
   if (!activation_code || !email || !password) {
     return res.status(400).json({ error: '激活码、邮箱、密码均为必填' });
   }
@@ -55,6 +88,9 @@ router.post('/register', (req, res) => {
   });
 
   const userId = tx();
+  if (device_fingerprint) {
+    registerDevice(userId, device_fingerprint, device_name);
+  }
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
   res.json({
     token: signToken(user),
@@ -63,12 +99,21 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  const { email, password } = req.body || {};
+  const { email, password, device_fingerprint, device_name } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: '邮箱和密码均为必填' });
 
   const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email.trim().toLowerCase());
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     return res.status(401).json({ error: '邮箱或密码错误' });
+  }
+
+  if (user.account_locked) {
+    return res.status(401).json({ error: LOGIN_WHILE_LOCKED_MESSAGE, locked: true });
+  }
+
+  const lockMessage = checkAndTrackDevice(user, device_fingerprint, device_name);
+  if (lockMessage) {
+    return res.status(401).json({ error: lockMessage, locked: true });
   }
 
   res.json({

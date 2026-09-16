@@ -138,6 +138,40 @@ router.put('/referral-settings', (req, res) => {
   res.json({ ok: true, commission_per_conversion: rate });
 });
 
+router.get('/security', (req, res) => {
+  const users = db
+    .prepare('SELECT id, email, account_locked, locked_reason, device_limit FROM users ORDER BY created_at DESC')
+    .all();
+  const getDevices = db.prepare(
+    `SELECT id, device_fingerprint, device_name, first_login_at, last_active_at
+     FROM devices WHERE user_id = ? ORDER BY first_login_at ASC`
+  );
+  res.json(
+    users.map((u) => ({
+      ...u,
+      account_locked: !!u.account_locked,
+      devices: getDevices.all(u.id),
+    }))
+  );
+});
+
+router.post('/security/:userId/unlock', (req, res) => {
+  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(req.params.userId);
+  if (!user) return res.status(404).json({ error: '学员不存在' });
+  db.prepare('UPDATE users SET account_locked = 0, locked_reason = NULL WHERE id = ?').run(user.id);
+  if (req.body?.reset_devices) {
+    db.prepare('DELETE FROM devices WHERE user_id = ?').run(user.id);
+  }
+  res.json({ ok: true });
+});
+
+router.post('/security/:userId/clear-devices', (req, res) => {
+  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(req.params.userId);
+  if (!user) return res.status(404).json({ error: '学员不存在' });
+  db.prepare('DELETE FROM devices WHERE user_id = ?').run(user.id);
+  res.json({ ok: true });
+});
+
 router.post('/students/:id/reset-password', (req, res) => {
   const user = db.prepare('SELECT id, email FROM users WHERE id = ?').get(req.params.id);
   if (!user) return res.status(404).json({ error: '学员不存在' });
@@ -171,10 +205,10 @@ router.post('/skills', (req, res) => {
   const status = s.status === 'draft' ? 'draft' : 'published';
   const info = db.prepare(`
     INSERT INTO skills (week_number, title, skill_name, category, trigger_condition, key_question,
-      step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, tags, status, insight_audio_url)
+      step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe, growth_friction, growth_friction_ending, tags, status, insight_audio_url)
     VALUES (@week_number, @title, @skill_name, @category, @trigger_condition, @key_question,
-      @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @tags, @status, @insight_audio_url)
-  `).run({ growth_friction: '', key_question: '', insight_audio_url: '', ...s, tags: JSON.stringify(tags), status });
+      @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe, @growth_friction, @growth_friction_ending, @tags, @status, @insight_audio_url)
+  `).run({ growth_friction: '', growth_friction_ending: '', key_question: '', insight_audio_url: '', ...s, tags: JSON.stringify(tags), status });
   db.setSkillTags(info.lastInsertRowid, tags);
   res.json(withParsedTags(db.prepare('SELECT * FROM skills WHERE id = ?').get(info.lastInsertRowid)));
 });
@@ -190,7 +224,7 @@ router.put('/skills/:id', (req, res) => {
       category=@category, trigger_condition=@trigger_condition, key_question=@key_question,
       step_one=@step_one, step_two=@step_two, step_three=@step_three, memory_anchor=@memory_anchor,
       insight=@insight, case_study=@case_study, cognitive_reframe=@cognitive_reframe,
-      growth_friction=@growth_friction, tags=@tags, status=@status, insight_audio_url=@insight_audio_url
+      growth_friction=@growth_friction, growth_friction_ending=@growth_friction_ending, tags=@tags, status=@status, insight_audio_url=@insight_audio_url
     WHERE id=@id
   `).run(merged);
   db.setSkillTags(existing.id, tags);

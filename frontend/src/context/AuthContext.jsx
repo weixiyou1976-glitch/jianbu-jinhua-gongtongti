@@ -31,6 +31,14 @@ export function AuthProvider({ children }) {
     setReady(true);
   }, []);
 
+  useEffect(() => {
+    function handleLocked() {
+      setUser(null);
+    }
+    window.addEventListener('account-locked', handleLocked);
+    return () => window.removeEventListener('account-locked', handleLocked);
+  }, []);
+
   function login(token, userData) {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));

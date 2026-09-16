@@ -1,15 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 
+function readLockedMessage() {
+  try {
+    return sessionStorage.getItem('lockedMessage') || '';
+  } catch {
+    return '';
+  }
+}
+
 export default function Login() {
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ email: '', password: '', activation_code: '' });
-  const [error, setError] = useState('');
+  const [error, setError] = useState(readLockedMessage);
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem('lockedMessage');
+    } catch {
+      // 忽略隐私模式下sessionStorage不可用的情况
+    }
+  }, []);
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));

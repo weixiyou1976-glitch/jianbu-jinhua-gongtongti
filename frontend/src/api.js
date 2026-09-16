@@ -1,3 +1,5 @@
+import { getDeviceFingerprint, getDeviceName } from './lib/deviceFingerprint';
+
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 async function request(path, { method = 'GET', body, token, admin, trial } = {}) {
@@ -19,6 +21,16 @@ async function request(path, { method = 'GET', body, token, admin, trial } = {})
   const data = isJson ? await res.json() : await res.text();
 
   if (!res.ok) {
+    if (isJson && data.locked) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      try {
+        sessionStorage.setItem('lockedMessage', data.error);
+      } catch {
+        // 忽略隐私模式下sessionStorage不可用的情况
+      }
+      window.dispatchEvent(new Event('account-locked'));
+    }
     throw new Error((isJson && data.error) || '请求失败，请稍后重试');
   }
   return data;
@@ -48,9 +60,13 @@ async function streamRequest(path, body, { trial } = {}) {
   return res.body;
 }
 
+function withDevice(payload) {
+  return { ...payload, device_fingerprint: getDeviceFingerprint(), device_name: getDeviceName() };
+}
+
 export const api = {
-  register: (payload) => request('/auth/register', { method: 'POST', body: payload }),
-  login: (payload) => request('/auth/login', { method: 'POST', body: payload }),
+  register: (payload) => request('/auth/register', { method: 'POST', body: withDevice(payload) }),
+  login: (payload) => request('/auth/login', { method: 'POST', body: withDevice(payload) }),
   getMe: () => request('/auth/me'),
   getCurrentSkill: () => request('/skills/current'),
   getSkills: (params = {}) => {
@@ -73,6 +89,10 @@ export const api = {
   getCoachHistory: (skill_id) => request(`/coach/${skill_id}/history`),
   resetCoach: (skill_id) => request(`/coach/${skill_id}`, { method: 'DELETE' }),
   coachMessage: (skill_id, message) => streamRequest('/coach/message', { skill_id, message }),
+
+  getTodayQuote: () => request('/quotes/today'),
+  saveQuote: (skill_id, quote_content) => request('/quotes/save', { method: 'POST', body: { skill_id, quote_content } }),
+  getSavedQuotes: () => request('/quotes/saved'),
 
   trialStart: (wechat_id, referral) =>
     request('/trial/start', { method: 'POST', body: { wechat_id, ...referral } }),
@@ -110,6 +130,11 @@ export const api = {
   adminCreateModule: (payload) => request('/admin/modules', { method: 'POST', body: payload, admin: true }),
   adminUpdateModule: (id, payload) => request(`/admin/modules/${id}`, { method: 'PUT', body: payload, admin: true }),
   adminDeleteModule: (id) => request(`/admin/modules/${id}`, { method: 'DELETE', admin: true }),
+
+  adminListSecurity: () => request('/admin/security', { admin: true }),
+  adminUnlockAccount: (userId, resetDevices) =>
+    request(`/admin/security/${userId}/unlock`, { method: 'POST', body: { reset_devices: resetDevices }, admin: true }),
+  adminClearDevices: (userId) => request(`/admin/security/${userId}/clear-devices`, { method: 'POST', admin: true }),
 };
 
 export const API_BASE_URL = API_BASE;

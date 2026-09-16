@@ -12,6 +12,7 @@ import Modules from './pages/Modules';
 import ModuleDetail from './pages/ModuleDetail';
 import Stamp from './pages/Stamp';
 import Progress from './pages/Progress';
+import SavedQuotes from './pages/SavedQuotes';
 import AddToHomeScreen from './pages/AddToHomeScreen';
 import Admin from './pages/Admin';
 
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="/modules/:slug" element={<ProtectedRoute><ModuleDetail /></ProtectedRoute>} />
         <Route path="/stamp" element={<ProtectedRoute><Stamp /></ProtectedRoute>} />
         <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+        <Route path="/quotes" element={<ProtectedRoute><SavedQuotes /></ProtectedRoute>} />
         <Route path="/add-to-home" element={<ProtectedRoute><AddToHomeScreen /></ProtectedRoute>} />
         <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

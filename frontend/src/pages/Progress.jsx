@@ -62,8 +62,19 @@ export default function Progress() {
         )}
 
         <Link
-          to="/add-to-home"
+          to="/quotes"
           className="flex items-center justify-between border border-ink/10 rounded-2xl p-4 mt-8 bg-white/40"
+        >
+          <span className="flex items-center gap-2 text-sm text-ink">
+            <span className="text-lg">📝</span>
+            我的策语收藏
+          </span>
+          <span className="text-xs text-ink/40">→</span>
+        </Link>
+
+        <Link
+          to="/add-to-home"
+          className="flex items-center justify-between border border-ink/10 rounded-2xl p-4 mt-3 bg-white/40"
         >
           <span className="flex items-center gap-2 text-sm text-ink">
             <span className="text-lg">📲</span>

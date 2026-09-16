@@ -4,7 +4,7 @@ import { api, API_BASE_URL } from '../api';
 const emptySkill = {
   week_number: '', title: '', skill_name: '', category: '认知类', trigger_condition: '',
   key_question: '', step_one: '', step_two: '', step_three: '', memory_anchor: '', insight: '',
-  case_study: '', cognitive_reframe: '', growth_friction: '', tags: [],
+  case_study: '', cognitive_reframe: '', growth_friction: '', growth_friction_ending: '', tags: [],
 };
 
 function TagsEditor({ tags, onChange }) {
@@ -278,7 +278,7 @@ function SkillsPanel() {
         {Object.keys(emptySkill).filter((field) => field !== 'tags').map((field) => (
           <div key={field}>
             <label className="text-xs text-ink/50 block mb-1">{field}</label>
-            {['insight', 'case_study', 'cognitive_reframe', 'growth_friction', 'step_one', 'step_two', 'step_three', 'trigger_condition', 'key_question'].includes(field) ? (
+            {['insight', 'case_study', 'cognitive_reframe', 'growth_friction', 'growth_friction_ending', 'step_one', 'step_two', 'step_three', 'trigger_condition', 'key_question'].includes(field) ? (
               <textarea
                 value={editing[field] ?? ''}
                 onChange={(e) => setEditing((s) => ({ ...s, [field]: e.target.value }))}
@@ -559,6 +559,144 @@ function ReferralsPanel() {
   );
 }
 
+function formatDeviceTime(isoLike) {
+  if (!isoLike) return '';
+  const date = new Date(isoLike.replace(' ', 'T') + 'Z');
+  return date.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function SecurityPanel() {
+  const [rows, setRows] = useState([]);
+  const [error, setError] = useState('');
+  const [busyId, setBusyId] = useState(null);
+
+  function refresh() {
+    api.adminListSecurity().then(setRows).catch((err) => setError(err.message));
+  }
+  useEffect(refresh, []);
+
+  async function handleUnlock(userId, resetDevices) {
+    if (!confirm(resetDevices ? '确认解锁账号并清除设备记录？' : '确认只解锁账号（保留原有设备记录）？')) return;
+    setBusyId(userId);
+    setError('');
+    try {
+      await api.adminUnlockAccount(userId, resetDevices);
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function handleClearDevices(userId) {
+    if (!confirm('确认清除该学员的所有设备绑定记录？清除后学员需要用新设备重新登录激活。')) return;
+    setBusyId(userId);
+    setError('');
+    try {
+      await api.adminClearDevices(userId);
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  const lockedRows = rows.filter((r) => r.account_locked);
+
+  return (
+    <div className="space-y-8">
+      {error && <p className="text-vermilion text-sm">{error}</p>}
+
+      <div>
+        <h2 className="text-sm font-semibold text-ink mb-3">已锁定账号（{lockedRows.length}）</h2>
+        {lockedRows.length === 0 && <p className="text-sm text-ink/40">目前没有被锁定的账号</p>}
+        <div className="space-y-2">
+          {lockedRows.map((r) => (
+            <div key={r.id} className="border border-vermilion/30 bg-vermilion/5 rounded-xl p-4">
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  <p className="text-sm text-ink font-medium">{r.email}</p>
+                  <p className="text-xs text-ink/40">锁定原因：{r.locked_reason || '未知'} · 已绑定设备 {r.devices.length} 个</p>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <button
+                    onClick={() => handleUnlock(r.id, false)}
+                    disabled={busyId === r.id}
+                    className="text-xs border border-vermilion/30 text-vermilion rounded-full px-3 py-1.5 disabled:opacity-40"
+                  >
+                    只解锁
+                  </button>
+                  <button
+                    onClick={() => handleUnlock(r.id, true)}
+                    disabled={busyId === r.id}
+                    className="text-xs bg-vermilion text-paper rounded-full px-3 py-1.5 disabled:opacity-40"
+                  >
+                    解锁并重置设备
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-sm font-semibold text-ink mb-3">全部账号 · 登录设备</h2>
+        {rows.length === 0 && <p className="text-sm text-ink/40">还没有学员账号</p>}
+        <div className="space-y-2">
+          {rows.map((r) => (
+            <div key={r.id} className="border border-ink/10 rounded-xl p-4">
+              <div className="flex items-center justify-between gap-3 flex-wrap mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-ink">{r.email}</span>
+                  {r.account_locked && (
+                    <span className="text-[10px] text-vermilion border border-vermilion/30 rounded-full px-2 py-0.5">
+                      已锁定
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={() => handleClearDevices(r.id)}
+                  disabled={busyId === r.id || r.devices.length === 0}
+                  className="text-xs text-ink/40 disabled:opacity-30 shrink-0"
+                >
+                  清除设备记录
+                </button>
+              </div>
+              {r.devices.length === 0 ? (
+                <p className="text-xs text-ink/30">还没有登录设备</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs border-collapse">
+                    <thead>
+                      <tr className="text-left text-ink/40">
+                        <th className="py-1 font-normal">设备</th>
+                        <th className="py-1 font-normal">首次登录</th>
+                        <th className="py-1 font-normal">最近活跃</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {r.devices.map((d) => (
+                        <tr key={d.id} className="border-t border-ink/5">
+                          <td className="py-1 text-ink/70 whitespace-nowrap">{d.device_name || '未知设备'}</td>
+                          <td className="py-1 text-ink/50 whitespace-nowrap">{formatDeviceTime(d.first_login_at)}</td>
+                          <td className="py-1 text-ink/50 whitespace-nowrap">{formatDeviceTime(d.last_active_at)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Admin() {
   const [unlocked, setUnlocked] = useState(!!localStorage.getItem('adminPassword'));
   const [tab, setTab] = useState('codes');
@@ -575,6 +713,7 @@ export default function Admin() {
             ['students', '学员'],
             ['trial', '试用用户'],
             ['referrals', '分享数据'],
+            ['security', '账号安全'],
             ['skills', 'Skill内容'],
             ['modules', '学习模块'],
           ].map(([key, label]) => (
@@ -593,6 +732,7 @@ export default function Admin() {
         {tab === 'students' && <StudentsPanel />}
         {tab === 'trial' && <TrialUsersPanel />}
         {tab === 'referrals' && <ReferralsPanel />}
+        {tab === 'security' && <SecurityPanel />}
         {tab === 'skills' && <SkillsPanel />}
         {tab === 'modules' && <ModulesPanel />}
       </main>

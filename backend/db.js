@@ -161,6 +161,28 @@ CREATE TABLE IF NOT EXISTS daily_checkins (
 );
 
 CREATE INDEX IF NOT EXISTS idx_daily_checkins_user ON daily_checkins(user_id, checkin_date);
+
+CREATE TABLE IF NOT EXISTS devices (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  device_fingerprint TEXT NOT NULL,
+  device_name TEXT NOT NULL DEFAULT '',
+  first_login_at TEXT NOT NULL DEFAULT (datetime('now')),
+  last_active_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(user_id, device_fingerprint)
+);
+
+CREATE INDEX IF NOT EXISTS idx_devices_user ON devices(user_id);
+
+CREATE TABLE IF NOT EXISTS saved_quotes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  skill_id INTEGER NOT NULL REFERENCES skills(id),
+  quote_content TEXT NOT NULL,
+  saved_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_saved_quotes_user ON saved_quotes(user_id, saved_at);
 `);
 
 const stampIndexes = db.prepare(`PRAGMA index_list(stamps)`).all();
@@ -200,10 +222,22 @@ if (!skillColumns.includes('status')) {
 if (!skillColumns.includes('insight_audio_url')) {
   db.exec(`ALTER TABLE skills ADD COLUMN insight_audio_url TEXT NOT NULL DEFAULT ''`);
 }
+if (!skillColumns.includes('growth_friction_ending')) {
+  db.exec(`ALTER TABLE skills ADD COLUMN growth_friction_ending TEXT NOT NULL DEFAULT ''`);
+}
 
 const userColumns = db.prepare(`PRAGMA table_info(users)`).all().map((c) => c.name);
 if (!userColumns.includes('referral_code')) {
   db.exec(`ALTER TABLE users ADD COLUMN referral_code TEXT`);
+}
+if (!userColumns.includes('device_limit')) {
+  db.exec(`ALTER TABLE users ADD COLUMN device_limit INTEGER NOT NULL DEFAULT 2`);
+}
+if (!userColumns.includes('account_locked')) {
+  db.exec(`ALTER TABLE users ADD COLUMN account_locked INTEGER NOT NULL DEFAULT 0`);
+}
+if (!userColumns.includes('locked_reason')) {
+  db.exec(`ALTER TABLE users ADD COLUMN locked_reason TEXT`);
 }
 db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code IS NOT NULL`);
 

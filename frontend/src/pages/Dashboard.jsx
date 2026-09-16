@@ -5,8 +5,13 @@ import { useAuth } from '../context/AuthContext';
 import ProgressRing from '../components/ProgressRing';
 import BottomNav from '../components/BottomNav';
 import AoLongAvatar from '../components/AoLongAvatar';
+import DailyQuoteModal from '../components/DailyQuoteModal';
 
 const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
+
+function todayKey() {
+  return `daily_quote_${new Date().toISOString().slice(0, 10)}`;
+}
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -17,6 +22,7 @@ export default function Dashboard() {
   const [error, setError] = useState('');
   const [showAddBanner, setShowAddBanner] = useState(false);
   const [checkinToast, setCheckinToast] = useState(false);
+  const [dailyQuote, setDailyQuote] = useState(null);
 
   useEffect(() => {
     Promise.all([api.getCurrentSkill(), api.getProgress(), api.getStamps()])
@@ -33,6 +39,22 @@ export default function Dashboard() {
         if (res.is_new) {
           setCheckinToast(true);
           setTimeout(() => setCheckinToast(false), 2000);
+
+          const key = todayKey();
+          let alreadyShown = true;
+          try {
+            alreadyShown = localStorage.getItem(key) === 'true';
+          } catch {
+            // 忽略隐私模式下localStorage不可用的情况
+          }
+          if (!alreadyShown) {
+            try {
+              localStorage.setItem(key, 'true');
+            } catch {
+              // 忽略隐私模式下localStorage不可用的情况
+            }
+            api.getTodayQuote().then(setDailyQuote).catch(() => {});
+          }
         }
       })
       .catch(() => {});
@@ -168,6 +190,8 @@ export default function Dashboard() {
       </main>
 
       <BottomNav />
+
+      {dailyQuote && <DailyQuoteModal quote={dailyQuote} onClose={() => setDailyQuote(null)} />}
     </div>
   );
 }

@@ -1,10 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api';
+import { useAuth } from '../context/AuthContext';
 import CoachPanel from '../components/CoachPanel';
 import InsightAudioButton from '../components/InsightAudioButton';
 import ShareModal from '../components/ShareModal';
 import AoLongAvatar from '../components/AoLongAvatar';
+
+function ContentWatermark({ userId }) {
+  return (
+    <span style={{ fontSize: 0, lineHeight: 0, color: 'transparent', position: 'absolute' }} aria-hidden="true">
+      {`uid:${userId}_t:${Date.now()}`}
+    </span>
+  );
+}
 
 const STAMP_EXPLAIN_TEXT =
   '每次在真实场景里用了这个Skill，就提交一枚策印。同一个Skill可以多次提交，每次记录不同的经历。';
@@ -42,6 +51,7 @@ function clearDraft(key) {
 export default function SkillDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [skill, setSkill] = useState(null);
   const [error, setError] = useState('');
   const [form, setForm] = useState(EMPTY_FORM);
@@ -91,6 +101,21 @@ export default function SkillDetail() {
     window.scrollTo(0, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    function blockCopy(e) {
+      if (e.target.closest?.('.skill-content')) e.preventDefault();
+    }
+    function blockContextMenu(e) {
+      if (e.target.closest?.('.skill-content')) e.preventDefault();
+    }
+    document.addEventListener('copy', blockCopy);
+    document.addEventListener('contextmenu', blockContextMenu);
+    return () => {
+      document.removeEventListener('copy', blockCopy);
+      document.removeEventListener('contextmenu', blockContextMenu);
+    };
+  }, []);
 
   function updateForm(field, value) {
     setForm((f) => {
@@ -199,7 +224,8 @@ export default function SkillDetail() {
 
       <main className="max-w-content mx-auto px-6 space-y-10">
         {/* 1. Skill触发器 */}
-        <section className="border border-vermilion/20 rounded-2xl p-6 bg-white/50">
+        <section className="skill-content border border-vermilion/20 rounded-2xl p-6 bg-white/50">
+          {user && <ContentWatermark userId={user.id} />}
           <p className="text-xs text-ink/40 mb-2">第 {skill.week_number} 周 · {skill.category}</p>
           <h1 className="text-2xl font-bold text-vermilion mb-4">{skill.skill_name}</h1>
 
@@ -246,7 +272,7 @@ export default function SkillDetail() {
         </section>
 
         {/* 2. 洞察 */}
-        <section>
+        <section className="skill-content">
           <div className="flex items-center justify-between mb-3">
             <h2
               className="text-base font-bold pl-2.5"
@@ -292,20 +318,20 @@ export default function SkillDetail() {
         </section>
 
         {/* 3. 案例 */}
-        <section>
+        <section className="skill-content">
           <h2 className="text-sm font-semibold text-ink/70 mb-3">案例</h2>
           <p className="text-sm text-ink leading-loose whitespace-pre-line">{skill.case_study}</p>
         </section>
 
         {/* 4. 认知重构 */}
-        <section className="bg-vermilion/5 border border-vermilion/15 rounded-2xl p-6">
+        <section className="skill-content bg-vermilion/5 border border-vermilion/15 rounded-2xl p-6">
           <h2 className="text-sm font-semibold text-vermilion mb-3">认知重构</h2>
           <p className="text-sm text-ink leading-loose whitespace-pre-line">{skill.cognitive_reframe}</p>
         </section>
 
         {/* 这一关·成长摩擦 */}
         {skill.growth_friction && (
-          <section>
+          <section className="skill-content">
             <h2 className="text-sm font-semibold text-ink/70 mb-3">这一关 · 成长摩擦</h2>
             <blockquote className="border-l-2 border-vermilion/40 pl-4 text-sm text-ink leading-loose whitespace-pre-line italic">
               {skill.growth_friction}
