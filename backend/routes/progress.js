@@ -23,10 +23,36 @@ function computeStreak(dates) {
 
 router.post('/checkin', requireAuth, (req, res) => {
   const today = new Date().toISOString().slice(0, 10);
+  const yesterdayDate = new Date();
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const yesterday = yesterdayDate.toISOString().slice(0, 10);
+
+  const alreadyToday = !!db
+    .prepare('SELECT 1 FROM daily_checkins WHERE user_id = ? AND checkin_date = ?')
+    .get(req.user.id, today);
+
+  let streakBroken = false;
+  if (!alreadyToday) {
+    const hadYesterday = !!db
+      .prepare('SELECT 1 FROM daily_checkins WHERE user_id = ? AND checkin_date = ?')
+      .get(req.user.id, yesterday);
+    const hadEarlier = !!db
+      .prepare('SELECT 1 FROM daily_checkins WHERE user_id = ? AND checkin_date < ?')
+      .get(req.user.id, today);
+    streakBroken = !hadYesterday && hadEarlier;
+  }
+
   const info = db
     .prepare('INSERT OR IGNORE INTO daily_checkins (user_id, checkin_date) VALUES (?, ?)')
     .run(req.user.id, today);
-  res.json({ is_new: info.changes > 0 });
+
+  const dates = db
+    .prepare('SELECT checkin_date FROM daily_checkins WHERE user_id = ?')
+    .all(req.user.id)
+    .map((r) => r.checkin_date);
+  const streak = computeStreak(dates);
+
+  res.json({ is_new: info.changes > 0, streak, streak_broken: streakBroken });
 });
 
 router.get('/progress', requireAuth, (req, res) => {

@@ -7,6 +7,9 @@ import BottomNav from '../components/BottomNav';
 import AoLongAvatar from '../components/AoLongAvatar';
 import DailyQuoteModal from '../components/DailyQuoteModal';
 import RewardUnlockModal from '../components/RewardUnlockModal';
+import StreakFlame from '../components/StreakFlame';
+import StreakBanner from '../components/StreakBanner';
+import StreakBrokenModal from '../components/StreakBrokenModal';
 
 const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
 
@@ -25,6 +28,26 @@ export default function Dashboard() {
   const [checkinToast, setCheckinToast] = useState(false);
   const [dailyQuote, setDailyQuote] = useState(null);
   const [pendingRewards, setPendingRewards] = useState([]);
+  const [streakBrokenInfo, setStreakBrokenInfo] = useState(null);
+  const [bannerStreak, setBannerStreak] = useState(null);
+
+  function maybeTriggerDailyQuote() {
+    const key = todayKey();
+    let alreadyShown = true;
+    try {
+      alreadyShown = localStorage.getItem(key) === 'true';
+    } catch {
+      // 忽略隐私模式下localStorage不可用的情况
+    }
+    if (!alreadyShown) {
+      try {
+        localStorage.setItem(key, 'true');
+      } catch {
+        // 忽略隐私模式下localStorage不可用的情况
+      }
+      api.getTodayQuote().then(setDailyQuote).catch(() => {});
+    }
+  }
 
   useEffect(() => {
     api.getPendingRewards().then(setPendingRewards).catch(() => {});
@@ -42,22 +65,12 @@ export default function Dashboard() {
         if (res.is_new) {
           setCheckinToast(true);
           setTimeout(() => setCheckinToast(false), 2000);
-
-          const key = todayKey();
-          let alreadyShown = true;
-          try {
-            alreadyShown = localStorage.getItem(key) === 'true';
-          } catch {
-            // 忽略隐私模式下localStorage不可用的情况
-          }
-          if (!alreadyShown) {
-            try {
-              localStorage.setItem(key, 'true');
-            } catch {
-              // 忽略隐私模式下localStorage不可用的情况
-            }
-            api.getTodayQuote().then(setDailyQuote).catch(() => {});
-          }
+          if (res.streak >= 3) setBannerStreak(res.streak);
+        }
+        if (res.streak_broken) {
+          setStreakBrokenInfo(res.streak);
+        } else if (res.is_new) {
+          maybeTriggerDailyQuote();
         }
       })
       .catch(() => {});
@@ -66,12 +79,18 @@ export default function Dashboard() {
     } catch {
       // 忽略隐私模式下localStorage不可用的情况
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleCloseRewardModal() {
     const [first, ...rest] = pendingRewards;
     if (first) api.markRewardNotified(first.id).catch(() => {});
     setPendingRewards(rest);
+  }
+
+  function handleCloseStreakBroken() {
+    setStreakBrokenInfo(null);
+    maybeTriggerDailyQuote();
   }
 
   function dismissAddBanner() {
@@ -152,11 +171,8 @@ export default function Dashboard() {
         {progress && (
           <div className="flex items-center justify-center gap-8 border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40">
             <ProgressRing percent={progress.percent} label={`${progress.completed}`} sublabel={`/ ${progress.total} 枚策印`} />
-            <div className="text-sm text-ink/60 space-y-1">
-              <div>
-                <p>连续打卡 <span className="text-vermilion font-semibold">{progress.streak}</span> 天</p>
-                <p className="text-[11px] text-ink/35 mt-0.5">每天打开渐步自动打卡</p>
-              </div>
+            <div className="text-sm text-ink/60 space-y-2">
+              <StreakFlame streak={progress.streak} />
               <p>已完成 <span className="text-vermilion font-semibold">{progress.percent}%</span></p>
             </div>
           </div>
@@ -200,9 +216,15 @@ export default function Dashboard() {
 
       <BottomNav />
 
+      {streakBrokenInfo != null && (
+        <StreakBrokenModal newStreak={streakBrokenInfo} onClose={handleCloseStreakBroken} />
+      )}
       {dailyQuote && <DailyQuoteModal quote={dailyQuote} onClose={() => setDailyQuote(null)} />}
       {!dailyQuote && pendingRewards.length > 0 && (
         <RewardUnlockModal reward={pendingRewards[0]} onClose={handleCloseRewardModal} />
+      )}
+      {!dailyQuote && bannerStreak != null && (
+        <StreakBanner streak={bannerStreak} onDone={() => setBannerStreak(null)} />
       )}
     </div>
   );

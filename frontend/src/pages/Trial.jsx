@@ -345,6 +345,56 @@ function SkillScreen({ skill, onDone, onExpired }) {
   );
 }
 
+const HOOK_WECHAT_ID = '751759951';
+
+function SkillLockPreview({ skill }) {
+  return (
+    <div className="flex items-start gap-3 bg-white rounded-lg p-3.5">
+      <span className="text-ink/30 shrink-0" style={{ fontSize: 20 }}>🔒</span>
+      <div className="text-left min-w-0">
+        <p className="text-sm font-bold text-ink/70">{skill.skill_name}</p>
+        <p className="text-xs text-ink/40 mt-0.5">{skill.trigger_condition_preview}</p>
+      </div>
+    </div>
+  );
+}
+
+function CliffhangerHook() {
+  const [otherSkills, setOtherSkills] = useState([]);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    api.getTrialOtherSkills().then(setOtherSkills).catch(() => {});
+  }, []);
+
+  function handleJoin() {
+    navigator.clipboard?.writeText(HOOK_WECHAT_ID).catch(() => {});
+    setCopied(true);
+  }
+
+  if (otherSkills.length === 0) return null;
+
+  return (
+    <div className="mt-8 text-left">
+      <p className="text-sm font-bold text-ink text-center mb-4">渐步里还有300+个Skill在等你</p>
+      <div className="space-y-2 bg-ink/5 rounded-2xl p-3">
+        {otherSkills.map((s, i) => (
+          <SkillLockPreview key={i} skill={s} />
+        ))}
+      </div>
+      <p className="text-xs text-ink/40 text-center mt-3 mb-4">这些Skill，都在等你用出来</p>
+      <button
+        onClick={handleJoin}
+        className={`w-full rounded-lg py-3 text-sm font-medium transition-colors ${
+          copied ? 'bg-ink/10 text-ink' : 'bg-vermilion text-paper'
+        }`}
+      >
+        {copied ? `✓ 微信号已复制：${HOOK_WECHAT_ID}，打开微信添加傲龙老师` : '立即加入，解锁全部300+个Skill'}
+      </button>
+    </div>
+  );
+}
+
 function DoneScreen({ skill }) {
   return (
     <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-6 py-12">
@@ -358,6 +408,7 @@ function DoneScreen({ skill }) {
         <p className="text-xs text-ink/35 leading-relaxed mt-6">
           你的AI陪练对话记录已保存，加入后可以继续接着聊
         </p>
+        <CliffhangerHook />
       </div>
     </div>
   );

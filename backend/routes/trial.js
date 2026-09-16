@@ -138,6 +138,28 @@ router.post('/trial/match', requireTrialAuth, async (req, res) => {
   res.json(withParsedTags(matched));
 });
 
+router.get('/trial/skill/others', requireTrialAuth, (req, res) => {
+  const trial = getTrial(req.trial.trialId);
+  if (!trial) return res.status(404).json({ error: '试用信息不存在' });
+
+  const excludeId = trial.matched_skill_id || 0;
+  const rows = db
+    .prepare(
+      "SELECT skill_name, trigger_condition FROM skills WHERE status != 'draft' AND id != ? ORDER BY RANDOM() LIMIT 3"
+    )
+    .all(excludeId);
+
+  res.json(
+    rows.map((s) => ({
+      skill_name: s.skill_name,
+      trigger_condition_preview:
+        Array.from(s.trigger_condition).length > 30
+          ? Array.from(s.trigger_condition).slice(0, 30).join('') + '…'
+          : s.trigger_condition,
+    }))
+  );
+});
+
 router.get('/trial/skill', requireTrialAuth, (req, res) => {
   const trial = getTrial(req.trial.trialId);
   if (!trial) return res.status(404).json({ error: '试用信息不存在' });

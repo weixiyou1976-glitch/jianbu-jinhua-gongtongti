@@ -98,6 +98,7 @@ export const api = {
     request('/trial/start', { method: 'POST', body: { wechat_id, ...referral } }),
   trialMatch: (concern) => request('/trial/match', { method: 'POST', body: { concern }, trial: true }),
   getTrialSkill: () => request('/trial/skill', { trial: true }),
+  getTrialOtherSkills: () => request('/trial/skill/others', { trial: true }),
   getTrialCoachHistory: () => request('/trial/coach/history', { trial: true }),
   trialCoachMessage: (skill_id, message) =>
     streamRequest('/trial/coach/message', { skill_id, message }, { trial: true }),

@@ -6,6 +6,7 @@ import CoachPanel from '../components/CoachPanel';
 import InsightAudioButton from '../components/InsightAudioButton';
 import ShareModal from '../components/ShareModal';
 import AoLongAvatar from '../components/AoLongAvatar';
+import StampCeremonyModal from '../components/StampCeremonyModal';
 
 function ContentWatermark({ userId }) {
   return (
@@ -62,6 +63,7 @@ export default function SkillDetail() {
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [showStampForm, setShowStampForm] = useState(false);
   const [showRestoreBanner, setShowRestoreBanner] = useState(false);
+  const [ceremony, setCeremony] = useState(null);
 
   const draftKey = stampHistory.length === 0 ? `stamp_draft_${id}` : `stamp_draft_${id}_new`;
 
@@ -148,16 +150,26 @@ export default function SkillDetail() {
     try {
       const res = await api.submitStamp(id, form);
       clearDraft(draftKey);
-      setStampHistory((h) => [res.stamp, ...h]);
-      setForm(EMPTY_FORM);
-      setShowStampForm(false);
-      setShowRestoreBanner(false);
-      load();
+      setCeremony({
+        stampNumber: res.stamp_number,
+        apply: () => {
+          setStampHistory((h) => [res.stamp, ...h]);
+          setForm(EMPTY_FORM);
+          setShowStampForm(false);
+          setShowRestoreBanner(false);
+          load();
+        },
+      });
     } catch (err) {
       setError(err.message);
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function handleCeremonyDone() {
+    ceremony?.apply();
+    setCeremony(null);
   }
 
   if (error && !skill) {
@@ -491,6 +503,8 @@ export default function SkillDetail() {
           onClose={() => setShowShare(false)}
         />
       )}
+
+      {ceremony && <StampCeremonyModal stampNumber={ceremony.stampNumber} onDone={handleCeremonyDone} />}
     </div>
   );
 }

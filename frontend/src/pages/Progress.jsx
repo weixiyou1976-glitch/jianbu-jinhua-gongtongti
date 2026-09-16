@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api';
 import BottomNav from '../components/BottomNav';
+import GrowthTree from '../components/GrowthTree';
 
 export default function Progress() {
   const [progress, setProgress] = useState(null);
@@ -29,6 +30,10 @@ export default function Progress() {
                 {progress.streak} <span className="text-sm font-normal text-ink/50">天</span>
               </p>
             </section>
+
+            <div className="mb-4">
+              <GrowthTree stampCount={progress.completed} />
+            </div>
 
             <section className="border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40">
               <h2 className="text-sm font-semibold text-ink mb-1">策印记录</h2>
