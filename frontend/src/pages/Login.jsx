@@ -67,7 +67,8 @@ export default function Login() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
           <h1 className="text-2xl font-semibold text-ink tracking-wide">渐步进化共同体</h1>
-          <p className="text-ink/50 text-sm mt-2">一周一枚策印，持续52周的进化路径</p>
+          <p className="text-lg font-bold text-ink mt-3">把本事练进骨子里</p>
+          <p className="text-sm text-ink/50 mt-1">不是把知识装进大脑里</p>
         </div>
 
         <div className="flex mb-8 border-b border-vermilion/15">

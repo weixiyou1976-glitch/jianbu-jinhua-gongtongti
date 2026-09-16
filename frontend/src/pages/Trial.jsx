@@ -63,7 +63,7 @@ function WechatScreen({ onStarted, onAlreadyUsed, referral }) {
       <div className="w-full max-w-sm text-center">
         <h1 className="text-xl font-semibold text-ink mb-2">先体验一次，再决定要不要加入</h1>
         <p className="text-sm text-ink/50 mb-8 leading-relaxed">
-          不需要激活码，不需要付费，完整体验一张最适合你的Skill
+          把本事练进骨子里——先免费体验一次
         </p>
         <form onSubmit={handleSubmit} className="space-y-3 text-left">
           <input
@@ -401,6 +401,7 @@ function DoneScreen({ skill }) {
       <div className="w-full max-w-sm text-center">
         <h1 className="text-xl font-semibold text-ink mb-2">你刚才完成了第一枚策印</h1>
         <p className="text-sm text-vermilion font-semibold mb-4">{skill.skill_name}</p>
+        <p className="text-sm text-ink/50 text-center mb-2">把本事练进骨子里，不是把知识装进大脑里</p>
         <p className="text-sm text-ink/60 leading-relaxed mb-8">
           渐步里还有300+这样的Skill，每周一个，一年52次真实的改变
         </p>

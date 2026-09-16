@@ -122,7 +122,7 @@ export default function Dashboard() {
       <div className="max-w-content mx-auto px-6 pt-2 pb-6 flex flex-col items-center text-center">
         <AoLongAvatar size={48} />
         <p className="text-ink text-sm font-bold mt-2">傲龙</p>
-        <p className="text-ink/40 text-xs mt-0.5">敕名策运师 · 渐步进化共同体创始人</p>
+        <p className="text-sm text-ink/50 mt-0.5 text-center">把本事练进骨子里，不是把知识装进大脑里</p>
       </div>
 
       <main className="max-w-content mx-auto px-6">
