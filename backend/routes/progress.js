@@ -1,24 +1,15 @@
 const express = require('express');
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
+const { computeStreak } = require('../lib/streak');
 
 const router = express.Router();
 
-function computeStreak(dates) {
-  let streak = 0;
-  let cursor = new Date();
-  for (let i = 0; i < 365; i++) {
-    const key = cursor.toISOString().slice(0, 10);
-    if (dates.includes(key)) {
-      streak++;
-      cursor.setDate(cursor.getDate() - 1);
-    } else if (streak === 0 && key === new Date().toISOString().slice(0, 10)) {
-      cursor.setDate(cursor.getDate() - 1);
-    } else {
-      break;
-    }
-  }
-  return streak;
+function checkinDates(table, userId) {
+  return db
+    .prepare(`SELECT checkin_date FROM ${table} WHERE user_id = ?`)
+    .all(userId)
+    .map((r) => r.checkin_date);
 }
 
 router.post('/checkin', requireAuth, (req, res) => {
@@ -53,6 +44,46 @@ router.post('/checkin', requireAuth, (req, res) => {
   const streak = computeStreak(dates);
 
   res.json({ is_new: info.changes > 0, streak, streak_broken: streakBroken });
+});
+
+router.post('/learning-checkin', requireAuth, (req, res) => {
+  const skillId = Number(req.body?.skill_id);
+  if (!skillId) return res.status(400).json({ error: '缺少 skill_id' });
+  const skill = db.prepare('SELECT id FROM skills WHERE id = ?').get(skillId);
+  if (!skill) return res.status(404).json({ error: 'Skill不存在' });
+
+  const today = new Date().toISOString().slice(0, 10);
+  const info = db
+    .prepare('INSERT OR IGNORE INTO learning_checkins (user_id, checkin_date, skill_id) VALUES (?, ?, ?)')
+    .run(req.user.id, today, skillId);
+
+  res.json({ is_new: info.changes > 0 });
+});
+
+router.get('/checkin/stats', requireAuth, (req, res) => {
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterdayDate = new Date();
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const yesterday = yesterdayDate.toISOString().slice(0, 10);
+
+  const visitDates = checkinDates('daily_checkins', req.user.id);
+  const learningDates = checkinDates('learning_checkins', req.user.id);
+  const practiceDates = checkinDates('practice_checkins', req.user.id);
+
+  const todayPractice = practiceDates.includes(today);
+  const hadYesterdayPractice = practiceDates.includes(yesterday);
+  const hadEarlierPractice = practiceDates.some((d) => d < today);
+  const practiceStreakBroken = !todayPractice && !hadYesterdayPractice && hadEarlierPractice;
+
+  res.json({
+    visit_streak: computeStreak(visitDates),
+    learning_streak: computeStreak(learningDates),
+    practice_streak: computeStreak(practiceDates),
+    today_visit: visitDates.includes(today),
+    today_learning: learningDates.includes(today),
+    today_practice: todayPractice,
+    practice_streak_broken: practiceStreakBroken,
+  });
 });
 
 router.get('/progress', requireAuth, (req, res) => {

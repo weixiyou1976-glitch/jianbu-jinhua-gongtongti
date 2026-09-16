@@ -1,4 +1,4 @@
-export default function StreakBrokenModal({ newStreak, onClose }) {
+export default function StreakBrokenModal({ onClose }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center px-6"
@@ -17,13 +17,10 @@ export default function StreakBrokenModal({ newStreak, onClose }) {
       >
         <p style={{ fontSize: 32, textAlign: 'center' }}>💔</p>
         <p style={{ marginTop: 12, fontSize: 16, color: '#FFFFFF', fontWeight: 700, textAlign: 'center' }}>
-          昨天断签了
+          昨天没有用出来
         </p>
         <p style={{ marginTop: 8, fontSize: 13, color: '#999999', textAlign: 'center' }}>
-          连续打卡从第1天重新开始
-        </p>
-        <p style={{ marginTop: 16, fontSize: 28, color: '#C41E1E', fontWeight: 700, textAlign: 'center' }}>
-          {newStreak}天
+          实战连续从第1天重新开始
         </p>
         <div style={{ marginTop: 24, display: 'flex', justifyContent: 'center' }}>
           <button

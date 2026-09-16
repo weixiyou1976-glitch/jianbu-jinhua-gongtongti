@@ -258,6 +258,9 @@ function StudentsPanel() {
             <tr className="text-left text-ink/40 border-b border-ink/10">
               <th className="py-2 font-normal">邮箱</th>
               <th className="py-2 font-normal">入学日期</th>
+              <th className="py-2 font-normal text-vermilion">实战连续天数</th>
+              <th className="py-2 font-normal">访问连续天数</th>
+              <th className="py-2 font-normal">学习连续天数</th>
               <th className="py-2 font-normal">掌握Skill数</th>
               <th className="py-2 font-normal">累计策印数</th>
               <th className="py-2 font-normal">操作</th>
@@ -279,6 +282,9 @@ function StudentsPanel() {
                       </button>
                     </td>
                     <td className="py-2 text-ink/50">{s.enrolled_at?.slice(0, 10)}</td>
+                    <td className="py-2 text-vermilion font-semibold">{s.practice_streak}</td>
+                    <td className="py-2">{s.visit_streak}</td>
+                    <td className="py-2">{s.learning_streak}</td>
                     <td className="py-2">{s.skills_mastered}</td>
                     <td className="py-2">{s.stamp_count}</td>
                     <td className="py-2 min-w-[220px]">
@@ -305,7 +311,7 @@ function StudentsPanel() {
                   </tr>
                   {expandedId === s.id && (
                     <tr className="border-b border-ink/5 bg-vermilion/5">
-                      <td colSpan={5} className="py-3 px-2">
+                      <td colSpan={8} className="py-3 px-2">
                         <div className="flex gap-8 text-xs text-ink/70">
                           <span>掌握Skill数（去重）：<span className="text-vermilion font-semibold">{s.skills_mastered}</span> 个</span>
                           <span>累计策印数（含重复）：<span className="text-vermilion font-semibold">{s.stamp_count}</span> 枚</span>

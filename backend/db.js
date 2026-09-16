@@ -162,6 +162,28 @@ CREATE TABLE IF NOT EXISTS daily_checkins (
 
 CREATE INDEX IF NOT EXISTS idx_daily_checkins_user ON daily_checkins(user_id, checkin_date);
 
+CREATE TABLE IF NOT EXISTS learning_checkins (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  checkin_date TEXT NOT NULL,
+  skill_id INTEGER NOT NULL REFERENCES skills(id),
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(user_id, checkin_date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_learning_checkins_user ON learning_checkins(user_id, checkin_date);
+
+CREATE TABLE IF NOT EXISTS practice_checkins (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  checkin_date TEXT NOT NULL,
+  stamp_count INTEGER NOT NULL DEFAULT 1,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(user_id, checkin_date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_practice_checkins_user ON practice_checkins(user_id, checkin_date);
+
 CREATE TABLE IF NOT EXISTS devices (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

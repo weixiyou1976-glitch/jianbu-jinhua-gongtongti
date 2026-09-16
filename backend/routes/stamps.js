@@ -18,6 +18,12 @@ router.post('/skills/:id/stamp', requireAuth, (req, res) => {
     )
     .run(req.user.id, skill.id, learned, practiced, gained);
 
+  const today = new Date().toISOString().slice(0, 10);
+  db.prepare(
+    `INSERT INTO practice_checkins (user_id, checkin_date, stamp_count) VALUES (?, ?, 1)
+     ON CONFLICT(user_id, checkin_date) DO UPDATE SET stamp_count = stamp_count + 1`
+  ).run(req.user.id, today);
+
   const count = db
     .prepare('SELECT COUNT(*) AS c FROM stamps WHERE user_id = ?')
     .get(req.user.id).c;

@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { requireAdmin } = require('../middleware/auth');
 const { checkAndGrantMilestones, getShareTag, getConversionTag } = require('../lib/rewards');
+const { computeStreak } = require('../lib/streak');
 
 const router = express.Router();
 router.use(requireAdmin);
@@ -46,6 +47,14 @@ router.get('/activation-codes/export.csv', (req, res) => {
   res.send(header + rows);
 });
 
+function streakForUser(table, userId) {
+  const dates = db
+    .prepare(`SELECT checkin_date FROM ${table} WHERE user_id = ?`)
+    .all(userId)
+    .map((r) => r.checkin_date);
+  return computeStreak(dates);
+}
+
 router.get('/students', (req, res) => {
   const users = db.prepare('SELECT id, email, activated_at, enrolled_at FROM users ORDER BY created_at DESC').all();
   const withProgress = users.map((u) => {
@@ -53,7 +62,14 @@ router.get('/students', (req, res) => {
     const skillsMastered = db
       .prepare('SELECT COUNT(DISTINCT skill_id) AS c FROM stamps WHERE user_id = ?')
       .get(u.id).c;
-    return { ...u, stamp_count: stampCount, skills_mastered: skillsMastered };
+    return {
+      ...u,
+      stamp_count: stampCount,
+      skills_mastered: skillsMastered,
+      visit_streak: streakForUser('daily_checkins', u.id),
+      learning_streak: streakForUser('learning_checkins', u.id),
+      practice_streak: streakForUser('practice_checkins', u.id),
+    };
   });
   res.json(withProgress);
 });

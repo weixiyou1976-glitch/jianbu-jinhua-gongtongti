@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 
 function getBannerText(streak) {
-  if (streak >= 14) return `🔥🔥 ${streak}天连续打卡！你已经是少数人了。明天继续，别让它断`;
-  if (streak >= 7) return `🔥 连续${streak}天！明天不来，火焰会熄灭——从第1天重新开始`;
-  if (streak >= 3) return `🔥 已连续打卡${streak}天，明天继续来，火焰不熄灭`;
+  if (streak >= 7) return `🔥 连续${streak}天实战！你已经是少数人了——明天继续，别让它断`;
+  if (streak >= 3) return `🔥 已连续${streak}天在真实场景里用出来——明天继续，别让它断`;
   return null;
 }
 

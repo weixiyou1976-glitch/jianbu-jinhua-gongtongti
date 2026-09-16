@@ -105,6 +105,13 @@ export default function SkillDetail() {
   }, [id]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      api.learningCheckin(id).catch(() => {});
+    }, 60000);
+    return () => clearTimeout(timer);
+  }, [id]);
+
+  useEffect(() => {
     function blockCopy(e) {
       if (e.target.closest?.('.skill-content')) e.preventDefault();
     }

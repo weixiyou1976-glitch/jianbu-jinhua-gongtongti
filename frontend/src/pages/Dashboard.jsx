@@ -7,7 +7,7 @@ import BottomNav from '../components/BottomNav';
 import AoLongAvatar from '../components/AoLongAvatar';
 import DailyQuoteModal from '../components/DailyQuoteModal';
 import RewardUnlockModal from '../components/RewardUnlockModal';
-import StreakFlame from '../components/StreakFlame';
+import CheckinStreakRow from '../components/CheckinStreakRow';
 import StreakBanner from '../components/StreakBanner';
 import StreakBrokenModal from '../components/StreakBrokenModal';
 
@@ -15,6 +15,30 @@ const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
 
 function todayKey() {
   return `daily_quote_${new Date().toISOString().slice(0, 10)}`;
+}
+
+function practiceBrokenKey() {
+  return `practice_broken_${new Date().toISOString().slice(0, 10)}`;
+}
+
+function practiceBannerKey() {
+  return `practice_banner_${new Date().toISOString().slice(0, 10)}`;
+}
+
+function alreadyShownToday(key) {
+  try {
+    return localStorage.getItem(key) === 'true';
+  } catch {
+    return true;
+  }
+}
+
+function markShownToday(key) {
+  try {
+    localStorage.setItem(key, 'true');
+  } catch {
+    // 忽略隐私模式下localStorage不可用的情况
+  }
 }
 
 export default function Dashboard() {
@@ -28,8 +52,9 @@ export default function Dashboard() {
   const [checkinToast, setCheckinToast] = useState(false);
   const [dailyQuote, setDailyQuote] = useState(null);
   const [pendingRewards, setPendingRewards] = useState([]);
-  const [streakBrokenInfo, setStreakBrokenInfo] = useState(null);
-  const [bannerStreak, setBannerStreak] = useState(null);
+  const [checkinStats, setCheckinStats] = useState(null);
+  const [practiceBroken, setPracticeBroken] = useState(false);
+  const [practiceBannerStreak, setPracticeBannerStreak] = useState(null);
 
   function maybeTriggerDailyQuote() {
     const key = todayKey();
@@ -65,12 +90,24 @@ export default function Dashboard() {
         if (res.is_new) {
           setCheckinToast(true);
           setTimeout(() => setCheckinToast(false), 2000);
-          if (res.streak >= 3) setBannerStreak(res.streak);
-        }
-        if (res.streak_broken) {
-          setStreakBrokenInfo(res.streak);
-        } else if (res.is_new) {
           maybeTriggerDailyQuote();
+        }
+      })
+      .catch(() => {});
+    api
+      .getCheckinStats()
+      .then((stats) => {
+        setCheckinStats(stats);
+        if (stats.practice_streak_broken) {
+          if (!alreadyShownToday(practiceBrokenKey())) {
+            markShownToday(practiceBrokenKey());
+            setPracticeBroken(true);
+          }
+        } else if (stats.practice_streak >= 3) {
+          if (!alreadyShownToday(practiceBannerKey())) {
+            markShownToday(practiceBannerKey());
+            setPracticeBannerStreak(stats.practice_streak);
+          }
         }
       })
       .catch(() => {});
@@ -88,9 +125,8 @@ export default function Dashboard() {
     setPendingRewards(rest);
   }
 
-  function handleCloseStreakBroken() {
-    setStreakBrokenInfo(null);
-    maybeTriggerDailyQuote();
+  function handleClosePracticeBroken() {
+    setPracticeBroken(false);
   }
 
   function dismissAddBanner() {
@@ -173,9 +209,16 @@ export default function Dashboard() {
             <ProgressRing percent={100} label={`${progress.total_stamps}`} sublabel="枚策印" />
             <div className="text-sm text-ink/60 space-y-2">
               <p>已掌握 <span className="text-vermilion font-semibold">{progress.skills_mastered}</span> 个Skill</p>
-              <StreakFlame streak={progress.streak} />
             </div>
           </div>
+        )}
+
+        {checkinStats && (
+          <CheckinStreakRow
+            visitStreak={checkinStats.visit_streak}
+            learningStreak={checkinStats.learning_streak}
+            practiceStreak={checkinStats.practice_streak}
+          />
         )}
 
         <div className="mb-8">
@@ -216,15 +259,13 @@ export default function Dashboard() {
 
       <BottomNav />
 
-      {streakBrokenInfo != null && (
-        <StreakBrokenModal newStreak={streakBrokenInfo} onClose={handleCloseStreakBroken} />
-      )}
+      {practiceBroken && <StreakBrokenModal onClose={handleClosePracticeBroken} />}
       {dailyQuote && <DailyQuoteModal quote={dailyQuote} onClose={() => setDailyQuote(null)} />}
-      {!dailyQuote && pendingRewards.length > 0 && (
+      {!dailyQuote && !practiceBroken && pendingRewards.length > 0 && (
         <RewardUnlockModal reward={pendingRewards[0]} onClose={handleCloseRewardModal} />
       )}
-      {!dailyQuote && bannerStreak != null && (
-        <StreakBanner streak={bannerStreak} onDone={() => setBannerStreak(null)} />
+      {!dailyQuote && !practiceBroken && practiceBannerStreak != null && (
+        <StreakBanner streak={practiceBannerStreak} onDone={() => setPracticeBannerStreak(null)} />
       )}
     </div>
   );

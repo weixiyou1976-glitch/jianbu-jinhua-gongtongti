@@ -6,10 +6,12 @@ import GrowthTree from '../components/GrowthTree';
 
 export default function Progress() {
   const [progress, setProgress] = useState(null);
+  const [checkinStats, setCheckinStats] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     api.getProgress().then(setProgress).catch((err) => setError(err.message));
+    api.getCheckinStats().then(setCheckinStats).catch(() => {});
   }, []);
 
   return (
@@ -23,13 +25,27 @@ export default function Progress() {
 
         {progress && (
           <>
-            <section className="border border-ink/10 rounded-2xl p-6 mb-4 bg-white/40">
-              <h2 className="text-sm font-semibold text-ink mb-1">连续打卡</h2>
-              <p className="text-xs text-ink/40 mb-4">每天打开渐步自动记录，保持学习节奏</p>
-              <p className="text-3xl font-bold text-vermilion text-center">
-                {progress.streak} <span className="text-sm font-normal text-ink/50">天</span>
-              </p>
-            </section>
+            {checkinStats && (
+              <section className="border border-ink/10 rounded-2xl p-6 mb-4 bg-white/40">
+                <h2 className="text-sm font-semibold text-ink mb-4">连续打卡</h2>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-ink/60">连续访问</span>
+                    <span className="text-lg font-semibold text-ink">{checkinStats.visit_streak} 天</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-ink/60">连续学习</span>
+                    <span className="text-lg font-semibold text-ink">{checkinStats.learning_streak} 天</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-ink">🔥 连续实战</span>
+                    <span style={{ fontSize: 22, fontWeight: 700, color: '#C41E1E' }}>
+                      {checkinStats.practice_streak} 天
+                    </span>
+                  </div>
+                </div>
+              </section>
+            )}
 
             <div className="mb-4">
               <GrowthTree stampCount={progress.total_stamps} />
