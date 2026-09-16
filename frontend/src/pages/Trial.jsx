@@ -403,7 +403,7 @@ function DoneScreen({ skill }) {
         <p className="text-sm text-vermilion font-semibold mb-4">{skill.skill_name}</p>
         <p className="text-sm text-ink/50 text-center mb-2">把本事练进骨子里，不是把知识装进大脑里</p>
         <p className="text-sm text-ink/60 leading-relaxed mb-8">
-          渐步里还有300+这样的Skill，每周一个，一年52次真实的改变
+          渐步里还有300+这样的Skill，持续增加，遇到什么处境就用什么Skill
         </p>
         <TrialJoinCard />
         <p className="text-xs text-ink/35 leading-relaxed mt-6">
