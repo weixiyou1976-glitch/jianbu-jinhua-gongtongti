@@ -170,10 +170,10 @@ export default function Dashboard() {
 
         {progress && (
           <div className="flex items-center justify-center gap-8 border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40">
-            <ProgressRing percent={progress.percent} label={`${progress.completed}`} sublabel={`/ ${progress.total} 枚策印`} />
+            <ProgressRing percent={100} label={`${progress.total_stamps}`} sublabel="枚策印" />
             <div className="text-sm text-ink/60 space-y-2">
+              <p>已掌握 <span className="text-vermilion font-semibold">{progress.skills_mastered}</span> 个Skill</p>
               <StreakFlame streak={progress.streak} />
-              <p>已完成 <span className="text-vermilion font-semibold">{progress.percent}%</span></p>
             </div>
           </div>
         )}

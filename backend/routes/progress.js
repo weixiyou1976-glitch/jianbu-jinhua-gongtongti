@@ -78,10 +78,16 @@ router.get('/progress', requireAuth, (req, res) => {
     .map((r) => r.checkin_date);
   const streak = computeStreak(dates);
 
+  const skillsMastered = db
+    .prepare('SELECT COUNT(DISTINCT skill_id) AS c FROM stamps WHERE user_id = ?')
+    .get(req.user.id).c;
+  const totalStamps = db.prepare('SELECT COUNT(*) AS c FROM stamps WHERE user_id = ?').get(req.user.id).c;
+
   res.json({
     total,
     completed: completedWeeks.size,
-    percent: Math.round((completedWeeks.size / total) * 100),
+    skills_mastered: skillsMastered,
+    total_stamps: totalStamps,
     streak,
     grid,
   });

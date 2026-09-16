@@ -32,20 +32,20 @@ export default function Progress() {
             </section>
 
             <div className="mb-4">
-              <GrowthTree stampCount={progress.completed} />
+              <GrowthTree stampCount={progress.total_stamps} />
             </div>
 
             <section className="border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40">
               <h2 className="text-sm font-semibold text-ink mb-1">策印记录</h2>
               <p className="text-xs text-ink/40 mb-4">每次在真实场景里用了Skill，就提交一枚策印</p>
-              <div className="flex justify-around text-center">
-                <div>
-                  <p className="text-2xl font-bold text-vermilion">{progress.completed}/{progress.total}</p>
-                  <p className="text-xs text-ink/50 mt-1">已完成周数</p>
+              <div className="grid grid-cols-2 gap-3 text-center">
+                <div className="rounded-xl bg-paper py-3">
+                  <p className="text-2xl font-bold text-vermilion">{progress.skills_mastered}</p>
+                  <p className="text-xs text-ink/50 mt-1">已掌握Skill</p>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-vermilion">{progress.percent}%</p>
-                  <p className="text-xs text-ink/50 mt-1">完成百分比</p>
+                <div className="rounded-xl bg-paper py-3">
+                  <p className="text-2xl font-bold text-vermilion">{progress.total_stamps}</p>
+                  <p className="text-xs text-ink/50 mt-1">累计策印</p>
                 </div>
               </div>
             </section>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { api, API_BASE_URL } from '../api';
 
 const emptySkill = {
@@ -225,6 +225,7 @@ function StudentsPanel() {
   const [error, setError] = useState('');
   const [resetResults, setResetResults] = useState({});
   const [resettingId, setResettingId] = useState(null);
+  const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
     api.adminListStudents().then(setStudents).catch((err) => setError(err.message));
@@ -257,41 +258,65 @@ function StudentsPanel() {
             <tr className="text-left text-ink/40 border-b border-ink/10">
               <th className="py-2 font-normal">邮箱</th>
               <th className="py-2 font-normal">入学日期</th>
-              <th className="py-2 font-normal">策印数</th>
-              <th className="py-2 font-normal">完成度</th>
+              <th className="py-2 font-normal">掌握Skill数</th>
+              <th className="py-2 font-normal">累计策印数</th>
               <th className="py-2 font-normal">操作</th>
             </tr>
           </thead>
           <tbody>
-            {students.map((s) => (
-              <tr key={s.id} className="border-b border-ink/5 align-top">
-                <td className="py-2">{s.email}</td>
-                <td className="py-2 text-ink/50">{s.enrolled_at?.slice(0, 10)}</td>
-                <td className="py-2">{s.stamp_count}</td>
-                <td className="py-2 text-vermilion">{s.percent}%</td>
-                <td className="py-2 min-w-[220px]">
-                  <button
-                    onClick={() => handleReset(s.id, s.email)}
-                    disabled={resettingId === s.id}
-                    className="text-xs text-vermilion disabled:opacity-40"
-                  >
-                    {resettingId === s.id ? '重置中…' : '重置密码'}
-                  </button>
-                  {resetResults[s.id] && (
-                    <div className="mt-1.5 flex items-center gap-2 bg-vermilion/5 border border-vermilion/20 rounded-lg px-2 py-1">
-                      <span className="font-mono text-xs text-ink">{resetResults[s.id]}</span>
+            {students.map((s) => {
+              const avgPerSkill = s.skills_mastered > 0 ? (s.stamp_count / s.skills_mastered).toFixed(1) : '0';
+              return (
+                <Fragment key={s.id}>
+                  <tr className="border-b border-ink/5 align-top">
+                    <td className="py-2">
                       <button
-                        onClick={() => copyPassword(resetResults[s.id])}
-                        className="text-[10px] text-ink/40 border border-ink/15 rounded px-1.5 py-0.5 shrink-0"
+                        type="button"
+                        onClick={() => setExpandedId((id) => (id === s.id ? null : s.id))}
+                        className="text-left hover:text-vermilion"
                       >
-                        复制
+                        {s.email} <span className="text-ink/30 text-xs">{expandedId === s.id ? '▲' : '▼'}</span>
                       </button>
-                    </div>
+                    </td>
+                    <td className="py-2 text-ink/50">{s.enrolled_at?.slice(0, 10)}</td>
+                    <td className="py-2">{s.skills_mastered}</td>
+                    <td className="py-2">{s.stamp_count}</td>
+                    <td className="py-2 min-w-[220px]">
+                      <button
+                        onClick={() => handleReset(s.id, s.email)}
+                        disabled={resettingId === s.id}
+                        className="text-xs text-vermilion disabled:opacity-40"
+                      >
+                        {resettingId === s.id ? '重置中…' : '重置密码'}
+                      </button>
+                      {resetResults[s.id] && (
+                        <div className="mt-1.5 flex items-center gap-2 bg-vermilion/5 border border-vermilion/20 rounded-lg px-2 py-1">
+                          <span className="font-mono text-xs text-ink">{resetResults[s.id]}</span>
+                          <button
+                            onClick={() => copyPassword(resetResults[s.id])}
+                            className="text-[10px] text-ink/40 border border-ink/15 rounded px-1.5 py-0.5 shrink-0"
+                          >
+                            复制
+                          </button>
+                        </div>
+                      )}
+                      <RecordPaymentForm studentId={s.id} />
+                    </td>
+                  </tr>
+                  {expandedId === s.id && (
+                    <tr className="border-b border-ink/5 bg-vermilion/5">
+                      <td colSpan={5} className="py-3 px-2">
+                        <div className="flex gap-8 text-xs text-ink/70">
+                          <span>掌握Skill数（去重）：<span className="text-vermilion font-semibold">{s.skills_mastered}</span> 个</span>
+                          <span>累计策印数（含重复）：<span className="text-vermilion font-semibold">{s.stamp_count}</span> 枚</span>
+                          <span>平均每个Skill策印数：<span className="text-vermilion font-semibold">{avgPerSkill}</span> 枚</span>
+                        </div>
+                      </td>
+                    </tr>
                   )}
-                  <RecordPaymentForm studentId={s.id} />
-                </td>
-              </tr>
-            ))}
+                </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
