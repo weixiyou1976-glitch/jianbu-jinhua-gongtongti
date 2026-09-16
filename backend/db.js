@@ -184,6 +184,17 @@ CREATE TABLE IF NOT EXISTS practice_checkins (
 
 CREATE INDEX IF NOT EXISTS idx_practice_checkins_user ON practice_checkins(user_id, checkin_date);
 
+CREATE TABLE IF NOT EXISTS temporary_unlocks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  skill_id INTEGER NOT NULL REFERENCES skills(id),
+  unlock_reason TEXT NOT NULL CHECK (unlock_reason IN ('ai_match', 'trial')),
+  expires_at TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_temporary_unlocks_lookup ON temporary_unlocks(user_id, skill_id, expires_at);
+
 CREATE TABLE IF NOT EXISTS devices (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

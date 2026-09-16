@@ -114,10 +114,7 @@ export default function Skills() {
                   <div key={s.id} className="border border-ink/10 rounded-lg p-3 bg-white/60">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm font-medium text-ink">{s.skill_name}</p>
-                          {s.unlocked === false && <span className="text-xs">🔒</span>}
-                        </div>
+                        <p className="text-sm font-medium text-ink">{s.skill_name}</p>
                         <span className="text-xs text-vermilion/80 mt-0.5 inline-block">{s.category}</span>
                         {s.match_reason && <p className="text-xs text-ink/60 mt-1.5">{s.match_reason}</p>}
                       </div>
@@ -128,6 +125,11 @@ export default function Skills() {
                         去学习
                       </Link>
                     </div>
+                    {s.temp_unlocked && (
+                      <p className="text-vermilion mt-2" style={{ fontSize: 12 }}>
+                        系统检测到这张Skill与你当前处境高度相关，已为你临时解锁72小时
+                      </p>
+                    )}
                   </div>
                 ))
               )}

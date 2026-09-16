@@ -17,6 +17,28 @@ function withParsedTags(row) {
   return { ...row, tags: JSON.parse(row.tags || '[]') };
 }
 
+function tempUnlockedSkillIds(userId) {
+  return new Set(
+    db
+      .prepare("SELECT skill_id FROM temporary_unlocks WHERE user_id = ? AND expires_at > datetime('now')")
+      .all(userId)
+      .map((r) => r.skill_id)
+  );
+}
+
+function grantTempUnlock(userId, skillIds, reason) {
+  const ids = [...new Set(skillIds)];
+  if (ids.length === 0) return;
+  const insert = db.prepare(
+    `INSERT INTO temporary_unlocks (user_id, skill_id, unlock_reason, expires_at)
+     VALUES (?, ?, ?, datetime('now', '+72 hours'))`
+  );
+  const tx = db.transaction((list) => {
+    for (const id of list) insert.run(userId, id, reason);
+  });
+  tx(ids);
+}
+
 router.get('/skills', requireAuth, (req, res) => {
   const { week, category } = req.query;
   let sql = "SELECT * FROM skills WHERE status != 'draft'";
@@ -36,13 +58,18 @@ router.get('/skills', requireAuth, (req, res) => {
     db.prepare('SELECT skill_id FROM stamps WHERE user_id = ?').all(req.user.id).map((r) => r.skill_id)
   );
   const moduleSkillIds = db.getModuleSkillIdSet();
+  const tempUnlockedIds = tempUnlockedSkillIds(req.user.id);
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
   res.json(
     skills.map((s) => ({
       ...withParsedTags(s),
       stamped: stampedIds.has(s.id),
-      unlocked: s.week_number <= currentWeek || stampedIds.has(s.id) || moduleSkillIds.has(s.id),
+      unlocked:
+        s.week_number <= currentWeek ||
+        stampedIds.has(s.id) ||
+        moduleSkillIds.has(s.id) ||
+        tempUnlockedIds.has(s.id),
     }))
   );
 });
@@ -88,13 +115,18 @@ router.get('/skills/search', requireAuth, (req, res) => {
     db.prepare('SELECT skill_id FROM stamps WHERE user_id = ?').all(req.user.id).map((r) => r.skill_id)
   );
   const moduleSkillIds = db.getModuleSkillIdSet();
+  const tempUnlockedIds = tempUnlockedSkillIds(req.user.id);
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
   res.json(
     skills.map((s) => ({
       ...withParsedTags(s),
       stamped: stampedIds.has(s.id),
-      unlocked: s.week_number <= currentWeek || stampedIds.has(s.id) || moduleSkillIds.has(s.id),
+      unlocked:
+        s.week_number <= currentWeek ||
+        stampedIds.has(s.id) ||
+        moduleSkillIds.has(s.id) ||
+        tempUnlockedIds.has(s.id),
     }))
   );
 });
@@ -162,13 +194,30 @@ router.post('/skills/match', requireAuth, async (req, res) => {
     db.prepare('SELECT skill_id FROM stamps WHERE user_id = ?').all(req.user.id).map((r) => r.skill_id)
   );
   const moduleSkillIds = db.getModuleSkillIdSet();
+  const tempUnlockedIds = tempUnlockedSkillIds(req.user.id);
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
   const annotate = (s) => ({
     ...withParsedTags(s),
     stamped: stampedIds.has(s.id),
-    unlocked: s.week_number <= currentWeek || stampedIds.has(s.id) || moduleSkillIds.has(s.id),
+    unlocked:
+      s.week_number <= currentWeek ||
+      stampedIds.has(s.id) ||
+      moduleSkillIds.has(s.id) ||
+      tempUnlockedIds.has(s.id),
   });
+
+  // 推荐结果一律临时解锁72小时，避免"推荐了却进不去"的死路
+  function finalizeResults(list) {
+    if (list.length > 0) {
+      grantTempUnlock(req.user.id, list.map((r) => r.id), 'ai_match');
+      list.forEach((r) => {
+        r.unlocked = true;
+        r.temp_unlocked = !(r.week_number <= currentWeek || stampedIds.has(r.id) || moduleSkillIds.has(r.id));
+      });
+    }
+    return list;
+  }
 
   let picks = null;
   try {
@@ -188,13 +237,13 @@ router.post('/skills/match', requireAuth, async (req, res) => {
       if (results.length >= 3) break;
     }
     if (results.length > 0) {
-      return res.json({ results, source: 'ai' });
+      return res.json({ results: finalizeResults(results), source: 'ai' });
     }
   }
 
   const fallbackPool = scored.length > 0 ? scored.map((x) => x.skill) : candidates;
   const fallback = fallbackPool.slice(0, 3).map((s) => ({ ...annotate(s), match_reason: '' }));
-  res.json({ results: fallback, source: 'keyword' });
+  res.json({ results: finalizeResults(fallback), source: 'keyword' });
 });
 
 router.get('/skills/:id', requireAuth, (req, res) => {
@@ -217,7 +266,10 @@ router.get('/skills/:id', requireAuth, (req, res) => {
     .prepare('SELECT 1 FROM stamps WHERE user_id = ? AND skill_id = ? LIMIT 1')
     .get(req.user.id, skill.id);
   const inModule = !!db.prepare('SELECT 1 FROM module_items WHERE skill_id = ?').get(skill.id);
-  const unlocked = skill.week_number <= currentWeek || stamped || inModule;
+  const tempUnlocked = !!db
+    .prepare("SELECT 1 FROM temporary_unlocks WHERE user_id = ? AND skill_id = ? AND expires_at > datetime('now')")
+    .get(req.user.id, skill.id);
+  const unlocked = skill.week_number <= currentWeek || stamped || inModule || tempUnlocked;
 
   if (!unlocked) {
     const currentSkill = db.prepare('SELECT id, skill_name FROM skills WHERE week_number = ?').get(currentWeek);
