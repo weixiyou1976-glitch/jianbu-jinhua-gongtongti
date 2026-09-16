@@ -366,6 +366,12 @@ export default function SkillDetail() {
           <h2 className="text-sm font-semibold text-ink mb-2">策印提交</h2>
           <p className="text-xs text-ink/40 leading-relaxed mb-4">{STAMP_EXPLAIN_TEXT}</p>
 
+          {stampHistory.length === 0 ? (
+            <p className="text-xs text-ink/40 text-left mb-4">⬜ 未安装 · 提交第一枚策印，证明你用出来了</p>
+          ) : (
+            <p className="text-sm text-ink text-left mb-4">✅ 已安装（{stampHistory.length}枚策印）</p>
+          )}
+
           {stampHistory.length > 0 && (
             <div className="space-y-3 mb-4">
               {visibleHistory.map((s) => (
