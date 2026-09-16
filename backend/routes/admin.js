@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { requireAdmin } = require('../middleware/auth');
+const { checkAndGrantMilestones, getShareTag, getConversionTag } = require('../lib/rewards');
 
 const router = express.Router();
 router.use(requireAdmin);
@@ -77,17 +78,23 @@ router.put('/trial-users/:id', (req, res) => {
   const nowConverted = !!converted;
   db.prepare('UPDATE trial_users SET converted = ? WHERE id = ?').run(nowConverted ? 1 : 0, trial.id);
 
-  if (nowConverted && !wasConverted && trial.referred_by && trial.referred_skill_id && trial.referred_share_type) {
+  if (nowConverted && !wasConverted && trial.referred_by) {
     const referrer = db.prepare('SELECT id FROM users WHERE referral_code = ?').get(trial.referred_by);
     if (referrer) {
-      const record = db
-        .prepare(
-          'SELECT id FROM referral_records WHERE referrer_user_id = ? AND skill_id = ? AND share_type = ?'
-        )
-        .get(referrer.id, trial.referred_skill_id, trial.referred_share_type);
-      if (record) {
-        db.prepare('UPDATE referral_records SET converted_count = converted_count + 1 WHERE id = ?').run(record.id);
+      if (trial.referred_skill_id && trial.referred_share_type) {
+        const record = db
+          .prepare(
+            'SELECT id FROM referral_records WHERE referrer_user_id = ? AND skill_id = ? AND share_type = ?'
+          )
+          .get(referrer.id, trial.referred_skill_id, trial.referred_share_type);
+        if (record) {
+          db.prepare('UPDATE referral_records SET converted_count = converted_count + 1 WHERE id = ?').run(record.id);
+        }
       }
+
+      db.prepare('UPDATE users SET conversion_count = conversion_count + 1 WHERE id = ?').run(referrer.id);
+      const updated = db.prepare('SELECT conversion_count FROM users WHERE id = ?').get(referrer.id);
+      checkAndGrantMilestones(referrer.id, 'conversion', updated.conversion_count);
     }
   }
 
@@ -170,6 +177,161 @@ router.post('/security/:userId/clear-devices', (req, res) => {
   if (!user) return res.status(404).json({ error: '学员不存在' });
   db.prepare('DELETE FROM devices WHERE user_id = ?').run(user.id);
   res.json({ ok: true });
+});
+
+router.get('/referral-rewards', (req, res) => {
+  const users = db
+    .prepare(
+      `SELECT id, email, share_click_count, conversion_count, referral_level_share, referral_level_conversion,
+              has_double_quote, quote_discount, referral_commission_rate
+       FROM users ORDER BY share_click_count DESC, conversion_count DESC`
+    )
+    .all();
+  res.json(
+    users.map((u) => ({
+      ...u,
+      has_double_quote: !!u.has_double_quote,
+      share_tag: getShareTag(u.share_click_count),
+      conversion_tag: getConversionTag(u.conversion_count),
+    }))
+  );
+});
+
+router.put('/referral-rewards/:id/adjust', (req, res) => {
+  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(req.params.id);
+  if (!user) return res.status(404).json({ error: '学员不存在' });
+
+  const { share_click_count, conversion_count } = req.body || {};
+  if (Number.isFinite(Number(share_click_count))) {
+    const count = Math.max(0, Math.floor(Number(share_click_count)));
+    db.prepare('UPDATE users SET share_click_count = ? WHERE id = ?').run(count, user.id);
+    checkAndGrantMilestones(user.id, 'share_click', count);
+  }
+  if (Number.isFinite(Number(conversion_count))) {
+    const count = Math.max(0, Math.floor(Number(conversion_count)));
+    db.prepare('UPDATE users SET conversion_count = ? WHERE id = ?').run(count, user.id);
+    checkAndGrantMilestones(user.id, 'conversion', count);
+  }
+  res.json({ ok: true });
+});
+
+router.put('/referral-rewards/:id/commission-rate', (req, res) => {
+  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(req.params.id);
+  if (!user) return res.status(404).json({ error: '学员不存在' });
+  const rate = Number(req.body?.referral_commission_rate);
+  if (!Number.isFinite(rate) || rate < 0 || rate > 1) return res.status(400).json({ error: '分润比例需为0-1之间的数字' });
+  db.prepare('UPDATE users SET referral_commission_rate = ? WHERE id = ?').run(rate, user.id);
+  res.json({ ok: true });
+});
+
+router.get('/fangs-voice', (req, res) => {
+  res.json(db.prepare('SELECT * FROM fangs_voice ORDER BY created_at DESC').all());
+});
+
+router.post('/fangs-voice', (req, res) => {
+  const { title, audio_url, required_share_clicks, required_conversions } = req.body || {};
+  if (!title || !audio_url) return res.status(400).json({ error: '缺少字段: title 或 audio_url' });
+  const info = db
+    .prepare(
+      'INSERT INTO fangs_voice (title, audio_url, required_share_clicks, required_conversions) VALUES (?, ?, ?, ?)'
+    )
+    .run(title, audio_url, Number(required_share_clicks) || 0, Number(required_conversions) || 0);
+  res.json(db.prepare('SELECT * FROM fangs_voice WHERE id = ?').get(info.lastInsertRowid));
+});
+
+router.put('/fangs-voice/:id', (req, res) => {
+  const existing = db.prepare('SELECT * FROM fangs_voice WHERE id = ?').get(req.params.id);
+  if (!existing) return res.status(404).json({ error: '记录不存在' });
+  const { title, audio_url, required_share_clicks, required_conversions } = req.body || {};
+  db.prepare(
+    `UPDATE fangs_voice SET title=?, audio_url=?, required_share_clicks=?, required_conversions=? WHERE id=?`
+  ).run(
+    title ?? existing.title,
+    audio_url ?? existing.audio_url,
+    Number.isFinite(Number(required_share_clicks)) ? Number(required_share_clicks) : existing.required_share_clicks,
+    Number.isFinite(Number(required_conversions)) ? Number(required_conversions) : existing.required_conversions,
+    existing.id
+  );
+  res.json(db.prepare('SELECT * FROM fangs_voice WHERE id = ?').get(existing.id));
+});
+
+router.delete('/fangs-voice/:id', (req, res) => {
+  db.prepare('DELETE FROM fangs_voice WHERE id = ?').run(req.params.id);
+  res.json({ ok: true });
+});
+
+router.post('/students/:id/record-payment', (req, res) => {
+  const student = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
+  if (!student) return res.status(404).json({ error: '学员不存在' });
+
+  const { payment_type, order_amount } = req.body || {};
+  const amount = Number(order_amount);
+  if (!Number.isFinite(amount) || amount <= 0) return res.status(400).json({ error: '订单金额需为正数' });
+  if (!['first_year', 'renewal'].includes(payment_type)) {
+    return res.status(400).json({ error: 'payment_type 需为 first_year 或 renewal' });
+  }
+
+  const insert = db.prepare(`
+    INSERT INTO commission_records (beneficiary_user_id, payer_user_id, commission_type, order_amount, commission_rate, commission_amount, status)
+    VALUES (?, ?, ?, ?, ?, ?, 'pending')
+  `);
+
+  let created = null;
+  if (payment_type === 'first_year') {
+    if (student.referrer_id) {
+      const beneficiary = db.prepare('SELECT id, referral_commission_rate FROM users WHERE id = ?').get(student.referrer_id);
+      if (beneficiary) {
+        const rate = beneficiary.referral_commission_rate || 0;
+        const info = insert.run(beneficiary.id, student.id, 'first_year', amount, rate, amount * rate);
+        created = info.lastInsertRowid;
+      }
+    }
+  } else {
+    if (student.referrer_id) {
+      const b = db.prepare('SELECT id, referrer_id FROM users WHERE id = ?').get(student.referrer_id);
+      if (b) {
+        const rate = 0.05;
+        const beneficiaryId = b.referrer_id || 0;
+        const info = insert.run(beneficiaryId, student.id, 'renewal', amount, rate, amount * rate);
+        created = info.lastInsertRowid;
+      }
+    }
+  }
+
+  res.json({ ok: true, commission_record_id: created });
+});
+
+router.get('/commissions', (req, res) => {
+  const rows = db
+    .prepare(
+      `SELECT c.*, p.email AS payer_email
+       FROM commission_records c
+       JOIN users p ON p.id = c.payer_user_id
+       ORDER BY c.created_at DESC`
+    )
+    .all();
+  const beneficiaryIds = [...new Set(rows.map((r) => r.beneficiary_user_id).filter((id) => id !== 0))];
+  const beneficiaryMap = new Map();
+  if (beneficiaryIds.length > 0) {
+    const placeholders = beneficiaryIds.map(() => '?').join(',');
+    db.prepare(`SELECT id, email FROM users WHERE id IN (${placeholders})`)
+      .all(...beneficiaryIds)
+      .forEach((u) => beneficiaryMap.set(u.id, u.email));
+  }
+  res.json(
+    rows.map((r) => ({
+      ...r,
+      status: r.status,
+      beneficiary_email: r.beneficiary_user_id === 0 ? '傲龙' : beneficiaryMap.get(r.beneficiary_user_id) || '未知',
+    }))
+  );
+});
+
+router.put('/commissions/:beneficiaryId/settle', (req, res) => {
+  const info = db
+    .prepare("UPDATE commission_records SET status = 'paid', paid_at = datetime('now') WHERE beneficiary_user_id = ? AND status = 'pending'")
+    .run(req.params.beneficiaryId);
+  res.json({ ok: true, settled_records: info.changes });
 });
 
 router.post('/students/:id/reset-password', (req, res) => {

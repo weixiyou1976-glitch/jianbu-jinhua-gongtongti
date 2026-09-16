@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
+const { checkAndGrantMilestones } = require('../lib/rewards');
 
 const router = express.Router();
 
@@ -48,6 +49,38 @@ router.post('/referral/click', (req, res) => {
 
   const recordId = upsertRecord(referrer.id, referrer.referral_code, skill_id, share_type);
   db.prepare('UPDATE referral_records SET click_count = click_count + 1 WHERE id = ?').run(recordId);
+
+  res.json({ ok: true });
+});
+
+router.post('/referral/track-click', (req, res) => {
+  const { ref, device_fingerprint } = req.body || {};
+  if (!ref) return res.json({ ok: true });
+
+  const referrer = findReferrerByCode(ref);
+  if (!referrer) return res.json({ ok: true });
+
+  const dedupKey = `${req.ip || ''}|${device_fingerprint || ''}`;
+  const recent = db
+    .prepare(
+      `SELECT 1 FROM share_click_logs
+       WHERE referrer_user_id = ? AND dedup_key = ? AND created_at >= datetime('now', '-1 day')`
+    )
+    .get(referrer.id, dedupKey);
+
+  if (!recent) {
+    db.prepare('INSERT INTO share_click_logs (referrer_user_id, dedup_key) VALUES (?, ?)').run(
+      referrer.id,
+      dedupKey
+    );
+    const info = db
+      .prepare('UPDATE users SET share_click_count = share_click_count + 1 WHERE id = ?')
+      .run(referrer.id);
+    if (info.changes > 0) {
+      const updated = db.prepare('SELECT share_click_count FROM users WHERE id = ?').get(referrer.id);
+      checkAndGrantMilestones(referrer.id, 'share_click', updated.share_click_count);
+    }
+  }
 
   res.json({ ok: true });
 });

@@ -106,6 +106,12 @@ export const api = {
     request('/referral/share', { method: 'POST', body: { skill_id, share_type } }),
   recordReferralClick: (ref, skill_id, share_type) =>
     request('/referral/click', { method: 'POST', body: { ref, skill_id, share_type } }),
+  trackReferralClick: (ref) =>
+    request('/referral/track-click', { method: 'POST', body: { ref, device_fingerprint: getDeviceFingerprint() } }),
+
+  getPendingRewards: () => request('/rewards/pending'),
+  markRewardNotified: (id) => request(`/rewards/${id}/mark-notified`, { method: 'POST' }),
+  getMyRewards: () => request('/rewards/me'),
 
   adminGenerateCodes: (count) => request('/admin/activation-codes', { method: 'POST', body: { count }, admin: true }),
   adminListCodes: () => request('/admin/activation-codes', { admin: true }),
@@ -135,6 +141,22 @@ export const api = {
   adminUnlockAccount: (userId, resetDevices) =>
     request(`/admin/security/${userId}/unlock`, { method: 'POST', body: { reset_devices: resetDevices }, admin: true }),
   adminClearDevices: (userId) => request(`/admin/security/${userId}/clear-devices`, { method: 'POST', admin: true }),
+
+  adminListReferralRewards: () => request('/admin/referral-rewards', { admin: true }),
+  adminAdjustReferralCounts: (id, payload) =>
+    request(`/admin/referral-rewards/${id}/adjust`, { method: 'PUT', body: payload, admin: true }),
+  adminSetCommissionRate: (id, referral_commission_rate) =>
+    request(`/admin/referral-rewards/${id}/commission-rate`, { method: 'PUT', body: { referral_commission_rate }, admin: true }),
+
+  adminListFangsVoice: () => request('/admin/fangs-voice', { admin: true }),
+  adminCreateFangsVoice: (payload) => request('/admin/fangs-voice', { method: 'POST', body: payload, admin: true }),
+  adminUpdateFangsVoice: (id, payload) => request(`/admin/fangs-voice/${id}`, { method: 'PUT', body: payload, admin: true }),
+  adminDeleteFangsVoice: (id) => request(`/admin/fangs-voice/${id}`, { method: 'DELETE', admin: true }),
+
+  adminRecordPayment: (id, payload) => request(`/admin/students/${id}/record-payment`, { method: 'POST', body: payload, admin: true }),
+  adminListCommissions: () => request('/admin/commissions', { admin: true }),
+  adminSettleCommissions: (beneficiaryId) =>
+    request(`/admin/commissions/${beneficiaryId}/settle`, { method: 'PUT', admin: true }),
 };
 
 export const API_BASE_URL = API_BASE;

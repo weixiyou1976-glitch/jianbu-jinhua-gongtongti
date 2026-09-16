@@ -8,22 +8,10 @@ function getSaveInstruction() {
   const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const isAndroid = /Android/.test(ua);
   if (isIOS) {
-    return (
-      <>
-        👇 长按下方图片 → 选择&apos;共享&apos;→ 发给微信好友
-        <br />
-        朋友在微信里长按图片即可扫码体验
-      </>
-    );
+    return "👇 长按图片 → 选择'共享'或'存储图像' → 发给微信好友";
   }
   if (isAndroid) {
-    return (
-      <>
-        👇 长按下方图片 → 选择&apos;保存图片&apos;→ 打开微信发给好友
-        <br />
-        朋友在微信里长按图片即可扫码体验
-      </>
-    );
+    return "👇 长按图片 → 选择'保存图片' → 发给微信好友";
   }
   return '👇 长按下方图片保存，发到微信让朋友扫码体验';
 }

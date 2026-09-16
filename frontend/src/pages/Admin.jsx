@@ -162,6 +162,64 @@ function CodesPanel() {
   );
 }
 
+function RecordPaymentForm({ studentId, onDone }) {
+  const [paymentType, setPaymentType] = useState('first_year');
+  const [amount, setAmount] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState('');
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const orderAmount = Number(amount);
+    if (!Number.isFinite(orderAmount) || orderAmount <= 0) return;
+    setBusy(true);
+    setError('');
+    setResult('');
+    try {
+      const res = await api.adminRecordPayment(studentId, { payment_type: paymentType, order_amount: orderAmount });
+      setResult(res.commission_record_id ? '已记录，分润已写入' : '已记录（该学员无推荐人，未产生分润）');
+      setAmount('');
+      onDone?.();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+      <select
+        value={paymentType}
+        onChange={(e) => setPaymentType(e.target.value)}
+        className="text-xs border border-ink/15 rounded px-1.5 py-1"
+      >
+        <option value="first_year">首年</option>
+        <option value="renewal">续费</option>
+      </select>
+      <input
+        type="number"
+        min={0}
+        step="0.01"
+        placeholder="订单金额"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        className="text-xs border border-ink/15 rounded px-1.5 py-1 w-20"
+      />
+      <button
+        type="submit"
+        disabled={busy || !amount}
+        className="text-[10px] text-vermilion border border-vermilion/30 rounded px-1.5 py-1 disabled:opacity-40 shrink-0"
+      >
+        {busy ? '记录中…' : '记录付费'}
+      </button>
+      {result && <span className="text-[10px] text-ink/50">{result}</span>}
+      {error && <span className="text-[10px] text-vermilion">{error}</span>}
+    </form>
+  );
+}
+
 function StudentsPanel() {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState('');
@@ -211,7 +269,7 @@ function StudentsPanel() {
                 <td className="py-2 text-ink/50">{s.enrolled_at?.slice(0, 10)}</td>
                 <td className="py-2">{s.stamp_count}</td>
                 <td className="py-2 text-vermilion">{s.percent}%</td>
-                <td className="py-2">
+                <td className="py-2 min-w-[220px]">
                   <button
                     onClick={() => handleReset(s.id, s.email)}
                     disabled={resettingId === s.id}
@@ -230,6 +288,7 @@ function StudentsPanel() {
                       </button>
                     </div>
                   )}
+                  <RecordPaymentForm studentId={s.id} />
                 </td>
               </tr>
             ))}
@@ -697,6 +756,348 @@ function SecurityPanel() {
   );
 }
 
+function FangsVoiceAdmin() {
+  const emptyVoice = { title: '', audio_url: '', required_share_clicks: 0, required_conversions: 0 };
+  const [list, setList] = useState([]);
+  const [editing, setEditing] = useState(null);
+  const [error, setError] = useState('');
+
+  function refresh() {
+    api.adminListFangsVoice().then(setList).catch((err) => setError(err.message));
+  }
+  useEffect(refresh, []);
+
+  async function handleSave(e) {
+    e.preventDefault();
+    try {
+      if (editing.id) {
+        await api.adminUpdateFangsVoice(editing.id, editing);
+      } else {
+        await api.adminCreateFangsVoice(editing);
+      }
+      setEditing(null);
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function handleDelete(id) {
+    if (!confirm('确认删除这条私房话？')) return;
+    await api.adminDeleteFangsVoice(id);
+    refresh();
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-semibold text-ink">私房话内容管理</h3>
+        {!editing && (
+          <button
+            onClick={() => setEditing({ ...emptyVoice })}
+            className="text-xs bg-vermilion text-paper rounded-full px-3 py-1.5"
+          >
+            + 新增
+          </button>
+        )}
+      </div>
+      {error && <p className="text-vermilion text-sm mb-2">{error}</p>}
+
+      {editing ? (
+        <form onSubmit={handleSave} className="space-y-2 border border-ink/10 rounded-xl p-4 text-sm">
+          <input
+            placeholder="标题"
+            value={editing.title}
+            onChange={(e) => setEditing((s) => ({ ...s, title: e.target.value }))}
+            className="w-full border border-ink/15 rounded-lg p-2 text-sm"
+            required
+          />
+          <input
+            placeholder="音频URL"
+            value={editing.audio_url}
+            onChange={(e) => setEditing((s) => ({ ...s, audio_url: e.target.value }))}
+            className="w-full border border-ink/15 rounded-lg p-2 text-sm"
+            required
+          />
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <label className="text-xs text-ink/50 block mb-1">分享点击门槛（0表示不通过此方式解锁）</label>
+              <input
+                type="number"
+                min={0}
+                value={editing.required_share_clicks}
+                onChange={(e) => setEditing((s) => ({ ...s, required_share_clicks: e.target.value }))}
+                className="w-full border border-ink/15 rounded-lg p-2 text-sm"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="text-xs text-ink/50 block mb-1">转化人数门槛（0表示不通过此方式解锁）</label>
+              <input
+                type="number"
+                min={0}
+                value={editing.required_conversions}
+                onChange={(e) => setEditing((s) => ({ ...s, required_conversions: e.target.value }))}
+                className="w-full border border-ink/15 rounded-lg p-2 text-sm"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button className="bg-vermilion text-paper rounded-lg px-4 py-2 text-sm">保存</button>
+            <button type="button" onClick={() => setEditing(null)} className="text-ink/40 text-sm px-2">取消</button>
+          </div>
+        </form>
+      ) : (
+        <div className="space-y-2">
+          {list.length === 0 && <p className="text-sm text-ink/40">还没有私房话内容</p>}
+          {list.map((f) => (
+            <div key={f.id} className="flex items-center justify-between border border-ink/10 rounded-lg px-3 py-2 text-sm">
+              <div>
+                <p className="text-ink">{f.title}</p>
+                <p className="text-xs text-ink/40">
+                  {f.required_share_clicks > 0 && `分享${f.required_share_clicks}次解锁`}
+                  {f.required_share_clicks > 0 && f.required_conversions > 0 && ' / '}
+                  {f.required_conversions > 0 && `转化${f.required_conversions}人解锁`}
+                </p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <button onClick={() => setEditing(f)} className="text-vermilion text-xs">编辑</button>
+                <button onClick={() => handleDelete(f.id)} className="text-ink/40 text-xs">删除</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ReferralRewardsPanel() {
+  const [rows, setRows] = useState([]);
+  const [error, setError] = useState('');
+  const [drafts, setDrafts] = useState({});
+  const [busyId, setBusyId] = useState(null);
+
+  function refresh() {
+    api.adminListReferralRewards().then(setRows).catch((err) => setError(err.message));
+  }
+  useEffect(refresh, []);
+
+  function draftFor(row) {
+    return drafts[row.id] || {
+      share_click_count: String(row.share_click_count),
+      conversion_count: String(row.conversion_count),
+      referral_commission_rate: String(row.referral_commission_rate),
+    };
+  }
+
+  function updateDraft(id, field, value) {
+    setDrafts((d) => ({ ...d, [id]: { ...draftFor(rows.find((r) => r.id === id)), ...d[id], [field]: value } }));
+  }
+
+  async function handleSaveCounts(row) {
+    const draft = draftFor(row);
+    setBusyId(row.id);
+    setError('');
+    try {
+      await api.adminAdjustReferralCounts(row.id, {
+        share_click_count: Number(draft.share_click_count),
+        conversion_count: Number(draft.conversion_count),
+      });
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function handleSaveRate(row) {
+    const draft = draftFor(row);
+    setBusyId(row.id);
+    setError('');
+    try {
+      await api.adminSetCommissionRate(row.id, Number(draft.referral_commission_rate));
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  return (
+    <div className="space-y-8">
+      {error && <p className="text-vermilion text-sm">{error}</p>}
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-left text-ink/40 border-b border-ink/10">
+              <th className="py-2 font-normal">学员</th>
+              <th className="py-2 font-normal">标签</th>
+              <th className="py-2 font-normal">分享点击</th>
+              <th className="py-2 font-normal">转化人数</th>
+              <th className="py-2 font-normal">分润比例</th>
+              <th className="py-2 font-normal">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => {
+              const draft = draftFor(r);
+              return (
+                <tr key={r.id} className="border-b border-ink/5 align-top">
+                  <td className="py-2 whitespace-nowrap">{r.email}</td>
+                  <td className="py-2 whitespace-nowrap text-xs text-ink/60">
+                    {[r.share_tag, r.conversion_tag].filter(Boolean).join(' · ') || '—'}
+                  </td>
+                  <td className="py-2">
+                    <input
+                      type="number"
+                      min={0}
+                      value={draft.share_click_count}
+                      onChange={(e) => updateDraft(r.id, 'share_click_count', e.target.value)}
+                      className="w-20 border border-ink/15 rounded px-1.5 py-1 text-xs"
+                    />
+                  </td>
+                  <td className="py-2">
+                    <input
+                      type="number"
+                      min={0}
+                      value={draft.conversion_count}
+                      onChange={(e) => updateDraft(r.id, 'conversion_count', e.target.value)}
+                      className="w-16 border border-ink/15 rounded px-1.5 py-1 text-xs"
+                    />
+                  </td>
+                  <td className="py-2">
+                    <input
+                      type="number"
+                      min={0}
+                      max={1}
+                      step="0.01"
+                      value={draft.referral_commission_rate}
+                      onChange={(e) => updateDraft(r.id, 'referral_commission_rate', e.target.value)}
+                      className="w-16 border border-ink/15 rounded px-1.5 py-1 text-xs"
+                    />
+                  </td>
+                  <td className="py-2 whitespace-nowrap">
+                    <button
+                      onClick={() => handleSaveCounts(r)}
+                      disabled={busyId === r.id}
+                      className="text-xs text-vermilion disabled:opacity-40 mr-2"
+                    >
+                      保存计数
+                    </button>
+                    <button
+                      onClick={() => handleSaveRate(r)}
+                      disabled={busyId === r.id}
+                      className="text-xs text-vermilion disabled:opacity-40"
+                    >
+                      保存比例
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <FangsVoiceAdmin />
+    </div>
+  );
+}
+
+function CommissionsPanel() {
+  const [rows, setRows] = useState([]);
+  const [error, setError] = useState('');
+  const [settlingId, setSettlingId] = useState(null);
+
+  function refresh() {
+    api.adminListCommissions().then(setRows).catch((err) => setError(err.message));
+  }
+  useEffect(refresh, []);
+
+  async function handleSettle(beneficiaryId) {
+    if (!confirm('确认把该学员所有待结算分润标记为已结算？')) return;
+    setSettlingId(beneficiaryId);
+    try {
+      await api.adminSettleCommissions(beneficiaryId);
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSettlingId(null);
+    }
+  }
+
+  const groups = new Map();
+  for (const r of rows) {
+    const key = r.beneficiary_user_id;
+    if (!groups.has(key)) groups.set(key, { beneficiary_email: r.beneficiary_email, records: [] });
+    groups.get(key).records.push(r);
+  }
+
+  const typeLabel = { first_year: '首年推荐', renewal: '续费二级' };
+
+  return (
+    <div className="space-y-6">
+      {error && <p className="text-vermilion text-sm">{error}</p>}
+      {rows.length === 0 && <p className="text-sm text-ink/40">还没有分润记录</p>}
+
+      {[...groups.entries()].map(([beneficiaryId, group]) => {
+        const pending = group.records.filter((r) => r.status === 'pending');
+        const pendingTotal = pending.reduce((sum, r) => sum + r.commission_amount, 0);
+        return (
+          <div key={beneficiaryId} className="border border-ink/10 rounded-2xl p-4">
+            <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+              <div>
+                <p className="text-sm font-semibold text-ink">
+                  {group.beneficiary_email}
+                  {Number(beneficiaryId) === 0 && <span className="text-xs text-ink/40 ml-1">（归傲龙）</span>}
+                </p>
+                <p className="text-xs text-ink/40">待结算合计 ¥{pendingTotal.toFixed(2)}</p>
+              </div>
+              <button
+                onClick={() => handleSettle(beneficiaryId)}
+                disabled={settlingId === beneficiaryId || pending.length === 0}
+                className="text-xs bg-vermilion text-paper rounded-full px-3 py-1.5 disabled:opacity-30 shrink-0"
+              >
+                {settlingId === beneficiaryId ? '处理中…' : '标记为已结算'}
+              </button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs border-collapse">
+                <thead>
+                  <tr className="text-left text-ink/40">
+                    <th className="py-1 font-normal">付费学员</th>
+                    <th className="py-1 font-normal">类型</th>
+                    <th className="py-1 font-normal">订单金额</th>
+                    <th className="py-1 font-normal">应得分润</th>
+                    <th className="py-1 font-normal">状态</th>
+                    <th className="py-1 font-normal">时间</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.records.map((r) => (
+                    <tr key={r.id} className="border-t border-ink/5">
+                      <td className="py-1 text-ink/70 whitespace-nowrap">{r.payer_email}</td>
+                      <td className="py-1 text-ink/70 whitespace-nowrap">{typeLabel[r.commission_type] || r.commission_type}</td>
+                      <td className="py-1 text-ink/70 whitespace-nowrap">¥{r.order_amount.toFixed(2)}</td>
+                      <td className="py-1 text-vermilion whitespace-nowrap">¥{r.commission_amount.toFixed(2)}</td>
+                      <td className="py-1 whitespace-nowrap">{r.status === 'paid' ? '已结算' : '待结算'}</td>
+                      <td className="py-1 text-ink/50 whitespace-nowrap">{r.created_at?.slice(0, 10)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Admin() {
   const [unlocked, setUnlocked] = useState(!!localStorage.getItem('adminPassword'));
   const [tab, setTab] = useState('codes');
@@ -713,6 +1114,8 @@ export default function Admin() {
             ['students', '学员'],
             ['trial', '试用用户'],
             ['referrals', '分享数据'],
+            ['referral-rewards', '推荐奖励'],
+            ['commissions', '分润管理'],
             ['security', '账号安全'],
             ['skills', 'Skill内容'],
             ['modules', '学习模块'],
@@ -732,6 +1135,8 @@ export default function Admin() {
         {tab === 'students' && <StudentsPanel />}
         {tab === 'trial' && <TrialUsersPanel />}
         {tab === 'referrals' && <ReferralsPanel />}
+        {tab === 'referral-rewards' && <ReferralRewardsPanel />}
+        {tab === 'commissions' && <CommissionsPanel />}
         {tab === 'security' && <SecurityPanel />}
         {tab === 'skills' && <SkillsPanel />}
         {tab === 'modules' && <ModulesPanel />}

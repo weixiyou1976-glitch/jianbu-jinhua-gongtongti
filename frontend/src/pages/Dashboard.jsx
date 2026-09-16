@@ -6,6 +6,7 @@ import ProgressRing from '../components/ProgressRing';
 import BottomNav from '../components/BottomNav';
 import AoLongAvatar from '../components/AoLongAvatar';
 import DailyQuoteModal from '../components/DailyQuoteModal';
+import RewardUnlockModal from '../components/RewardUnlockModal';
 
 const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
 
@@ -23,8 +24,10 @@ export default function Dashboard() {
   const [showAddBanner, setShowAddBanner] = useState(false);
   const [checkinToast, setCheckinToast] = useState(false);
   const [dailyQuote, setDailyQuote] = useState(null);
+  const [pendingRewards, setPendingRewards] = useState([]);
 
   useEffect(() => {
+    api.getPendingRewards().then(setPendingRewards).catch(() => {});
     Promise.all([api.getCurrentSkill(), api.getProgress(), api.getStamps()])
       .then(([c, p, s]) => {
         setCurrent(c);
@@ -64,6 +67,12 @@ export default function Dashboard() {
       // 忽略隐私模式下localStorage不可用的情况
     }
   }, []);
+
+  function handleCloseRewardModal() {
+    const [first, ...rest] = pendingRewards;
+    if (first) api.markRewardNotified(first.id).catch(() => {});
+    setPendingRewards(rest);
+  }
 
   function dismissAddBanner() {
     setShowAddBanner(false);
@@ -192,6 +201,9 @@ export default function Dashboard() {
       <BottomNav />
 
       {dailyQuote && <DailyQuoteModal quote={dailyQuote} onClose={() => setDailyQuote(null)} />}
+      {!dailyQuote && pendingRewards.length > 0 && (
+        <RewardUnlockModal reward={pendingRewards[0]} onClose={handleCloseRewardModal} />
+      )}
     </div>
   );
 }

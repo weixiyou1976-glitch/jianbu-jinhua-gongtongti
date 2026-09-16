@@ -62,8 +62,19 @@ export default function Progress() {
         )}
 
         <Link
-          to="/quotes"
+          to="/rewards"
           className="flex items-center justify-between border border-ink/10 rounded-2xl p-4 mt-8 bg-white/40"
+        >
+          <span className="flex items-center gap-2 text-sm text-ink">
+            <span className="text-lg">🎁</span>
+            推荐奖励
+          </span>
+          <span className="text-xs text-ink/40">→</span>
+        </Link>
+
+        <Link
+          to="/quotes"
+          className="flex items-center justify-between border border-ink/10 rounded-2xl p-4 mt-3 bg-white/40"
         >
           <span className="flex items-center gap-2 text-sm text-ink">
             <span className="text-lg">📝</span>

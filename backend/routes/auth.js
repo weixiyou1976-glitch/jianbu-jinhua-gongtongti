@@ -46,7 +46,7 @@ function checkAndTrackDevice(user, fingerprint, deviceName) {
 }
 
 router.post('/register', (req, res) => {
-  const { activation_code, email, password, device_fingerprint, device_name } = req.body || {};
+  const { activation_code, email, password, device_fingerprint, device_name, ref } = req.body || {};
   if (!activation_code || !email || !password) {
     return res.status(400).json({ error: '激活码、邮箱、密码均为必填' });
   }
@@ -66,9 +66,11 @@ router.post('/register', (req, res) => {
   const passwordHash = bcrypt.hashSync(password, 10);
   const now = new Date().toISOString();
 
+  const referrer = ref ? db.prepare('SELECT id FROM users WHERE referral_code = ?').get(ref) : null;
+
   const insertUser = db.prepare(`
-    INSERT INTO users (email, password_hash, activation_code, activated_at, enrolled_at, referral_code)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO users (email, password_hash, activation_code, activated_at, enrolled_at, referral_code, referrer_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
   const markCode = db.prepare(`
     UPDATE activation_codes SET used = 1, used_by = ?, used_at = ? WHERE code = ?
@@ -81,7 +83,8 @@ router.post('/register', (req, res) => {
       code.code,
       now,
       now,
-      db.generateReferralCode()
+      db.generateReferralCode(),
+      referrer ? referrer.id : null
     );
     markCode.run(info.lastInsertRowid, now, code.code);
     return info.lastInsertRowid;

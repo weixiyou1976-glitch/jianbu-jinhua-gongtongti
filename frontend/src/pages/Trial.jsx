@@ -8,6 +8,7 @@ import AoLongAvatar from '../components/AoLongAvatar';
 const TRIAL_TOKEN_KEY = 'trialToken';
 const REFERRAL_KEY = 'trialReferral';
 const REFERRAL_CLICK_TRACKED_KEY = 'trialReferralClickTracked';
+const PENDING_REFERRAL_CODE_KEY = 'pendingReferralCode';
 const ALREADY_USED_MSG = '你已经体验过了，欢迎加入渐步';
 const EXPIRED_MSG = '体验时间已结束，欢迎加入渐步';
 const NO_MATCH_MSG = '还没有匹配到Skill';
@@ -368,6 +369,16 @@ export default function Trial() {
   const [referral, setReferral] = useState(null);
 
   useEffect(() => {
+    const rawRef = new URLSearchParams(window.location.search).get('ref');
+    if (rawRef) {
+      try {
+        localStorage.setItem(PENDING_REFERRAL_CODE_KEY, rawRef);
+      } catch {
+        // 忽略隐私模式下localStorage不可用的情况
+      }
+      api.trackReferralClick(rawRef).catch(() => {});
+    }
+
     const urlReferral = readReferralFromUrl();
     const activeReferral = urlReferral || getStoredReferral();
     setReferral(activeReferral);

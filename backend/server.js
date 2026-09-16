@@ -12,12 +12,14 @@ const modulesRoutes = require('./routes/modules');
 const trialRoutes = require('./routes/trial');
 const referralRoutes = require('./routes/referral');
 const quotesRoutes = require('./routes/quotes');
+const rewardsRoutes = require('./routes/rewards');
 
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean)
   : '*';
 
 const app = express();
+app.set('trust proxy', true);
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
@@ -32,6 +34,7 @@ app.use('/api', modulesRoutes);
 app.use('/api', trialRoutes);
 app.use('/api', referralRoutes);
 app.use('/api', quotesRoutes);
+app.use('/api', rewardsRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.use((err, req, res, next) => {

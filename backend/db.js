@@ -183,6 +183,52 @@ CREATE TABLE IF NOT EXISTS saved_quotes (
 );
 
 CREATE INDEX IF NOT EXISTS idx_saved_quotes_user ON saved_quotes(user_id, saved_at);
+
+CREATE TABLE IF NOT EXISTS referral_rewards (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reward_type TEXT NOT NULL CHECK (reward_type IN ('share_click', 'conversion')),
+  milestone INTEGER NOT NULL,
+  reward_content TEXT NOT NULL,
+  unlocked_at TEXT NOT NULL DEFAULT (datetime('now')),
+  is_notified INTEGER NOT NULL DEFAULT 0,
+  UNIQUE(user_id, reward_type, milestone)
+);
+
+CREATE INDEX IF NOT EXISTS idx_referral_rewards_user ON referral_rewards(user_id);
+
+CREATE TABLE IF NOT EXISTS fangs_voice (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  audio_url TEXT NOT NULL,
+  required_share_clicks INTEGER NOT NULL DEFAULT 0,
+  required_conversions INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS commission_records (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  beneficiary_user_id INTEGER NOT NULL,
+  payer_user_id INTEGER NOT NULL REFERENCES users(id),
+  commission_type TEXT NOT NULL CHECK (commission_type IN ('first_year', 'renewal')),
+  order_amount REAL NOT NULL,
+  commission_rate REAL NOT NULL,
+  commission_amount REAL NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'paid')),
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  paid_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_commission_records_beneficiary ON commission_records(beneficiary_user_id, status);
+
+CREATE TABLE IF NOT EXISTS share_click_logs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  referrer_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  dedup_key TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_share_click_logs_lookup ON share_click_logs(referrer_user_id, dedup_key, created_at);
 `);
 
 const stampIndexes = db.prepare(`PRAGMA index_list(stamps)`).all();
@@ -238,6 +284,30 @@ if (!userColumns.includes('account_locked')) {
 }
 if (!userColumns.includes('locked_reason')) {
   db.exec(`ALTER TABLE users ADD COLUMN locked_reason TEXT`);
+}
+if (!userColumns.includes('share_click_count')) {
+  db.exec(`ALTER TABLE users ADD COLUMN share_click_count INTEGER NOT NULL DEFAULT 0`);
+}
+if (!userColumns.includes('conversion_count')) {
+  db.exec(`ALTER TABLE users ADD COLUMN conversion_count INTEGER NOT NULL DEFAULT 0`);
+}
+if (!userColumns.includes('referral_level_share')) {
+  db.exec(`ALTER TABLE users ADD COLUMN referral_level_share INTEGER NOT NULL DEFAULT 0`);
+}
+if (!userColumns.includes('referral_level_conversion')) {
+  db.exec(`ALTER TABLE users ADD COLUMN referral_level_conversion INTEGER NOT NULL DEFAULT 0`);
+}
+if (!userColumns.includes('has_double_quote')) {
+  db.exec(`ALTER TABLE users ADD COLUMN has_double_quote INTEGER NOT NULL DEFAULT 0`);
+}
+if (!userColumns.includes('quote_discount')) {
+  db.exec(`ALTER TABLE users ADD COLUMN quote_discount REAL NOT NULL DEFAULT 1.0`);
+}
+if (!userColumns.includes('referrer_id')) {
+  db.exec(`ALTER TABLE users ADD COLUMN referrer_id INTEGER REFERENCES users(id)`);
+}
+if (!userColumns.includes('referral_commission_rate')) {
+  db.exec(`ALTER TABLE users ADD COLUMN referral_commission_rate REAL NOT NULL DEFAULT 0`);
 }
 db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code IS NOT NULL`);
 

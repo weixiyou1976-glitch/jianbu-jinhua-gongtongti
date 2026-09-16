@@ -36,10 +36,23 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      const data =
-        mode === 'login'
-          ? await api.login({ email: form.email, password: form.password })
-          : await api.register(form);
+      let data;
+      if (mode === 'login') {
+        data = await api.login({ email: form.email, password: form.password });
+      } else {
+        let ref = null;
+        try {
+          ref = localStorage.getItem('pendingReferralCode');
+        } catch {
+          // 忽略隐私模式下localStorage不可用的情况
+        }
+        data = await api.register(ref ? { ...form, ref } : form);
+        try {
+          localStorage.removeItem('pendingReferralCode');
+        } catch {
+          // 忽略隐私模式下localStorage不可用的情况
+        }
+      }
       login(data.token, data.user);
       navigate('/dashboard');
     } catch (err) {
