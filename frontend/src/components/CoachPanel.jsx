@@ -26,7 +26,7 @@ function formatLastActive(isoLike) {
   return date.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-export default function CoachPanel({ skill }) {
+export default function CoachPanel({ skill, stampCount = 0 }) {
   const [situation, setSituation] = useState('');
   const [conversation, setConversation] = useState([]);
   const [draft, setDraft] = useState('');
@@ -154,6 +154,12 @@ export default function CoachPanel({ skill }) {
         <br />
         我会根据本周Skill帮你设计专属练习。
       </p>
+
+      {stampCount > 0 && (
+        <p className="text-ink/40 text-center mb-4" style={{ fontSize: 12 }}>
+          已加载你的{Math.min(stampCount, 5)}次练习记录，傲龙的数字分身会在上次基础上继续陪你练
+        </p>
+      )}
 
       {!started && (
         <form onSubmit={handleStart} className="space-y-2">

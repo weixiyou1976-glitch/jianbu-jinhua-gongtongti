@@ -1,4 +1,30 @@
-function buildSystemPrompt(skill) {
+function buildHistoryBlock(stampHistory) {
+  if (!stampHistory || stampHistory.length === 0) {
+    return '\n\n这位学员是第一次在这个Skill上开始陪练，请从基础开始引导。';
+  }
+
+  const records = stampHistory
+    .map((s, i) => {
+      const date = (s.submitted_at || '').slice(0, 10);
+      return `第${i + 1}次（${date}）：
+- 我学了：${s.learned}
+- 我练了：${s.practiced}
+- 我得到了：${s.gained}`;
+    })
+    .join('\n\n');
+
+  return `\n\n这位学员在这个Skill上已经有过以下实战记录（从最近到最早）：
+
+${records}
+
+请根据这些历史记录，了解这位学员在这个Skill上的练习进度和卡点，在陪练时：
+1. 不要重复他已经掌握的部分
+2. 针对他上次卡住或还没突破的地方重点练习
+3. 在合适的时机，提到他的进步（比如"上次你说XXX，这次我们在这个基础上继续"）
+4. 如果这是他第一次，正常开始陪练`;
+}
+
+function buildSystemPrompt(skill, stampHistory = []) {
   return `你是一位专业的行为训练教练，你的任务是帮助学员把「${skill.skill_name}」这个Skill真正练出来，而不是告诉他道理。
 
 本周Skill信息：
@@ -64,7 +90,7 @@ function buildSystemPrompt(skill) {
 注意：
 - 只聚焦在本周Skill的练习上，不展开其他话题
 - 语气像一个有经验的教练，不像AI客服
-- 对话结束时，鼓励学员把本次练习的收获写进策印`;
+- 对话结束时，鼓励学员把本次练习的收获写进策印${buildHistoryBlock(stampHistory)}`;
 }
 
 module.exports = { buildSystemPrompt };

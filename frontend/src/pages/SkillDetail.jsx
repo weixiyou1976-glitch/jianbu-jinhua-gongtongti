@@ -359,7 +359,7 @@ export default function SkillDetail() {
         )}
 
         {/* AI陪练 */}
-        <CoachPanel skill={skill} />
+        <CoachPanel skill={skill} stampCount={stampHistory.length} />
 
         {/* 5. 策印提交区 */}
         <section className="border border-ink/10 rounded-2xl p-6">

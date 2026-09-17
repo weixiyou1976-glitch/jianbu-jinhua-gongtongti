@@ -101,10 +101,18 @@ router.post('/coach/message', requireAuth, async (req, res) => {
     .prepare('SELECT role, content FROM coach_messages WHERE user_id = ? AND skill_id = ? ORDER BY id ASC')
     .all(req.user.id, skill_id);
 
+  const stampHistory = db
+    .prepare(
+      `SELECT learned, practiced, gained, submitted_at FROM stamps
+       WHERE user_id = ? AND skill_id = ?
+       ORDER BY submitted_at DESC LIMIT 5`
+    )
+    .all(req.user.id, skill_id);
+
   insertMessage.run(req.user.id, skill_id, 'user', message);
 
   const messages = [
-    { role: 'system', content: buildSystemPrompt(skill) },
+    { role: 'system', content: buildSystemPrompt(skill, stampHistory) },
     ...history,
     { role: 'user', content: message },
   ];
