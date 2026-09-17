@@ -431,6 +431,7 @@ function getModuleSkillIdSet() {
 }
 
 require('./migrations/skills-225-230')(db);
+require('./migrations/skills-231-236')(db);
 
 module.exports = db;
 module.exports.setSkillTags = setSkillTags;
