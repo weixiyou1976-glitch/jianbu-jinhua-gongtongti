@@ -433,6 +433,11 @@ function getModuleSkillIdSet() {
 require('./migrations/skills-225-230')(db);
 require('./migrations/skills-231-236')(db);
 
+// 第234周录入时分类写成了"行动与适应能力类"，订正为库里已有的"行动与适应类"，避免筛选标签重复。
+db.prepare(
+  "UPDATE skills SET category = '行动与适应类' WHERE week_number = 234 AND category = '行动与适应能力类'"
+).run();
+
 module.exports = db;
 module.exports.setSkillTags = setSkillTags;
 module.exports.getModuleSkillIdSet = getModuleSkillIdSet;
