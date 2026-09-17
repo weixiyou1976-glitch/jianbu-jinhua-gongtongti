@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
+const { checkAndGrantGrowthLevel } = require('../lib/growth');
 
 const router = express.Router();
 
@@ -23,6 +24,8 @@ router.post('/skills/:id/stamp', requireAuth, (req, res) => {
     `INSERT INTO practice_checkins (user_id, checkin_date, stamp_count) VALUES (?, ?, 1)
      ON CONFLICT(user_id, checkin_date) DO UPDATE SET stamp_count = stamp_count + 1`
   ).run(req.user.id, today);
+
+  checkAndGrantGrowthLevel(req.user.id);
 
   const count = db
     .prepare('SELECT COUNT(*) AS c FROM stamps WHERE user_id = ?')

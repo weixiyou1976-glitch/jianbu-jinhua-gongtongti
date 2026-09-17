@@ -57,7 +57,9 @@ function streakForUser(table, userId) {
 }
 
 router.get('/students', (req, res) => {
-  const users = db.prepare('SELECT id, email, activated_at, enrolled_at FROM users ORDER BY created_at DESC').all();
+  const users = db
+    .prepare('SELECT id, email, activated_at, enrolled_at, growth_level, growth_title FROM users ORDER BY created_at DESC')
+    .all();
   const withProgress = users.map((u) => {
     const stampCount = db.prepare('SELECT COUNT(*) AS c FROM stamps WHERE user_id = ?').get(u.id).c;
     const skillsMastered = db

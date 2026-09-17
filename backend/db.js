@@ -242,6 +242,18 @@ CREATE TABLE IF NOT EXISTS referral_rewards (
 
 CREATE INDEX IF NOT EXISTS idx_referral_rewards_user ON referral_rewards(user_id);
 
+CREATE TABLE IF NOT EXISTS growth_achievements (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  level INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  achieved_at TEXT NOT NULL DEFAULT (datetime('now')),
+  is_notified INTEGER NOT NULL DEFAULT 0,
+  UNIQUE(user_id, level)
+);
+
+CREATE INDEX IF NOT EXISTS idx_growth_achievements_user ON growth_achievements(user_id);
+
 CREATE TABLE IF NOT EXISTS fangs_voice (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
@@ -371,6 +383,12 @@ if (!userColumns.includes('trial_converted_at')) {
 }
 if (!userColumns.includes('welcome_shown')) {
   db.exec(`ALTER TABLE users ADD COLUMN welcome_shown INTEGER NOT NULL DEFAULT 0`);
+}
+if (!userColumns.includes('growth_level')) {
+  db.exec(`ALTER TABLE users ADD COLUMN growth_level INTEGER NOT NULL DEFAULT 0`);
+}
+if (!userColumns.includes('growth_title')) {
+  db.exec(`ALTER TABLE users ADD COLUMN growth_title TEXT`);
 }
 db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code IS NOT NULL`);
 

@@ -11,6 +11,7 @@ import CheckinStreakRow from '../components/CheckinStreakRow';
 import StreakBanner from '../components/StreakBanner';
 import StreakBrokenModal from '../components/StreakBrokenModal';
 import WelcomeModal from '../components/WelcomeModal';
+import GrowthLevelUpModal from '../components/GrowthLevelUpModal';
 
 const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
 
@@ -53,6 +54,8 @@ export default function Dashboard() {
   const [checkinToast, setCheckinToast] = useState(false);
   const [dailyQuote, setDailyQuote] = useState(null);
   const [pendingRewards, setPendingRewards] = useState([]);
+  const [pendingGrowthAchievements, setPendingGrowthAchievements] = useState([]);
+  const [growthInfo, setGrowthInfo] = useState(null);
   const [checkinStats, setCheckinStats] = useState(null);
   const [practiceBroken, setPracticeBroken] = useState(false);
   const [practiceBannerStreak, setPracticeBannerStreak] = useState(null);
@@ -112,6 +115,8 @@ export default function Dashboard() {
       })
       .catch(resolveWelcomePending);
     api.getPendingRewards().then(setPendingRewards).catch(() => {});
+    api.getGrowthPending().then(setPendingGrowthAchievements).catch(() => {});
+    api.getGrowthInfo().then(setGrowthInfo).catch(() => {});
     Promise.all([api.getCurrentSkill(), api.getProgress(), api.getStamps()])
       .then(([c, p, s]) => {
         setCurrent(c);
@@ -161,6 +166,12 @@ export default function Dashboard() {
     setPendingRewards(rest);
   }
 
+  function handleCloseGrowthAchievement() {
+    const [first, ...rest] = pendingGrowthAchievements;
+    if (first) api.markGrowthNotified(first.id).catch(() => {});
+    setPendingGrowthAchievements(rest);
+  }
+
   function handleClosePracticeBroken() {
     setPracticeBroken(false);
   }
@@ -190,7 +201,22 @@ export default function Dashboard() {
       <header className="max-w-content mx-auto px-6 pt-8 pb-4 flex items-center justify-between">
         <div>
           <p className="text-ink/40 text-xs">欢迎回来</p>
-          <p className="text-ink text-sm">{user?.email}</p>
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="text-ink text-sm">{user?.email}</p>
+            {growthInfo?.growth_title && (
+              <span
+                style={{
+                  fontSize: 12,
+                  color: '#C41E1E',
+                  border: '1px solid #C41E1E',
+                  borderRadius: 999,
+                  padding: '1px 8px',
+                }}
+              >
+                {growthInfo.growth_title}
+              </span>
+            )}
+          </div>
         </div>
         <button onClick={logout} className="text-xs text-ink/40 border border-ink/15 rounded-full px-3 py-1.5">
           退出
@@ -315,9 +341,21 @@ export default function Dashboard() {
       {!welcomeInfo && !dailyQuote && !practiceBroken && pendingRewards.length > 0 && (
         <RewardUnlockModal reward={pendingRewards[0]} onClose={handleCloseRewardModal} />
       )}
-      {!welcomeInfo && !dailyQuote && !practiceBroken && practiceBannerStreak != null && (
-        <StreakBanner streak={practiceBannerStreak} onDone={() => setPracticeBannerStreak(null)} />
-      )}
+      {!welcomeInfo &&
+        !dailyQuote &&
+        !practiceBroken &&
+        pendingRewards.length === 0 &&
+        pendingGrowthAchievements.length > 0 && (
+          <GrowthLevelUpModal achievement={pendingGrowthAchievements[0]} onClose={handleCloseGrowthAchievement} />
+        )}
+      {!welcomeInfo &&
+        !dailyQuote &&
+        !practiceBroken &&
+        pendingRewards.length === 0 &&
+        pendingGrowthAchievements.length === 0 &&
+        practiceBannerStreak != null && (
+          <StreakBanner streak={practiceBannerStreak} onDone={() => setPracticeBannerStreak(null)} />
+        )}
     </div>
   );
 }

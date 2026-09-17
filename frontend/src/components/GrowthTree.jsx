@@ -1,6 +1,7 @@
 const TRUNK = '#8B5E3C';
 const LEAF = '#2D6A4F';
 const ACCENT = '#C41E1E';
+const GOLD = '#D4AF37';
 
 const STAGES = [
   { min: 0, max: 0, label: '种子', trunkW: 0, trunkH: 0, leaves: 0, canopy: 0, flowers: 0, fruit: 0, seed: true },
@@ -9,7 +10,70 @@ const STAGES = [
   { min: 16, max: 30, label: '茁壮', trunkW: 10, trunkH: 70, leaves: 0, canopy: 1, flowers: 0, fruit: 0 },
   { min: 31, max: 50, label: '枝繁叶茂', trunkW: 13, trunkH: 85, leaves: 0, canopy: 2, flowers: 0, fruit: 0 },
   { min: 51, max: 100, label: '大树', trunkW: 16, trunkH: 95, leaves: 0, canopy: 3, flowers: 7, fruit: 0 },
-  { min: 101, max: 224, label: '参天大树', trunkW: 18, trunkH: 105, leaves: 0, canopy: 4, flowers: 0, fruit: 9 },
+  {
+    min: 101,
+    max: 224,
+    label: '参天大树',
+    trunkW: 18,
+    trunkH: 105,
+    leaves: 0,
+    canopy: 4,
+    flowers: 0,
+    fruit: 9,
+    nextLabel: '古树',
+    progressMax: 225,
+  },
+  {
+    min: 225,
+    max: 500,
+    label: '古树',
+    trunkW: 22,
+    trunkH: 120,
+    leaves: 0,
+    canopy: 5,
+    flowers: 0,
+    fruit: 16,
+    trunkColor: '#5C3D1E',
+    leafColor: '#1B4D3E',
+    roots: true,
+    nextLabel: '神树',
+    progressMax: 501,
+  },
+  {
+    min: 501,
+    max: 1000,
+    label: '神树',
+    trunkW: 20,
+    trunkH: 135,
+    leaves: 0,
+    canopy: 6,
+    flowers: 0,
+    fruit: 10,
+    trunkColor: '#8B5E3C',
+    leafColor: '#1B4D3E',
+    goldTrim: true,
+    glow: true,
+    roots: true,
+    spiralBranches: true,
+    nextLabel: '化境之树',
+    progressMax: 1001,
+  },
+  {
+    min: 1001,
+    max: Infinity,
+    label: '化境之树',
+    trunkW: 24,
+    trunkH: 155,
+    leaves: 0,
+    canopy: 7,
+    flowers: 0,
+    fruit: 0,
+    trunkColor: '#7A2E1D',
+    leafColor: '#1B4D3E',
+    roots: true,
+    stampMark: true,
+    canopyFull: true,
+  },
 ];
 
 function getStageIndex(count) {
@@ -21,23 +85,89 @@ function TreeSvg({ cfg }) {
   const groundY = 192;
   const trunkTopY = groundY - cfg.trunkH;
   const canopyCenterY = trunkTopY - 8;
+  const trunkColor = cfg.trunkColor || TRUNK;
+  const leafColor = cfg.leafColor || LEAF;
 
   return (
     <svg viewBox="0 0 200 200" width="100%" height="180" role="img" aria-label={cfg.label}>
+      {cfg.glow && (
+        <defs>
+          <filter id="tree-glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+      )}
+
       <ellipse cx="100" cy={groundY} rx="70" ry="6" fill="#EDE8DF" />
 
       {cfg.seed ? (
-        <ellipse cx="100" cy={groundY - 6} rx="7" ry="9" fill={TRUNK} />
+        <ellipse cx="100" cy={groundY - 6} rx="7" ry="9" fill={trunkColor} />
       ) : (
         <>
+          {cfg.glow && <ellipse cx="100" cy={canopyCenterY} rx="70" ry="50" fill={GOLD} opacity="0.15" filter="url(#tree-glow)" />}
+
+          {cfg.roots && (
+            <>
+              <path
+                d={`M ${100 - cfg.trunkW / 2} ${groundY - 4} Q ${100 - cfg.trunkW * 2} ${groundY + 2} ${100 - cfg.trunkW * 3.2} 200`}
+                stroke={trunkColor}
+                strokeWidth="3"
+                fill="none"
+              />
+              <path
+                d={`M ${100 + cfg.trunkW / 2} ${groundY - 4} Q ${100 + cfg.trunkW * 2} ${groundY + 2} ${100 + cfg.trunkW * 3.2} 200`}
+                stroke={trunkColor}
+                strokeWidth="3"
+                fill="none"
+              />
+            </>
+          )}
+
+          {cfg.spiralBranches && (
+            <>
+              <path
+                d={`M 100 ${trunkTopY + cfg.trunkH * 0.6} Q ${100 - cfg.trunkW * 3} ${trunkTopY + cfg.trunkH * 0.3} ${100 - cfg.trunkW * 2} ${trunkTopY - 10}`}
+                stroke={trunkColor}
+                strokeWidth="3"
+                fill="none"
+              />
+              <path
+                d={`M 100 ${trunkTopY + cfg.trunkH * 0.4} Q ${100 + cfg.trunkW * 3} ${trunkTopY + cfg.trunkH * 0.15} ${100 + cfg.trunkW * 2.2} ${trunkTopY - 16}`}
+                stroke={trunkColor}
+                strokeWidth="3"
+                fill="none"
+              />
+            </>
+          )}
+
           <rect
             x={100 - cfg.trunkW / 2}
             y={trunkTopY}
             width={cfg.trunkW}
             height={cfg.trunkH}
             rx={Math.max(cfg.trunkW / 3, 2)}
-            fill={TRUNK}
+            fill={trunkColor}
+            stroke={cfg.goldTrim ? GOLD : 'none'}
+            strokeWidth={cfg.goldTrim ? 1.5 : 0}
           />
+
+          {cfg.stampMark && (
+            <g>
+              <circle
+                cx="100"
+                cy={trunkTopY + cfg.trunkH / 2}
+                r={Math.max(cfg.trunkW / 2.4, 6)}
+                fill="none"
+                stroke={ACCENT}
+                strokeWidth="1.5"
+              />
+              <circle cx="100" cy={trunkTopY + cfg.trunkH / 2} r={Math.max(cfg.trunkW / 5, 2.5)} fill={ACCENT} />
+            </g>
+          )}
 
           {cfg.leaves > 0 &&
             Array.from({ length: cfg.leaves }).map((_, i) => {
@@ -53,11 +183,13 @@ function TreeSvg({ cfg }) {
                   cy={cy}
                   rx="10"
                   ry="6"
-                  fill={LEAF}
+                  fill={leafColor}
                   transform={`rotate(${rot} ${cx} ${cy})`}
                 />
               );
             })}
+
+          {cfg.canopyFull && <ellipse cx="100" cy="14" rx="86" ry="16" fill={leafColor} opacity="0.5" />}
 
           {cfg.canopy > 0 &&
             Array.from({ length: 3 + cfg.canopy * 2 }).map((_, i) => {
@@ -67,7 +199,19 @@ function TreeSvg({ cfg }) {
               const rr = spread * (0.55 + (i % 3) * 0.22);
               const cx = 100 + Math.cos(angle) * rr;
               const cy = canopyCenterY + Math.sin(angle) * rr * 0.65 - cfg.canopy * 4;
-              return <circle key={i} cx={cx} cy={cy} r={13 + cfg.canopy * 2.5} fill={LEAF} opacity="0.92" />;
+              return (
+                <circle
+                  key={i}
+                  cx={cx}
+                  cy={cy}
+                  r={13 + cfg.canopy * 2.5}
+                  fill={leafColor}
+                  opacity="0.92"
+                  stroke={cfg.goldTrim ? GOLD : 'none'}
+                  strokeWidth={cfg.goldTrim ? 0.8 : 0}
+                  filter={cfg.glow ? 'url(#tree-glow)' : undefined}
+                />
+              );
             })}
 
           {cfg.flowers > 0 &&
@@ -98,7 +242,8 @@ export default function GrowthTree({ stampCount }) {
   const stage = STAGES[stageIndex];
   const isSeedStage = stageIndex === 0;
   const isMaxStage = stageIndex === STAGES.length - 1;
-  const progressPercent = isSeedStage ? 0 : Math.min(100, Math.round((stampCount / stage.max) * 100));
+  const displayMax = stage.progressMax || stage.max;
+  const progressPercent = isSeedStage ? 0 : Math.min(100, Math.round((stampCount / displayMax) * 100));
 
   return (
     <section>
@@ -112,12 +257,18 @@ export default function GrowthTree({ stampCount }) {
               <div className="h-full" style={{ width: `${progressPercent}%`, backgroundColor: ACCENT }} />
             </div>
             <p className="text-xs text-ink/40 text-center mt-1">
-              {stampCount}/{stage.max}
+              {stampCount}/{displayMax}
             </p>
           </>
         )}
         <p className="text-xs text-ink/40 text-center mt-2">
-          {isMaxStage ? '你的成长树已长成参天大树' : isSeedStage ? '再 1 枚，你的种子会发芽' : `再 ${stage.max - stampCount} 枚，你的树会继续生长`}
+          {isMaxStage
+            ? '你的树已经化境'
+            : isSeedStage
+            ? '再 1 枚，你的种子会发芽'
+            : stage.nextLabel
+            ? `再 ${displayMax - stampCount} 枚，你的树会长成${stage.nextLabel}`
+            : `再 ${stage.max - stampCount} 枚，你的树会继续生长`}
         </p>
       </div>
     </section>

@@ -119,6 +119,10 @@ export const api = {
   markRewardNotified: (id) => request(`/rewards/${id}/mark-notified`, { method: 'POST' }),
   getMyRewards: () => request('/rewards/me'),
 
+  getGrowthInfo: () => request('/growth/me'),
+  getGrowthPending: () => request('/growth/pending'),
+  markGrowthNotified: (id) => request(`/growth/${id}/mark-notified`, { method: 'POST' }),
+
   adminGenerateCodes: (count) => request('/admin/activation-codes', { method: 'POST', body: { count }, admin: true }),
   adminListCodes: () => request('/admin/activation-codes', { admin: true }),
   adminListStudents: () => request('/admin/students', { admin: true }),

@@ -4,14 +4,30 @@ import { api } from '../api';
 import BottomNav from '../components/BottomNav';
 import GrowthTree from '../components/GrowthTree';
 
+function nextLevelText(nextLevel) {
+  if (!nextLevel) return null;
+  if (nextLevel.distinct_skills_remaining > 0) {
+    return `再掌握${nextLevel.distinct_skills_remaining}个Skill，升级为【${nextLevel.title}】`;
+  }
+  if (nextLevel.total_stamps_remaining > 0) {
+    return `再提交${nextLevel.total_stamps_remaining}枚策印，升级为【${nextLevel.title}】`;
+  }
+  if (nextLevel.practice_streak_remaining > 0) {
+    return `再连续实战${nextLevel.practice_streak_remaining}天，升级为【${nextLevel.title}】`;
+  }
+  return null;
+}
+
 export default function Progress() {
   const [progress, setProgress] = useState(null);
   const [checkinStats, setCheckinStats] = useState(null);
+  const [growthInfo, setGrowthInfo] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     api.getProgress().then(setProgress).catch((err) => setError(err.message));
     api.getCheckinStats().then(setCheckinStats).catch(() => {});
+    api.getGrowthInfo().then(setGrowthInfo).catch(() => {});
   }, []);
 
   return (
@@ -25,8 +41,38 @@ export default function Progress() {
 
         {progress && (
           <>
+            {growthInfo && (
+              <section className="text-center mb-6">
+                <p style={{ fontSize: 20, fontWeight: 700, color: '#C41E1E' }}>
+                  {growthInfo.growth_title || '尚未解锁成长称号'}
+                </p>
+                {nextLevelText(growthInfo.next_level) && (
+                  <p className="text-xs text-ink/40 mt-1">{nextLevelText(growthInfo.next_level)}</p>
+                )}
+              </section>
+            )}
+
+            <div className="mb-4">
+              <GrowthTree stampCount={progress.total_stamps} />
+            </div>
+
+            <section className="border border-ink/10 rounded-2xl p-6 mb-4 bg-white/40">
+              <h2 className="text-sm font-semibold text-ink mb-1">策印记录</h2>
+              <p className="text-xs text-ink/40 mb-4">每次在真实场景里用了Skill，就提交一枚策印</p>
+              <div className="grid grid-cols-2 gap-3 text-center">
+                <div className="rounded-xl bg-paper py-3">
+                  <p className="text-2xl font-bold text-vermilion">{progress.skills_mastered}</p>
+                  <p className="text-xs text-ink/50 mt-1">已掌握Skill</p>
+                </div>
+                <div className="rounded-xl bg-paper py-3">
+                  <p className="text-2xl font-bold text-vermilion">{progress.total_stamps}</p>
+                  <p className="text-xs text-ink/50 mt-1">累计策印</p>
+                </div>
+              </div>
+            </section>
+
             {checkinStats && (
-              <section className="border border-ink/10 rounded-2xl p-6 mb-4 bg-white/40">
+              <section className="border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40">
                 <h2 className="text-sm font-semibold text-ink mb-4">连续打卡</h2>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -46,25 +92,6 @@ export default function Progress() {
                 </div>
               </section>
             )}
-
-            <div className="mb-4">
-              <GrowthTree stampCount={progress.total_stamps} />
-            </div>
-
-            <section className="border border-ink/10 rounded-2xl p-6 mb-8 bg-white/40">
-              <h2 className="text-sm font-semibold text-ink mb-1">策印记录</h2>
-              <p className="text-xs text-ink/40 mb-4">每次在真实场景里用了Skill，就提交一枚策印</p>
-              <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="rounded-xl bg-paper py-3">
-                  <p className="text-2xl font-bold text-vermilion">{progress.skills_mastered}</p>
-                  <p className="text-xs text-ink/50 mt-1">已掌握Skill</p>
-                </div>
-                <div className="rounded-xl bg-paper py-3">
-                  <p className="text-2xl font-bold text-vermilion">{progress.total_stamps}</p>
-                  <p className="text-xs text-ink/50 mt-1">累计策印</p>
-                </div>
-              </div>
-            </section>
 
             <div className="grid grid-cols-8 gap-2 sm:grid-cols-10">
               {progress.grid.map((cell) => (
