@@ -439,6 +439,18 @@ db.prepare(
   "UPDATE skills SET category = '行动与适应类' WHERE week_number = 234 AND category = '行动与适应能力类'"
 ).run();
 
+// 第179周insight里"银行/河岸"偷换概念的例子换成"自然的东西/天然成分"，只在旧例子还在时才替换。
+{
+  const week179 = db.prepare("SELECT insight FROM skills WHERE week_number = 179 AND insight LIKE '%河岸%'").get();
+  if (week179) {
+    const fixedInsight = week179.insight.replace(
+      '例："银行（金融机构）很可靠，所以河岸（也叫银行）也很可靠"——荒谬的例子，但现实里的偷换往往更隐蔽。',
+      '例："自然的东西都是好的，所以天然成分的产品一定对身体有益"——这里"自然"在第一句里是"符合自然规律"的意思，在第二句里悄悄变成了"天然提取、无人工成分"的意思，两个含义之间被偷偷替换了。现实里的偷换往往更隐蔽，不容易被察觉。'
+    );
+    db.prepare('UPDATE skills SET insight = ? WHERE week_number = 179').run(fixedInsight);
+  }
+}
+
 module.exports = db;
 module.exports.setSkillTags = setSkillTags;
 module.exports.getModuleSkillIdSet = getModuleSkillIdSet;
