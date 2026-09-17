@@ -106,7 +106,7 @@ export default function GrowthTree({ stampCount }) {
       <div className="rounded-xl p-4" style={{ backgroundColor: '#F9F6F0', borderRadius: 12 }}>
         <TreeSvg cfg={stage} />
         <p className="text-sm text-ink/70 text-center mt-2">已积累 {stampCount} 枚策印</p>
-        {!isSeedStage && (
+        {!isSeedStage && !isMaxStage && (
           <>
             <div className="mt-3 h-1.5 bg-ink/10 rounded-full overflow-hidden">
               <div className="h-full" style={{ width: `${progressPercent}%`, backgroundColor: ACCENT }} />
