@@ -342,6 +342,24 @@ if (!userColumns.includes('referrer_id')) {
 if (!userColumns.includes('referral_commission_rate')) {
   db.exec(`ALTER TABLE users ADD COLUMN referral_commission_rate REAL NOT NULL DEFAULT 0`);
 }
+if (!userColumns.includes('wechat_id')) {
+  db.exec(`ALTER TABLE users ADD COLUMN wechat_id TEXT`);
+}
+if (!userColumns.includes('trial_concern')) {
+  db.exec(`ALTER TABLE users ADD COLUMN trial_concern TEXT`);
+}
+if (!userColumns.includes('trial_skill_id')) {
+  db.exec(`ALTER TABLE users ADD COLUMN trial_skill_id INTEGER REFERENCES skills(id)`);
+}
+if (!userColumns.includes('trial_referred_by')) {
+  db.exec(`ALTER TABLE users ADD COLUMN trial_referred_by TEXT`);
+}
+if (!userColumns.includes('trial_converted_at')) {
+  db.exec(`ALTER TABLE users ADD COLUMN trial_converted_at TEXT`);
+}
+if (!userColumns.includes('welcome_shown')) {
+  db.exec(`ALTER TABLE users ADD COLUMN welcome_shown INTEGER NOT NULL DEFAULT 0`);
+}
 db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code IS NOT NULL`);
 
 const trialUserColumns = db.prepare(`PRAGMA table_info(trial_users)`).all().map((c) => c.name);

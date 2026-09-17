@@ -12,6 +12,30 @@ function checkinDates(table, userId) {
     .map((r) => r.checkin_date);
 }
 
+router.get('/welcome', requireAuth, (req, res) => {
+  const user = db
+    .prepare('SELECT trial_concern, trial_skill_id, welcome_shown FROM users WHERE id = ?')
+    .get(req.user.id);
+  if (!user || user.welcome_shown || !user.trial_concern) {
+    return res.json({ show: false });
+  }
+  const skill = user.trial_skill_id
+    ? db.prepare('SELECT id, skill_name FROM skills WHERE id = ?').get(user.trial_skill_id)
+    : null;
+  const totalSkills = db.prepare("SELECT COUNT(*) AS c FROM skills WHERE status != 'draft'").get().c;
+  res.json({
+    show: true,
+    trial_concern: user.trial_concern,
+    trial_skill: skill || null,
+    remaining_skill_count: Math.max(totalSkills - 1, 0),
+  });
+});
+
+router.post('/welcome/shown', requireAuth, (req, res) => {
+  db.prepare('UPDATE users SET welcome_shown = 1 WHERE id = ?').run(req.user.id);
+  res.json({ ok: true });
+});
+
 router.post('/checkin', requireAuth, (req, res) => {
   const today = new Date().toISOString().slice(0, 10);
   const yesterdayDate = new Date();

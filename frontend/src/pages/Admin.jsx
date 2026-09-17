@@ -470,19 +470,42 @@ function TrialUsersPanel() {
   const [trialUsers, setTrialUsers] = useState([]);
   const [error, setError] = useState('');
   const [updatingId, setUpdatingId] = useState(null);
+  const [emailDrafts, setEmailDrafts] = useState({});
+  const [migrationMsgs, setMigrationMsgs] = useState({});
 
   function refresh() {
     api.adminListTrialUsers().then(setTrialUsers).catch((err) => setError(err.message));
   }
   useEffect(refresh, []);
 
-  async function toggleConverted(row) {
+  async function markConverted(row) {
+    const email = (emailDrafts[row.id] || '').trim();
+    setUpdatingId(row.id);
+    setMigrationMsgs((m) => ({ ...m, [row.id]: '' }));
+    try {
+      const res = await api.adminUpdateTrialUser(row.id, { converted: true, user_email: email || undefined });
+      setTrialUsers((list) => list.map((t) => (t.id === row.id ? { ...t, converted: true } : t)));
+      if (email) {
+        setMigrationMsgs((m) => ({
+          ...m,
+          [row.id]: res.migration?.ok
+            ? '已关联并迁移体验记录'
+            : res.migration?.error || '标记成功，但数据迁移失败',
+        }));
+      }
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setUpdatingId(null);
+    }
+  }
+
+  async function unmarkConverted(row) {
     setUpdatingId(row.id);
     try {
-      await api.adminUpdateTrialUser(row.id, { converted: !row.converted });
-      setTrialUsers((list) =>
-        list.map((t) => (t.id === row.id ? { ...t, converted: !row.converted } : t))
-      );
+      await api.adminUpdateTrialUser(row.id, { converted: false });
+      setTrialUsers((list) => list.map((t) => (t.id === row.id ? { ...t, converted: false } : t)));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -514,24 +537,120 @@ function TrialUsersPanel() {
                   {t.matched_skill_name ? `第${t.matched_week_number}周 · ${t.matched_skill_name}` : '—'}
                 </td>
                 <td className="py-2 text-ink/50 whitespace-nowrap">{formatTrialTime(t.created_at)}</td>
-                <td className="py-2 whitespace-nowrap">
-                  <button
-                    onClick={() => toggleConverted(t)}
-                    disabled={updatingId === t.id}
-                    className={`text-xs rounded-full px-3 py-1 border disabled:opacity-40 ${
-                      t.converted
-                        ? 'text-vermilion border-vermilion/30 bg-vermilion/5'
-                        : 'text-ink/40 border-ink/15'
-                    }`}
-                  >
-                    {t.converted ? '✓ 已转化' : '未转化'}
-                  </button>
+                <td className="py-2 min-w-[200px]">
+                  {t.converted ? (
+                    <div>
+                      <button
+                        onClick={() => unmarkConverted(t)}
+                        disabled={updatingId === t.id}
+                        className="text-xs rounded-full px-3 py-1 border text-vermilion border-vermilion/30 bg-vermilion/5 disabled:opacity-40"
+                      >
+                        ✓ 已转化
+                      </button>
+                      {t.linked_user_email && (
+                        <p className="text-[10px] text-ink/40 mt-1">已关联：{t.linked_user_email}</p>
+                      )}
+                      {migrationMsgs[t.id] && <p className="text-[10px] text-ink/40 mt-1">{migrationMsgs[t.id]}</p>}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <input
+                        type="email"
+                        placeholder="学员邮箱（可选，用于迁移体验记录）"
+                        value={emailDrafts[t.id] || ''}
+                        onChange={(e) => setEmailDrafts((m) => ({ ...m, [t.id]: e.target.value }))}
+                        className="text-xs border border-ink/15 rounded px-1.5 py-1 w-40"
+                      />
+                      <button
+                        onClick={() => markConverted(t)}
+                        disabled={updatingId === t.id}
+                        className="text-xs rounded-full px-3 py-1 border text-ink/40 border-ink/15 disabled:opacity-40"
+                      >
+                        标记为已转化
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+function ConversionAnalyticsPanel() {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    api.adminGetTrialAnalytics().then(setData).catch((err) => setError(err.message));
+  }, []);
+
+  if (error) return <p className="text-vermilion text-sm">{error}</p>;
+  if (!data) return <p className="text-sm text-ink/40">加载中…</p>;
+
+  return (
+    <div className="space-y-8">
+      <section>
+        <h2 className="text-sm font-semibold text-ink mb-1">困扰关键词分析</h2>
+        <p className="text-xs text-ink/40 mb-3">按Skill库已有标签匹配体验用户的困扰描述，最常见的10个主题及其转化率</p>
+        {data.keyword_themes.length === 0 ? (
+          <p className="text-sm text-ink/30">暂无数据</p>
+        ) : (
+          <div className="space-y-1.5">
+            {data.keyword_themes.map((k, i) => (
+              <div key={k.keyword} className="flex items-center justify-between text-sm border-b border-ink/5 py-1.5">
+                <span className="text-ink/70">{i + 1}. {k.keyword}</span>
+                <span className="text-ink/40 text-xs">
+                  {k.total} 人提及 · 转化 {k.converted} 人 · <span className="text-vermilion">{k.rate}%</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section>
+        <h2 className="text-sm font-semibold text-ink mb-1">Skill转化率分析</h2>
+        <p className="text-xs text-ink/40 mb-3">按匹配到的Skill分组，转化率最高的前10名</p>
+        {data.skill_conversion.length === 0 ? (
+          <p className="text-sm text-ink/30">暂无数据</p>
+        ) : (
+          <div className="space-y-1.5">
+            {data.skill_conversion.map((s, i) => (
+              <div key={s.skill_id} className="flex items-center justify-between text-sm border-b border-ink/5 py-1.5">
+                <span className="text-ink/70">
+                  {i + 1}. {s.week_number != null ? `第${s.week_number}周 · ` : ''}{s.skill_name}
+                </span>
+                <span className="text-ink/40 text-xs">
+                  {s.total} 人体验 · 转化 {s.converted} 人 · <span className="text-vermilion">{s.rate}%</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section>
+        <h2 className="text-sm font-semibold text-ink mb-1">来源分析</h2>
+        <p className="text-xs text-ink/40 mb-3">按推荐人分组，带来体验用户转化率最高的前10名</p>
+        {data.referrer_conversion.length === 0 ? (
+          <p className="text-sm text-ink/30">暂无数据</p>
+        ) : (
+          <div className="space-y-1.5">
+            {data.referrer_conversion.map((r, i) => (
+              <div key={r.referral_code} className="flex items-center justify-between text-sm border-b border-ink/5 py-1.5">
+                <span className="text-ink/70">{i + 1}. {r.email || r.referral_code}</span>
+                <span className="text-ink/40 text-xs">
+                  {r.total} 人体验 · 转化 {r.converted} 人 · <span className="text-vermilion">{r.rate}%</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
@@ -1144,6 +1263,7 @@ export default function Admin() {
             ['codes', '激活码'],
             ['students', '学员'],
             ['trial', '试用用户'],
+            ['conversion', '转化分析'],
             ['referrals', '分享数据'],
             ['referral-rewards', '推荐奖励'],
             ['commissions', '分润管理'],
@@ -1165,6 +1285,7 @@ export default function Admin() {
         {tab === 'codes' && <CodesPanel />}
         {tab === 'students' && <StudentsPanel />}
         {tab === 'trial' && <TrialUsersPanel />}
+        {tab === 'conversion' && <ConversionAnalyticsPanel />}
         {tab === 'referrals' && <ReferralsPanel />}
         {tab === 'referral-rewards' && <ReferralRewardsPanel />}
         {tab === 'commissions' && <CommissionsPanel />}

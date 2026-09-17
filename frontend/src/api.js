@@ -88,6 +88,8 @@ export const api = {
   checkin: () => request('/checkin', { method: 'POST' }),
   learningCheckin: (skill_id) => request('/learning-checkin', { method: 'POST', body: { skill_id } }),
   getCheckinStats: () => request('/checkin/stats'),
+  getWelcomeStatus: () => request('/welcome'),
+  markWelcomeShown: () => request('/welcome/shown', { method: 'POST' }),
   getCoachHistory: (skill_id) => request(`/coach/${skill_id}/history`),
   resetCoach: (skill_id) => request(`/coach/${skill_id}`, { method: 'DELETE' }),
   coachMessage: (skill_id, message) => streamRequest('/coach/message', { skill_id, message }),
@@ -124,6 +126,7 @@ export const api = {
   adminUpdateTrialUser: (id, payload) =>
     request(`/admin/trial-users/${id}`, { method: 'PUT', body: payload, admin: true }),
   adminListReferrals: () => request('/admin/referrals', { admin: true }),
+  adminGetTrialAnalytics: () => request('/admin/trial-analytics', { admin: true }),
   adminSettleReferrals: (userId) =>
     request(`/admin/referrals/${userId}/settle`, { method: 'PUT', admin: true }),
   adminGetReferralSettings: () => request('/admin/referral-settings', { admin: true }),

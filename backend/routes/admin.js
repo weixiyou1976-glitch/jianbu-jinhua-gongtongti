@@ -5,6 +5,7 @@ const db = require('../db');
 const { requireAdmin } = require('../middleware/auth');
 const { checkAndGrantMilestones, getShareTag, getConversionTag } = require('../lib/rewards');
 const { computeStreak } = require('../lib/streak');
+const { migrateTrialToUser } = require('../lib/trialMigration');
 
 const router = express.Router();
 router.use(requireAdmin);
@@ -78,9 +79,11 @@ router.get('/trial-users', (req, res) => {
   const rows = db
     .prepare(
       `SELECT t.id, t.wechat_id, t.concern, t.matched_skill_id, t.created_at, t.converted,
-              s.skill_name AS matched_skill_name, s.week_number AS matched_week_number
+              s.skill_name AS matched_skill_name, s.week_number AS matched_week_number,
+              u.email AS linked_user_email
        FROM trial_users t
        LEFT JOIN skills s ON s.id = t.matched_skill_id
+       LEFT JOIN users u ON u.wechat_id = t.wechat_id
        ORDER BY t.created_at DESC`
     )
     .all();
@@ -88,13 +91,21 @@ router.get('/trial-users', (req, res) => {
 });
 
 router.put('/trial-users/:id', (req, res) => {
-  const { converted } = req.body || {};
+  const { converted, user_email } = req.body || {};
   const trial = db.prepare('SELECT * FROM trial_users WHERE id = ?').get(req.params.id);
   if (!trial) return res.status(404).json({ error: '记录不存在' });
 
   const wasConverted = !!trial.converted;
   const nowConverted = !!converted;
   db.prepare('UPDATE trial_users SET converted = ? WHERE id = ?').run(nowConverted ? 1 : 0, trial.id);
+
+  let migration = null;
+  if (nowConverted && !wasConverted && user_email) {
+    const targetUser = db.prepare('SELECT id FROM users WHERE email = ?').get(user_email.trim());
+    migration = targetUser
+      ? migrateTrialToUser(trial.id, targetUser.id)
+      : { ok: false, error: '未找到该邮箱对应的正式学员账号，请确认学员已注册' };
+  }
 
   if (nowConverted && !wasConverted && trial.referred_by) {
     const referrer = db.prepare('SELECT id FROM users WHERE referral_code = ?').get(trial.referred_by);
@@ -116,7 +127,84 @@ router.put('/trial-users/:id', (req, res) => {
     }
   }
 
-  res.json({ ok: true });
+  res.json({ ok: true, migration });
+});
+
+router.get('/trial-analytics', (req, res) => {
+  const trials = db.prepare('SELECT concern, matched_skill_id, referred_by, converted FROM trial_users').all();
+
+  // 困扰关键词分析：复用Skill库已有的标签词表，作为关键词判定依据
+  const tags = db.prepare('SELECT DISTINCT tag FROM skill_tags').all().map((r) => r.tag);
+  const keywordStats = new Map();
+  for (const t of trials) {
+    if (!t.concern) continue;
+    for (const tag of tags) {
+      if (t.concern.includes(tag)) {
+        const entry = keywordStats.get(tag) || { total: 0, converted: 0 };
+        entry.total += 1;
+        if (t.converted) entry.converted += 1;
+        keywordStats.set(tag, entry);
+      }
+    }
+  }
+  const keyword_themes = [...keywordStats.entries()]
+    .map(([keyword, v]) => ({
+      keyword,
+      total: v.total,
+      converted: v.converted,
+      rate: v.total ? Math.round((v.converted / v.total) * 1000) / 10 : 0,
+    }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10);
+
+  // Skill转化率分析
+  const skillStats = new Map();
+  for (const t of trials) {
+    if (!t.matched_skill_id) continue;
+    const entry = skillStats.get(t.matched_skill_id) || { total: 0, converted: 0 };
+    entry.total += 1;
+    if (t.converted) entry.converted += 1;
+    skillStats.set(t.matched_skill_id, entry);
+  }
+  const skillNames = new Map(
+    db.prepare('SELECT id, skill_name, week_number FROM skills').all().map((s) => [s.id, s])
+  );
+  const skill_conversion = [...skillStats.entries()]
+    .map(([skillId, v]) => ({
+      skill_id: skillId,
+      skill_name: skillNames.get(skillId)?.skill_name || `Skill #${skillId}`,
+      week_number: skillNames.get(skillId)?.week_number ?? null,
+      total: v.total,
+      converted: v.converted,
+      rate: v.total ? Math.round((v.converted / v.total) * 1000) / 10 : 0,
+    }))
+    .sort((a, b) => b.rate - a.rate || b.total - a.total)
+    .slice(0, 10);
+
+  // 来源分析：按推荐人分组
+  const referrerStats = new Map();
+  for (const t of trials) {
+    if (!t.referred_by) continue;
+    const entry = referrerStats.get(t.referred_by) || { total: 0, converted: 0 };
+    entry.total += 1;
+    if (t.converted) entry.converted += 1;
+    referrerStats.set(t.referred_by, entry);
+  }
+  const referrerEmails = new Map(
+    db.prepare('SELECT referral_code, email FROM users WHERE referral_code IS NOT NULL').all().map((u) => [u.referral_code, u.email])
+  );
+  const referrer_conversion = [...referrerStats.entries()]
+    .map(([code, v]) => ({
+      referral_code: code,
+      email: referrerEmails.get(code) || null,
+      total: v.total,
+      converted: v.converted,
+      rate: v.total ? Math.round((v.converted / v.total) * 1000) / 10 : 0,
+    }))
+    .sort((a, b) => b.rate - a.rate || b.total - a.total)
+    .slice(0, 10);
+
+  res.json({ keyword_themes, skill_conversion, referrer_conversion });
 });
 
 router.get('/referrals', (req, res) => {

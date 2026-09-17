@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +10,7 @@ import RewardUnlockModal from '../components/RewardUnlockModal';
 import CheckinStreakRow from '../components/CheckinStreakRow';
 import StreakBanner from '../components/StreakBanner';
 import StreakBrokenModal from '../components/StreakBrokenModal';
+import WelcomeModal from '../components/WelcomeModal';
 
 const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
 
@@ -55,8 +56,12 @@ export default function Dashboard() {
   const [checkinStats, setCheckinStats] = useState(null);
   const [practiceBroken, setPracticeBroken] = useState(false);
   const [practiceBannerStreak, setPracticeBannerStreak] = useState(null);
+  const [welcomeInfo, setWelcomeInfo] = useState(null);
+  // welcomePendingRef: true 表示欢迎弹窗状态尚未确定，或已确定要显示——此时今日策语要等待
+  const welcomePendingRef = useRef(true);
+  const pendingQuoteCheckRef = useRef(false);
 
-  function maybeTriggerDailyQuote() {
+  function runDailyQuoteCheck() {
     const key = todayKey();
     let alreadyShown = true;
     try {
@@ -74,7 +79,37 @@ export default function Dashboard() {
     }
   }
 
+  function maybeTriggerDailyQuote() {
+    if (welcomePendingRef.current) {
+      pendingQuoteCheckRef.current = true;
+      return;
+    }
+    runDailyQuoteCheck();
+  }
+
+  function resolveWelcomePending() {
+    welcomePendingRef.current = false;
+    if (pendingQuoteCheckRef.current) {
+      pendingQuoteCheckRef.current = false;
+      runDailyQuoteCheck();
+    }
+  }
+
   useEffect(() => {
+    api
+      .getWelcomeStatus()
+      .then((res) => {
+        if (res.show) {
+          setWelcomeInfo({
+            trialConcern: res.trial_concern,
+            trialSkillName: res.trial_skill?.skill_name || null,
+            remainingSkillCount: res.remaining_skill_count,
+          });
+        } else {
+          resolveWelcomePending();
+        }
+      })
+      .catch(resolveWelcomePending);
     api.getPendingRewards().then(setPendingRewards).catch(() => {});
     Promise.all([api.getCurrentSkill(), api.getProgress(), api.getStamps()])
       .then(([c, p, s]) => {
@@ -127,6 +162,12 @@ export default function Dashboard() {
 
   function handleClosePracticeBroken() {
     setPracticeBroken(false);
+  }
+
+  function handleCloseWelcome() {
+    api.markWelcomeShown().catch(() => {});
+    setWelcomeInfo(null);
+    resolveWelcomePending();
   }
 
   function dismissAddBanner() {
@@ -259,12 +300,20 @@ export default function Dashboard() {
 
       <BottomNav />
 
-      {practiceBroken && <StreakBrokenModal onClose={handleClosePracticeBroken} />}
-      {dailyQuote && <DailyQuoteModal quote={dailyQuote} onClose={() => setDailyQuote(null)} />}
-      {!dailyQuote && !practiceBroken && pendingRewards.length > 0 && (
+      {welcomeInfo && (
+        <WelcomeModal
+          trialConcern={welcomeInfo.trialConcern}
+          trialSkillName={welcomeInfo.trialSkillName}
+          remainingSkillCount={welcomeInfo.remainingSkillCount}
+          onClose={handleCloseWelcome}
+        />
+      )}
+      {!welcomeInfo && practiceBroken && <StreakBrokenModal onClose={handleClosePracticeBroken} />}
+      {!welcomeInfo && dailyQuote && <DailyQuoteModal quote={dailyQuote} onClose={() => setDailyQuote(null)} />}
+      {!welcomeInfo && !dailyQuote && !practiceBroken && pendingRewards.length > 0 && (
         <RewardUnlockModal reward={pendingRewards[0]} onClose={handleCloseRewardModal} />
       )}
-      {!dailyQuote && !practiceBroken && practiceBannerStreak != null && (
+      {!welcomeInfo && !dailyQuote && !practiceBroken && practiceBannerStreak != null && (
         <StreakBanner streak={practiceBannerStreak} onDone={() => setPracticeBannerStreak(null)} />
       )}
     </div>
