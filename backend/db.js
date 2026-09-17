@@ -412,6 +412,8 @@ function getModuleSkillIdSet() {
   return new Set(db.prepare('SELECT DISTINCT skill_id FROM module_items').all().map((r) => r.skill_id));
 }
 
+require('./migrations/skills-225-230')(db);
+
 module.exports = db;
 module.exports.setSkillTags = setSkillTags;
 module.exports.getModuleSkillIdSet = getModuleSkillIdSet;
