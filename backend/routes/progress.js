@@ -14,7 +14,7 @@ function checkinDates(table, userId) {
 
 router.get('/welcome', requireAuth, (req, res) => {
   const user = db
-    .prepare('SELECT trial_concern, trial_skill_id, welcome_shown FROM users WHERE id = ?')
+    .prepare('SELECT trial_concern, trial_skill_id, trial_converted_at, welcome_shown FROM users WHERE id = ?')
     .get(req.user.id);
   if (!user || user.welcome_shown || !user.trial_concern) {
     return res.json({ show: false });
@@ -23,11 +23,18 @@ router.get('/welcome', requireAuth, (req, res) => {
     ? db.prepare('SELECT id, skill_name FROM skills WHERE id = ?').get(user.trial_skill_id)
     : null;
   const totalSkills = db.prepare("SELECT COUNT(*) AS c FROM skills WHERE status != 'draft'").get().c;
+  const hasMigratedStamp =
+    user.trial_skill_id && user.trial_converted_at
+      ? !!db
+          .prepare('SELECT 1 FROM stamps WHERE user_id = ? AND skill_id = ? AND submitted_at <= ? LIMIT 1')
+          .get(req.user.id, user.trial_skill_id, user.trial_converted_at)
+      : false;
   res.json({
     show: true,
     trial_concern: user.trial_concern,
     trial_skill: skill || null,
     remaining_skill_count: Math.max(totalSkills - 1, 0),
+    has_migrated_stamp: hasMigratedStamp,
   });
 });
 

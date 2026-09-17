@@ -1,4 +1,10 @@
-export default function WelcomeModal({ trialConcern, trialSkillName, remainingSkillCount, onClose }) {
+export default function WelcomeModal({
+  trialConcern,
+  trialSkillName,
+  remainingSkillCount,
+  hasMigratedStamp,
+  onClose,
+}) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-6" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
       <div style={{ backgroundColor: '#1a1a1a', borderRadius: 16, padding: 28, width: 'calc(100vw - 48px)', maxWidth: 360 }}>
@@ -20,6 +26,11 @@ export default function WelcomeModal({ trialConcern, trialSkillName, remainingSk
         {trialSkillName && (
           <p style={{ fontSize: 13, color: '#999999', textAlign: 'center' }}>
             那一次，渐步为你找到了【{trialSkillName}】
+          </p>
+        )}
+        {hasMigratedStamp && (
+          <p style={{ fontSize: 13, color: '#999999', textAlign: 'center', marginTop: 8 }}>
+            你已经提交了第一枚策印——它已经跟着你一起来了
           </p>
         )}
         <div style={{ height: 24 }} />

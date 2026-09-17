@@ -103,6 +103,7 @@ export const api = {
   trialMatch: (concern) => request('/trial/match', { method: 'POST', body: { concern }, trial: true }),
   getTrialSkill: () => request('/trial/skill', { trial: true }),
   getTrialOtherSkills: () => request('/trial/skill/others', { trial: true }),
+  trialSubmitStamp: (payload) => request('/trial/stamp', { method: 'POST', body: payload, trial: true }),
   getTrialCoachHistory: () => request('/trial/coach/history', { trial: true }),
   trialCoachMessage: (skill_id, message) =>
     streamRequest('/trial/coach/message', { skill_id, message }, { trial: true }),

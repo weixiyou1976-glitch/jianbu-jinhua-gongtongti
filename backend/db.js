@@ -128,6 +128,18 @@ CREATE TABLE IF NOT EXISTS trial_coach_messages (
 
 CREATE INDEX IF NOT EXISTS idx_trial_coach_messages_trial ON trial_coach_messages(trial_user_id, id);
 
+CREATE TABLE IF NOT EXISTS trial_stamps (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  trial_user_id INTEGER NOT NULL REFERENCES trial_users(id) ON DELETE CASCADE,
+  skill_id INTEGER NOT NULL REFERENCES skills(id),
+  learned TEXT NOT NULL,
+  practiced TEXT NOT NULL,
+  gained TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_trial_stamps_trial ON trial_stamps(trial_user_id);
+
 CREATE TABLE IF NOT EXISTS referral_records (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   referrer_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

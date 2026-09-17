@@ -173,15 +173,31 @@ function ConcernScreen({ onMatched, onExpired }) {
 function SkillScreen({ skill, onDone, onExpired }) {
   const [insightExpanded, setInsightExpanded] = useState(false);
   const [form, setForm] = useState({ learned: '', practiced: '', gained: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [skill.id]);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!form.learned.trim() || !form.practiced.trim() || !form.gained.trim()) return;
-    onDone(skill);
+    if (!form.learned.trim() || !form.practiced.trim() || !form.gained.trim() || submitting) return;
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      await api.trialSubmitStamp({
+        skill_id: skill.id,
+        learned: form.learned.trim(),
+        practiced: form.practiced.trim(),
+        gained: form.gained.trim(),
+      });
+      onDone(skill);
+    } catch (err) {
+      setSubmitError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -332,11 +348,13 @@ function SkillScreen({ skill, onDone, onExpired }) {
                 required
               />
             </div>
+            {submitError && <p className="text-vermilion text-sm">{submitError}</p>}
             <button
               type="submit"
-              className="w-full bg-vermilion text-paper rounded-lg py-3 text-sm font-medium"
+              disabled={submitting}
+              className="w-full bg-vermilion text-paper rounded-lg py-3 text-sm font-medium disabled:opacity-50"
             >
-              提交策印
+              {submitting ? '提交中…' : '提交策印'}
             </button>
           </form>
         </section>

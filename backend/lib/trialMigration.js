@@ -31,7 +31,23 @@ function migrateTrialToUser(trialId, targetUserId) {
     migratedMessages = trialMessages.length;
   }
 
-  return { ok: true, migrated_messages: migratedMessages };
+  const trialStamps = db
+    .prepare('SELECT skill_id, learned, practiced, gained, created_at FROM trial_stamps WHERE trial_user_id = ?')
+    .all(trial.id);
+
+  let migratedStamps = 0;
+  if (trialStamps.length > 0) {
+    const insertStamp = db.prepare(
+      'INSERT INTO stamps (user_id, skill_id, learned, practiced, gained, submitted_at) VALUES (?, ?, ?, ?, ?, ?)'
+    );
+    const txStamps = db.transaction((rows) => {
+      for (const s of rows) insertStamp.run(user.id, s.skill_id, s.learned, s.practiced, s.gained, s.created_at);
+    });
+    txStamps(trialStamps);
+    migratedStamps = trialStamps.length;
+  }
+
+  return { ok: true, migrated_messages: migratedMessages, migrated_stamps: migratedStamps };
 }
 
 module.exports = { migrateTrialToUser };

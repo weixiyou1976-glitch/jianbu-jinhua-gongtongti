@@ -138,6 +138,27 @@ router.post('/trial/match', requireTrialAuth, async (req, res) => {
   res.json(withParsedTags(matched));
 });
 
+router.post('/trial/stamp', requireTrialAuth, (req, res) => {
+  const trial = getTrial(req.trial.trialId);
+  if (!trial) return res.status(404).json({ error: '试用信息不存在' });
+
+  const { skill_id, learned, practiced, gained } = req.body || {};
+  if (!skill_id || !learned || !practiced || !gained) {
+    return res.status(400).json({ error: '我学了/我练了/我得到了 三项均为必填' });
+  }
+  if (Number(skill_id) !== trial.matched_skill_id) {
+    return res.status(403).json({ error: '体验账号只能为匹配到的这一张Skill提交策印' });
+  }
+
+  const info = db
+    .prepare(
+      'INSERT INTO trial_stamps (trial_user_id, skill_id, learned, practiced, gained) VALUES (?, ?, ?, ?, ?)'
+    )
+    .run(trial.id, skill_id, learned, practiced, gained);
+
+  res.json({ ok: true, id: info.lastInsertRowid });
+});
+
 router.get('/trial/skill/others', requireTrialAuth, (req, res) => {
   const trial = getTrial(req.trial.trialId);
   if (!trial) return res.status(404).json({ error: '试用信息不存在' });

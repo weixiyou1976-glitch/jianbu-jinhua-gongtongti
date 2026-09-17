@@ -104,6 +104,7 @@ export default function Dashboard() {
             trialConcern: res.trial_concern,
             trialSkillName: res.trial_skill?.skill_name || null,
             remainingSkillCount: res.remaining_skill_count,
+            hasMigratedStamp: res.has_migrated_stamp,
           });
         } else {
           resolveWelcomePending();
@@ -305,6 +306,7 @@ export default function Dashboard() {
           trialConcern={welcomeInfo.trialConcern}
           trialSkillName={welcomeInfo.trialSkillName}
           remainingSkillCount={welcomeInfo.remainingSkillCount}
+          hasMigratedStamp={welcomeInfo.hasMigratedStamp}
           onClose={handleCloseWelcome}
         />
       )}
