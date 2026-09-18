@@ -49,7 +49,7 @@ function addLinkedRecords(db) {
     INSERT INTO modules (id, slug, name) VALUES (1, 'local-module', '旧模块');
     INSERT INTO module_items (module_id, stage_order, stage_name, skill_id, item_order) VALUES (1, 1, '旧阶段', 1224, 1);
     INSERT INTO coach_messages (user_id, skill_id, role, content) VALUES (1, 1224, 'user', '旧陪练');
-    INSERT INTO trial_users (id, wechat_id, matched_skill_id, referred_skill_id) VALUES (1, 'local-old-trial', 1224, 1224);
+    INSERT INTO trial_users (id, email, matched_skill_id, referred_skill_id) VALUES (1, 'local-old-trial@example.invalid', 1224, 1224);
     INSERT INTO trial_coach_messages (trial_user_id, role, content) VALUES (1, 'user', '旧体验陪练');
     INSERT INTO trial_stamps (trial_user_id, skill_id, learned, practiced, gained) VALUES (1, 1224, '旧体验策印', '练', '得');
     INSERT INTO temporary_unlocks (user_id, skill_id, unlock_reason, expires_at) VALUES (1, 1224, 'ai_match', datetime('now', '+72 hours'));
@@ -86,9 +86,9 @@ function assertNewSkills(db) {
   assert.equal(db.pragma('integrity_check', { simple: true }), 'ok');
 }
 
-test('种子内容包含连续的1—230周，导入不连接数据库', () => {
-  assert.equal(skills.length, 230);
-  assert.deepEqual(skills.map((s) => s.week_number), Array.from({ length: 230 }, (_, i) => i + 1));
+test('种子内容包含连续的1—254周，导入不连接数据库', () => {
+  assert.equal(skills.length, 254);
+  assert.deepEqual(skills.map((s) => s.week_number), Array.from({ length: 254 }, (_, i) => i + 1));
   assert.equal(require.cache[dbModule], undefined);
 });
 
@@ -100,7 +100,7 @@ test('真实启动路径增量写入，并保留全部旧内容、ID、关联记
     initialize(dbPath);
     assert.deepEqual(snapshot(db, true), before);
     assertNewSkills(db);
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM skills').get().n, 230);
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM skills').get().n, 254);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM activation_codes WHERE code = 'TEST-0001'").get().n, 0);
     const after = snapshot(db);
     initialize(dbPath);
@@ -142,13 +142,13 @@ test('标签写入失败时整批Skill和标签全部回滚', () => {
   } finally { db.close(); }
 });
 
-test('空库启动不抢先写六张，完整seed可初始化230张且再次执行不重复', () => {
+test('空库启动不抢先写六张，完整seed可初始化254张且再次执行不重复', () => {
   const { db, dbPath } = openFixture('fresh', false);
   try {
     assert.equal(migrate(db), 0);
     assert.equal(db.prepare('SELECT COUNT(*) AS n FROM skills').get().n, 0);
     execFileSync(process.execPath, [seedModule], { cwd: workspace, env: env(dbPath) });
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM skills').get().n, 230);
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM skills').get().n, 254);
     assertNewSkills(db);
     const before = snapshot(db);
     execFileSync(process.execPath, [seedModule], { cwd: workspace, env: env(dbPath) });
@@ -212,7 +212,7 @@ test('真实HTTP接口：总库、周次/类型/标签、解锁、详情、重�
   }
   try {
     const all = await request('/skills');
-    assert.equal(all.length, 230);
+    assert.equal(all.length, 254);
     assert.equal((await request('/skills/current')).week, 1);
     assert.equal((await request('/skills/1001')).skill_name, skills[0].skill_name);
     assert.equal((await request('/skills/1224')).next.id, all.find((s) => s.week_number === 225).id);
@@ -244,7 +244,10 @@ test('真实HTTP接口：总库、周次/类型/标签、解锁、详情、重�
       assert.equal(lastAIRequest.messages[1].content, '请结合我的策印继续陪练');
       assert.equal((await request(`/coach/${skill.id}/history`)).messages.length, 4);
 
-      const trialToken = (await request('/trial/start', { wechat_id: `local-new-trial-${expected.week_number}` })).token;
+      const trialEmail = `local-new-trial-${expected.week_number}@example.invalid`;
+      db.prepare("INSERT INTO email_verifications (email, code, expires_at) VALUES (?, ?, datetime('now', '+5 minutes'))")
+        .run(trialEmail, '123456');
+      const trialToken = (await request('/trial/verify-code', { email: trialEmail, code: '123456' })).token;
       const trialSkill = await request('/trial/match', { concern: '我很担心报价后客户的沉默，迟迟不愿意开始做事，想练习新的方法' }, trialToken);
       assert.equal(trialSkill.id, skill.id);
       assert.equal((await request('/trial/skill', null, trialToken)).id, skill.id);
@@ -261,9 +264,9 @@ test('真实HTTP接口：总库、周次/类型/标签、解锁、详情、重�
     assert.equal(fallback.source, 'keyword');
     assert.ok(fallback.results.some((s) => s.week_number === 227));
     const progress = await request('/progress');
-    assert.equal(progress.total, 230);
-    assert.equal(progress.skills_mastered, 7);
-    assert.equal(progress.total_stamps, 19);
+    assert.equal(progress.total, 254);
+    assert.equal(progress.skills_mastered, 31);
+    assert.equal(progress.total_stamps, 91);
     assert.ok(progress.grid.find((g) => g.week === 224).completed);
     assert.ok(progress.grid.filter((g) => g.week >= 225).every((g) => g.completed));
     assert.equal((await request('/skills/1224/stamps'))[0].learned, '旧策印');

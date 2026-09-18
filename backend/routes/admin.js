@@ -80,12 +80,12 @@ router.get('/students', (req, res) => {
 router.get('/trial-users', (req, res) => {
   const rows = db
     .prepare(
-      `SELECT t.id, t.wechat_id, t.concern, t.matched_skill_id, t.created_at, t.converted,
+      `SELECT t.id, t.email, t.concern, t.matched_skill_id, t.created_at, t.converted,
               s.skill_name AS matched_skill_name, s.week_number AS matched_week_number,
               u.email AS linked_user_email
        FROM trial_users t
        LEFT JOIN skills s ON s.id = t.matched_skill_id
-       LEFT JOIN users u ON u.wechat_id = t.wechat_id
+       LEFT JOIN users u ON u.id = t.converted_user_id
        ORDER BY t.created_at DESC`
     )
     .all();

@@ -4446,6 +4446,7 @@ if (require.main === module) {
       }
     });
     tx();
+    require('./migrations/display-order')(db);
     console.log(`已写入 ${skills.length} 条示例Skill内容`);
   } else {
     console.log('skills 表已有数据，跳过内容写入');

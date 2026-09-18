@@ -111,12 +111,23 @@ CREATE INDEX IF NOT EXISTS idx_coach_messages_user_skill ON coach_messages(user_
 
 CREATE TABLE IF NOT EXISTS trial_users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  wechat_id TEXT UNIQUE NOT NULL,
+  email TEXT UNIQUE NOT NULL,
   concern TEXT NOT NULL DEFAULT '',
   matched_skill_id INTEGER REFERENCES skills(id),
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   converted INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS email_verifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL,
+  code TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  used INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_email_verifications_email ON email_verifications(email, created_at);
 
 CREATE TABLE IF NOT EXISTS trial_coach_messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -395,12 +406,19 @@ if (!userColumns.includes('growth_title')) {
 }
 db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code IS NOT NULL`);
 
-const trialUserColumns = db.prepare(`PRAGMA table_info(trial_users)`).all().map((c) => c.name);
+let trialUserColumns = db.prepare(`PRAGMA table_info(trial_users)`).all().map((c) => c.name);
+if (trialUserColumns.includes('wechat_id') && !trialUserColumns.includes('email')) {
+  db.exec(`ALTER TABLE trial_users RENAME COLUMN wechat_id TO email`);
+  trialUserColumns = db.prepare(`PRAGMA table_info(trial_users)`).all().map((c) => c.name);
+}
 if (!trialUserColumns.includes('referred_by')) {
   db.exec(`ALTER TABLE trial_users ADD COLUMN referred_by TEXT`);
 }
 if (!trialUserColumns.includes('referred_skill_id')) {
   db.exec(`ALTER TABLE trial_users ADD COLUMN referred_skill_id INTEGER`);
+}
+if (!trialUserColumns.includes('converted_user_id')) {
+  db.exec(`ALTER TABLE trial_users ADD COLUMN converted_user_id INTEGER REFERENCES users(id)`);
 }
 if (!trialUserColumns.includes('referred_share_type')) {
   db.exec(`ALTER TABLE trial_users ADD COLUMN referred_share_type TEXT`);

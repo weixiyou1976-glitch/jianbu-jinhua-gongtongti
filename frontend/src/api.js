@@ -98,8 +98,9 @@ export const api = {
   saveQuote: (skill_id, quote_content) => request('/quotes/save', { method: 'POST', body: { skill_id, quote_content } }),
   getSavedQuotes: () => request('/quotes/saved'),
 
-  trialStart: (wechat_id, referral) =>
-    request('/trial/start', { method: 'POST', body: { wechat_id, ...referral } }),
+  trialSendCode: (email) => request('/trial/send-code', { method: 'POST', body: { email } }),
+  trialVerifyCode: (email, code, referral) =>
+    request('/trial/verify-code', { method: 'POST', body: { email, code, ...referral } }),
   trialMatch: (concern) => request('/trial/match', { method: 'POST', body: { concern }, trial: true }),
   getTrialSkill: () => request('/trial/skill', { trial: true }),
   getTrialOtherSkills: () => request('/trial/skill/others', { trial: true }),

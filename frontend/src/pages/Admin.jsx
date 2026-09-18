@@ -523,7 +523,7 @@ function TrialUsersPanel() {
         <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="text-left text-ink/40 border-b border-ink/10">
-              <th className="py-2 font-normal">微信号</th>
+              <th className="py-2 font-normal">邮箱</th>
               <th className="py-2 font-normal">困扰内容</th>
               <th className="py-2 font-normal">匹配Skill</th>
               <th className="py-2 font-normal">体验时间</th>
@@ -533,7 +533,7 @@ function TrialUsersPanel() {
           <tbody>
             {trialUsers.map((t) => (
               <tr key={t.id} className="border-b border-ink/5 align-top">
-                <td className="py-2 whitespace-nowrap">{t.wechat_id}</td>
+                <td className="py-2 whitespace-nowrap">{t.email}</td>
                 <td className="py-2 max-w-xs text-ink/70">{t.concern || '—'}</td>
                 <td className="py-2 whitespace-nowrap text-ink/70">
                   {t.matched_skill_name ? `第${t.matched_week_number}周 · ${t.matched_skill_name}` : '—'}

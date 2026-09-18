@@ -7,13 +7,14 @@ function migrateTrialToUser(trialId, targetUserId) {
 
   db.prepare(
     `UPDATE users SET
-       wechat_id = ?,
        trial_concern = ?,
        trial_skill_id = ?,
        trial_referred_by = ?,
        trial_converted_at = datetime('now')
      WHERE id = ?`
-  ).run(trial.wechat_id, trial.concern || null, trial.matched_skill_id || null, trial.referred_by || null, user.id);
+  ).run(trial.concern || null, trial.matched_skill_id || null, trial.referred_by || null, user.id);
+
+  db.prepare('UPDATE trial_users SET converted_user_id = ? WHERE id = ?').run(user.id, trial.id);
 
   const trialMessages = db
     .prepare('SELECT role, content, created_at FROM trial_coach_messages WHERE trial_user_id = ? ORDER BY id ASC')
