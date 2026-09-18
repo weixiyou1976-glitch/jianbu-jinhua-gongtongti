@@ -437,6 +437,7 @@ require('./migrations/skills-225-230')(db);
 require('./migrations/skills-231-236')(db);
 require('./migrations/skills-237-242')(db);
 require('./migrations/skills-243-248')(db);
+require('./migrations/skills-249-254')(db);
 require('./migrations/display-order')(db);
 
 // 第234周录入时分类写成了"行动与适应能力类"，订正为库里已有的"行动与适应类"，避免筛选标签重复。
