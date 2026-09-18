@@ -11,25 +11,51 @@ const SEASONS = [
   { label: '变现实战', range: [40, 52] },
 ];
 
+const RECOMMENDATIONS_KEY = 'ai_recommendations';
+
+function loadCachedRecommendations() {
+  try {
+    const raw = sessionStorage.getItem(RECOMMENDATIONS_KEY);
+    if (!raw) return null;
+    const cached = JSON.parse(raw);
+    if (cached?.situation && Array.isArray(cached?.results)) return cached;
+  } catch {
+    // 忽略隐私模式下sessionStorage不可用或数据损坏的情况
+  }
+  return null;
+}
+
 export default function Skills() {
   const [tab, setTab] = useState('week');
   const [skills, setSkills] = useState([]);
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
 
-  const [situation, setSituation] = useState('');
+  const [cachedOnMount] = useState(loadCachedRecommendations);
+  const [situation, setSituation] = useState(cachedOnMount?.situation || '');
   const [matchLoading, setMatchLoading] = useState(false);
   const [matchError, setMatchError] = useState('');
-  const [matchResults, setMatchResults] = useState(null);
+  const [matchResults, setMatchResults] = useState(cachedOnMount?.results || null);
+  const [restoredFromCache, setRestoredFromCache] = useState(!!cachedOnMount);
 
   async function handleMatch() {
     if (!situation.trim() || matchLoading) return;
     setMatchLoading(true);
     setMatchError('');
     setMatchResults(null);
+    setRestoredFromCache(false);
     try {
       const data = await api.matchSkills(situation.trim());
-      setMatchResults(data.results || []);
+      const results = data.results || [];
+      setMatchResults(results);
+      try {
+        sessionStorage.setItem(
+          RECOMMENDATIONS_KEY,
+          JSON.stringify({ situation: situation.trim(), results, timestamp: Date.now() })
+        );
+      } catch {
+        // 忽略隐私模式下sessionStorage不可用的情况
+      }
     } catch (err) {
       setMatchError(err.message);
     } finally {
@@ -37,9 +63,23 @@ export default function Skills() {
     }
   }
 
+  function handleResetSearch() {
+    try {
+      sessionStorage.removeItem(RECOMMENDATIONS_KEY);
+    } catch {
+      // 忽略隐私模式下sessionStorage不可用的情况
+    }
+    setSituation('');
+    setMatchResults(null);
+    setMatchError('');
+    setRestoredFromCache(false);
+  }
+
   useEffect(() => {
     api.getSkills().then(setSkills).catch((err) => setError(err.message));
   }, []);
+
+  const stampedSkillIds = useMemo(() => new Set(skills.filter((s) => s.stamped).map((s) => s.id)), [skills]);
 
   const byWeek = useMemo(() => {
     const seasons = SEASONS.map((season) => ({
@@ -107,6 +147,20 @@ export default function Skills() {
 
           {matchResults && (
             <div className="mt-4 space-y-2">
+              {restoredFromCache && (
+                <div className="flex items-center justify-between gap-2 mb-1 bg-vermilion/5 border border-vermilion/15 rounded-lg px-3 py-2">
+                  <p className="text-xs text-ink/50">
+                    上次为你推荐的Skill（基于：{situation.slice(0, 20)}……）
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleResetSearch}
+                    className="text-xs text-vermilion shrink-0 whitespace-nowrap"
+                  >
+                    重新搜索
+                  </button>
+                </div>
+              )}
               {matchResults.length === 0 ? (
                 <p className="text-xs text-ink/30">没有找到匹配的Skill，换个说法试试？</p>
               ) : (
@@ -118,12 +172,17 @@ export default function Skills() {
                         <span className="text-xs text-vermilion/80 mt-0.5 inline-block">{s.category}</span>
                         {s.match_reason && <p className="text-xs text-ink/60 mt-1.5">{s.match_reason}</p>}
                       </div>
-                      <Link
-                        to={`/skill/${s.id}`}
-                        className="shrink-0 text-xs text-vermilion border border-vermilion/30 rounded-full px-3 py-1 whitespace-nowrap"
-                      >
-                        去学习
-                      </Link>
+                      <div className="shrink-0 flex flex-col items-end gap-1.5">
+                        {stampedSkillIds.has(s.id) && (
+                          <span className="text-xs text-vermilion whitespace-nowrap">✅ 已安装</span>
+                        )}
+                        <Link
+                          to={`/skill/${s.id}`}
+                          className="text-xs text-vermilion border border-vermilion/30 rounded-full px-3 py-1 whitespace-nowrap"
+                        >
+                          去学习
+                        </Link>
+                      </div>
                     </div>
                     {s.temp_unlocked && (
                       <p className="text-vermilion mt-2" style={{ fontSize: 12 }}>
