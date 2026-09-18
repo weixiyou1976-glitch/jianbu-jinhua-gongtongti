@@ -1,28 +1,40 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
 
-let transporter = null;
+const SMTP_HOST = 'smtp.qq.com';
 
-function getTransporter() {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: 'smtp.qq.com',
-      port: 465,
-      secure: true,
-      family: 4,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-      connectionTimeout: 15000,
-      greetingTimeout: 15000,
-      socketTimeout: 15000,
-    });
+let transporterPromise = null;
+
+async function getTransporter() {
+  if (!transporterPromise) {
+    transporterPromise = dns.promises
+      .lookup(SMTP_HOST, { family: 4 })
+      .then(({ address }) =>
+        nodemailer.createTransport({
+          host: address,
+          servername: SMTP_HOST,
+          port: 465,
+          secure: true,
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          },
+          connectionTimeout: 15000,
+          greetingTimeout: 15000,
+          socketTimeout: 15000,
+        })
+      )
+      .catch((err) => {
+        transporterPromise = null;
+        throw err;
+      });
   }
-  return transporter;
+  return transporterPromise;
 }
 
 async function sendVerificationEmail(email, code) {
-  await getTransporter().sendMail({
+  const transporter = await getTransporter();
+  await transporter.sendMail({
     from: `"渐步进化共同体" <${process.env.SMTP_USER}>`,
     to: email,
     subject: '渐步体验验证码',
