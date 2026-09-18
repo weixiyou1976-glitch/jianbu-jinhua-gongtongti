@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const net = require('net');
 const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { requireAdmin } = require('../middleware/auth');
@@ -598,6 +599,33 @@ router.put('/modules/:id', (req, res) => {
 router.delete('/modules/:id', (req, res) => {
   db.prepare('DELETE FROM modules WHERE id = ?').run(req.params.id);
   res.json({ ok: true });
+});
+
+function probeTcp(host, port, timeoutMs = 8000) {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const socket = net.connect({ host, port });
+    const finish = (ok, detail) => {
+      clearTimeout(timer);
+      socket.destroy();
+      resolve({ target: `${host}:${port}`, ok, ms: Date.now() - started, detail });
+    };
+    const timer = setTimeout(() => finish(false, 'TIMEOUT'), timeoutMs);
+    socket.once('connect', () => finish(true, 'CONNECTED'));
+    socket.once('error', (err) => finish(false, err.code || err.message));
+  });
+}
+
+router.get('/net-diag', async (req, res) => {
+  const targets = [
+    ['smtp.qq.com', 465],
+    ['smtp.qq.com', 587],
+    ['smtp.gmail.com', 465],
+    ['smtp.gmail.com', 587],
+    ['www.qq.com', 443],
+  ];
+  const results = await Promise.all(targets.map(([host, port]) => probeTcp(host, port)));
+  res.json({ results });
 });
 
 module.exports = router;
