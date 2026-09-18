@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
-export default function SkillCard({ skill }) {
+export default function SkillCard({ skill, displayNumber }) {
   const navigate = useNavigate();
   const locked = skill.unlocked === false;
   const tags = skill.tags || [];
+  const weekLabel = displayNumber ?? skill.week_number;
 
   function handleTagClick(e, tag) {
     e.preventDefault();
@@ -15,7 +16,7 @@ export default function SkillCard({ skill }) {
     return (
       <div className="relative block border rounded-xl p-4 border-ink/5 bg-white/20 opacity-60">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-xs text-ink/40">第 {skill.week_number} 周</span>
+          <span className="text-xs text-ink/40">第 {weekLabel} 周</span>
           <span className="text-xs bg-ink/5 text-ink/40 rounded-full px-2 py-0.5">{skill.category}</span>
         </div>
         <p className="text-sm font-medium text-ink/50">{skill.skill_name}</p>
@@ -38,7 +39,7 @@ export default function SkillCard({ skill }) {
     >
       {locked && <span className="absolute top-3 right-3 text-sm">🔒</span>}
       <div className="flex items-center justify-between mb-1 pr-5">
-        <span className="text-xs text-ink/40">第 {skill.week_number} 周</span>
+        <span className="text-xs text-ink/40">第 {weekLabel} 周</span>
         <span className="text-xs bg-vermilion/10 text-vermilion rounded-full px-2 py-0.5">{skill.category}</span>
       </div>
       <p className="text-sm font-medium text-ink">{skill.skill_name}</p>

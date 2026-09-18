@@ -13,6 +13,21 @@ function currentWeekNumber(enrolledAt) {
   return Math.min(Math.max(week, 1), maxWeek);
 }
 
+// 52周主线路径的解锁节奏：与 week_number 完全独立，每7天解锁一个 display_order。
+function currentDisplayOrder(enrolledAt) {
+  const start = new Date(enrolledAt);
+  const now = new Date();
+  const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  const order = Math.floor(diffDays / 7) + 1;
+  const maxOrder =
+    db.prepare("SELECT MAX(display_order) AS m FROM skills WHERE status != 'draft'").get().m || 1;
+  return Math.min(Math.max(order, 1), maxOrder);
+}
+
+function isUnlockedByPacing(skill, currentWeek, currentOrder) {
+  return skill.week_number <= currentWeek || (skill.display_order != null && skill.display_order <= currentOrder);
+}
+
 function withParsedTags(row) {
   return { ...row, tags: JSON.parse(row.tags || '[]') };
 }
@@ -61,12 +76,13 @@ router.get('/skills', requireAuth, (req, res) => {
   const tempUnlockedIds = tempUnlockedSkillIds(req.user.id);
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
+  const currentOrder = currentDisplayOrder(user.enrolled_at);
   res.json(
     skills.map((s) => ({
       ...withParsedTags(s),
       stamped: stampedIds.has(s.id),
       unlocked:
-        s.week_number <= currentWeek ||
+        isUnlockedByPacing(s, currentWeek, currentOrder) ||
         stampedIds.has(s.id) ||
         moduleSkillIds.has(s.id) ||
         tempUnlockedIds.has(s.id),
@@ -118,12 +134,13 @@ router.get('/skills/search', requireAuth, (req, res) => {
   const tempUnlockedIds = tempUnlockedSkillIds(req.user.id);
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
+  const currentOrder = currentDisplayOrder(user.enrolled_at);
   res.json(
     skills.map((s) => ({
       ...withParsedTags(s),
       stamped: stampedIds.has(s.id),
       unlocked:
-        s.week_number <= currentWeek ||
+        isUnlockedByPacing(s, currentWeek, currentOrder) ||
         stampedIds.has(s.id) ||
         moduleSkillIds.has(s.id) ||
         tempUnlockedIds.has(s.id),
@@ -197,11 +214,12 @@ router.post('/skills/match', requireAuth, async (req, res) => {
   const tempUnlockedIds = tempUnlockedSkillIds(req.user.id);
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
+  const currentOrder = currentDisplayOrder(user.enrolled_at);
   const annotate = (s) => ({
     ...withParsedTags(s),
     stamped: stampedIds.has(s.id),
     unlocked:
-      s.week_number <= currentWeek ||
+      isUnlockedByPacing(s, currentWeek, currentOrder) ||
       stampedIds.has(s.id) ||
       moduleSkillIds.has(s.id) ||
       tempUnlockedIds.has(s.id),
@@ -213,7 +231,7 @@ router.post('/skills/match', requireAuth, async (req, res) => {
       grantTempUnlock(req.user.id, list.map((r) => r.id), 'ai_match');
       list.forEach((r) => {
         r.unlocked = true;
-        r.temp_unlocked = !(r.week_number <= currentWeek || stampedIds.has(r.id) || moduleSkillIds.has(r.id));
+        r.temp_unlocked = !(isUnlockedByPacing(r, currentWeek, currentOrder) || stampedIds.has(r.id) || moduleSkillIds.has(r.id));
       });
     }
     return list;
@@ -262,6 +280,7 @@ router.get('/skills/:id', requireAuth, (req, res) => {
 
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
+  const currentOrder = currentDisplayOrder(user.enrolled_at);
   const stamped = !!db
     .prepare('SELECT 1 FROM stamps WHERE user_id = ? AND skill_id = ? LIMIT 1')
     .get(req.user.id, skill.id);
@@ -269,7 +288,7 @@ router.get('/skills/:id', requireAuth, (req, res) => {
   const tempUnlocked = !!db
     .prepare("SELECT 1 FROM temporary_unlocks WHERE user_id = ? AND skill_id = ? AND expires_at > datetime('now')")
     .get(req.user.id, skill.id);
-  const unlocked = skill.week_number <= currentWeek || stamped || inModule || tempUnlocked;
+  const unlocked = isUnlockedByPacing(skill, currentWeek, currentOrder) || stamped || inModule || tempUnlocked;
 
   if (!unlocked) {
     const currentSkill = db.prepare('SELECT id, skill_name FROM skills WHERE week_number = ?').get(currentWeek);

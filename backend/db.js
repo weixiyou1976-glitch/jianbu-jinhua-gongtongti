@@ -328,6 +328,9 @@ if (!skillColumns.includes('insight_audio_url')) {
 if (!skillColumns.includes('growth_friction_ending')) {
   db.exec(`ALTER TABLE skills ADD COLUMN growth_friction_ending TEXT NOT NULL DEFAULT ''`);
 }
+if (!skillColumns.includes('display_order')) {
+  db.exec(`ALTER TABLE skills ADD COLUMN display_order INTEGER DEFAULT NULL`);
+}
 
 const userColumns = db.prepare(`PRAGMA table_info(users)`).all().map((c) => c.name);
 if (!userColumns.includes('referral_code')) {
@@ -433,6 +436,7 @@ function getModuleSkillIdSet() {
 require('./migrations/skills-225-230')(db);
 require('./migrations/skills-231-236')(db);
 require('./migrations/skills-237-242')(db);
+require('./migrations/display-order')(db);
 
 // 第234周录入时分类写成了"行动与适应能力类"，订正为库里已有的"行动与适应类"，避免筛选标签重复。
 db.prepare(

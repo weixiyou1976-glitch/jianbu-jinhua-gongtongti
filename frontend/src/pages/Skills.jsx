@@ -4,11 +4,12 @@ import { api } from '../api';
 import BottomNav from '../components/BottomNav';
 import SkillCard from '../components/SkillCard';
 
-const SEASONS = [
-  { label: '认知重启', range: [1, 13] },
-  { label: '行动破局', range: [14, 26] },
-  { label: '关系与影响力', range: [27, 39] },
-  { label: '变现实战', range: [40, 52] },
+const MAIN_PATH_STAGES = [
+  { label: '行动与自律', range: [1, 10] },
+  { label: '情绪与自我', range: [11, 20] },
+  { label: '沟通与关系', range: [21, 30] },
+  { label: '认知升级', range: [31, 40] },
+  { label: '影响力与决策', range: [41, 52] },
 ];
 
 const RECOMMENDATIONS_KEY = 'ai_recommendations';
@@ -81,18 +82,14 @@ export default function Skills() {
 
   const stampedSkillIds = useMemo(() => new Set(skills.filter((s) => s.stamped).map((s) => s.id)), [skills]);
 
-  const byWeek = useMemo(() => {
-    const seasons = SEASONS.map((season) => ({
-      ...season,
-      items: skills.filter((s) => s.week_number >= season.range[0] && s.week_number <= season.range[1]),
+  const mainPath = useMemo(() => {
+    const ordered = skills
+      .filter((s) => s.display_order != null)
+      .sort((a, b) => a.display_order - b.display_order);
+    return MAIN_PATH_STAGES.map((stage) => ({
+      ...stage,
+      items: ordered.filter((s) => s.display_order >= stage.range[0] && s.display_order <= stage.range[1]),
     }));
-    const lastRangeEnd = SEASONS.length ? SEASONS[SEASONS.length - 1].range[1] : 0;
-    const rest = skills.filter((s) => s.week_number > lastRangeEnd);
-    if (rest.length) {
-      const maxWeek = Math.max(...rest.map((s) => s.week_number));
-      seasons.push({ label: '持续更新', range: [lastRangeEnd + 1, maxWeek], items: rest });
-    }
-    return seasons;
   }, [skills]);
 
   const byCategory = useMemo(() => {
@@ -208,7 +205,7 @@ export default function Skills() {
               className={`flex-1 pb-3 text-sm ${tab === 'week' ? 'text-vermilion border-b-2 border-vermilion font-semibold' : 'text-ink/40'}`}
               onClick={() => setTab('week')}
             >
-              按周次
+              52周主线
             </button>
             <button
               className={`flex-1 pb-3 text-sm ${tab === 'category' ? 'text-vermilion border-b-2 border-vermilion font-semibold' : 'text-ink/40'}`}
@@ -241,17 +238,17 @@ export default function Skills() {
         )}
 
         {!searchResults && tab === 'week' &&
-          byWeek.map((season) => (
-            <section key={season.label}>
+          mainPath.map((stage) => (
+            <section key={stage.label}>
               <h2 className="text-sm font-semibold text-ink/70 mb-3">
-                {season.label} <span className="text-ink/30 font-normal">第{season.range[0]}-{season.range[1]}周</span>
+                {stage.label} <span className="text-ink/30 font-normal">第{stage.range[0]}-{stage.range[1]}周</span>
               </h2>
-              {season.items.length === 0 ? (
+              {stage.items.length === 0 ? (
                 <p className="text-xs text-ink/30">暂无内容</p>
               ) : (
                 <div className="space-y-2">
-                  {season.items.map((s) => (
-                    <SkillCard key={s.id} skill={s} />
+                  {stage.items.map((s) => (
+                    <SkillCard key={s.id} skill={s} displayNumber={s.display_order} />
                   ))}
                 </div>
               )}

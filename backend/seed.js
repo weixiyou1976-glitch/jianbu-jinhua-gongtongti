@@ -1,6 +1,7 @@
 const skills = [
   {
     week_number: 1,
+    display_order: 11,
     title: '第1周 · 把模糊的烦躁翻译成具体的问题',
     skill_name: '烦躁翻译法',
     category: '认知类',
@@ -33,6 +34,7 @@ const skills = [
   },
   {
     week_number: 3,
+    display_order: 14,
     title: '第3周 · 分清事实与你编的故事',
     skill_name: '故事拆弹器',
     category: '认知类',
@@ -49,6 +51,7 @@ const skills = [
   },
   {
     week_number: 4,
+    display_order: 34,
     title: '第4周 · 用对朋友的方式对待自己',
     skill_name: '自我教练法',
     category: '认知类',
@@ -81,6 +84,7 @@ const skills = [
   },
   {
     week_number: 6,
+    display_order: 9,
     title: '第6周 · 在信息噪音里只猎取一件事',
     skill_name: '重点猎人',
     category: '决策类',
@@ -97,6 +101,7 @@ const skills = [
   },
   {
     week_number: 7,
+    display_order: 1,
     title: '第7周 · 用一个五分钟动作打破拖延',
     skill_name: '最小启动器',
     category: '行动类',
@@ -113,6 +118,7 @@ const skills = [
   },
   {
     week_number: 8,
+    display_order: 8,
     title: '第8周 · 每次只砍一刀，留最产出的',
     skill_name: '砍刀时刻',
     category: '决策类',
@@ -144,6 +150,7 @@ const skills = [
   },
   {
     week_number: 10,
+    display_order: 15,
     title: '第10周 · 不让情绪代替你做决定',
     skill_name: '情绪隔离舱',
     category: '决策类',
@@ -237,6 +244,7 @@ const skills = [
   },
   {
     week_number: 16,
+    display_order: 41,
     title: '第16周 · 开口求人前，先给出去',
     skill_name: '互惠先给',
     category: '影响力类',
@@ -253,6 +261,7 @@ const skills = [
   },
   {
     week_number: 17,
+    display_order: 42,
     title: '第17周 · 用一个小承诺，撬动大行动',
     skill_name: '小诺钉桩',
     category: '影响力类',
@@ -269,6 +278,7 @@ const skills = [
   },
   {
     week_number: 18,
+    display_order: 43,
     title: '第18周 · 让他看见，别人已经在路上',
     skill_name: '从众引路',
     category: '影响力类',
@@ -285,6 +295,7 @@ const skills = [
   },
   {
     week_number: 19,
+    display_order: 45,
     title: '第19周 · 先立住身份，话才有分量',
     skill_name: '先立权威',
     category: '影响力类',
@@ -301,6 +312,7 @@ const skills = [
   },
   {
     week_number: 20,
+    display_order: 23,
     title: '第20周 · 先让他喜欢你，事才好谈',
     skill_name: '先找共频',
     category: '影响力类',
@@ -317,6 +329,7 @@ const skills = [
   },
   {
     week_number: 21,
+    display_order: 44,
     title: '第21周 · 让拖延变得有代价',
     skill_name: '稀缺激活',
     category: '影响力类',
@@ -333,6 +346,7 @@ const skills = [
   },
   {
     week_number: 22,
+    display_order: 25,
     title: '第22周 · 后果归谁，课题归谁',
     skill_name: '课题分离',
     category: '关系类',
@@ -399,6 +413,7 @@ const skills = [
   },
   {
     week_number: 26,
+    display_order: 50,
     title: '第26周 · 底牌不是用来出的，是用来让你站稳的',
     skill_name: '底牌思维',
     category: '谈判类',
@@ -432,6 +447,7 @@ const skills = [
   },
   {
     week_number: 28,
+    display_order: 24,
     title: '第28周 · 先给答案，再给过程',
     skill_name: '结论先行',
     category: '表达类',
@@ -448,6 +464,7 @@ const skills = [
   },
   {
     week_number: 29,
+    display_order: 29,
     title: '第29周 · 谁定义问题，谁主导对话',
     skill_name: '框架夺回',
     category: '影响力类',
@@ -516,6 +533,7 @@ const skills = [
   },
   {
     week_number: 33,
+    display_order: 3,
     title: '第33周 · 触发信号+最小行为+即时奖励',
     skill_name: '习惯启动',
     category: '自我管理类',
@@ -550,6 +568,7 @@ const skills = [
   },
   {
     week_number: 35,
+    display_order: 12,
     title: '第35周 · 说得出名字，才能处理它',
     skill_name: '情绪命名',
     category: '情绪能力类',
@@ -567,6 +586,7 @@ const skills = [
   },
   {
     week_number: 36,
+    display_order: 19,
     title: '第36周 · 可控的去做，不可控的放下',
     skill_name: '压力拆弹',
     category: '情绪能力类',
@@ -584,6 +604,7 @@ const skills = [
   },
   {
     week_number: 37,
+    display_order: 20,
     title: '第37周 · 感受它，提炼它，然后继续走',
     skill_name: '心理复原',
     category: '情绪能力类',
@@ -601,6 +622,7 @@ const skills = [
   },
   {
     week_number: 38,
+    display_order: 13,
     title: '第38周 · 冲动来的时候，先不动',
     skill_name: '冲动暂停',
     category: '情绪能力类',
@@ -771,6 +793,7 @@ const skills = [
   },
   {
     week_number: 48,
+    display_order: 39,
     title: '第48周 · 好的判断不是"我是对的"，而是"我知道我有多不确定"',
     skill_name: '判断校准',
     category: '认知能力类',
@@ -788,6 +811,7 @@ const skills = [
   },
   {
     week_number: 49,
+    display_order: 21,
     title: '第49周 · 先听懂，再开口',
     skill_name: '深度倾听',
     category: '社会能力类',
@@ -805,6 +829,7 @@ const skills = [
   },
   {
     week_number: 50,
+    display_order: 22,
     title: '第50周 · 先到他那里，再说你的',
     skill_name: '共情切换',
     category: '社会能力类',
@@ -822,6 +847,7 @@ const skills = [
   },
   {
     week_number: 51,
+    display_order: 30,
     title: '第51周 · 信任是说到做到的积累，不是关系的深度',
     skill_name: '信任铺轨',
     category: '社会能力类',
@@ -839,6 +865,7 @@ const skills = [
   },
   {
     week_number: 52,
+    display_order: 27,
     title: '第52周 · 争立场没有赢家，谈利益有出路',
     skill_name: '冲突拆解',
     category: '社会能力类',
@@ -856,6 +883,7 @@ const skills = [
   },
   {
     week_number: 53,
+    display_order: 49,
     title: '第53周 · 在成功之前，先想清楚怎么失败',
     skill_name: '风险预演',
     category: '决策能力类',
@@ -873,6 +901,7 @@ const skills = [
   },
   {
     week_number: 54,
+    display_order: 10,
     title: '第54周 · 先找到第一件，其他的自然排队',
     skill_name: '优先级归零',
     category: '决策能力类',
@@ -941,6 +970,7 @@ const skills = [
   },
   {
     week_number: 58,
+    display_order: 33,
     title: '第58周 · 不只想这件事，还想我在怎么想这件事',
     skill_name: '元认知暂停',
     category: '元能力类',
@@ -958,6 +988,7 @@ const skills = [
   },
   {
     week_number: 59,
+    display_order: 51,
     title: '第59周 · 复盘不是回顾，是提炼',
     skill_name: '复盘提炼',
     category: '元能力类',
@@ -975,6 +1006,7 @@ const skills = [
   },
   {
     week_number: 60,
+    display_order: 40,
     title: '第60周 · 解决问题不如改变产生问题的结构',
     skill_name: '系统视角',
     category: '元能力类',
@@ -992,6 +1024,7 @@ const skills = [
   },
   {
     week_number: 61,
+    display_order: 35,
     title: '第61周 · 真正的搜索，是找让自己错的证据',
     skill_name: '确认偏误识别',
     category: '认知能力类',
@@ -1043,6 +1076,7 @@ const skills = [
   },
   {
     week_number: 64,
+    display_order: 52,
     title: '第64周 · 每天一点点，一年之后是另一个人',
     skill_name: '复利积累',
     category: '自我管理类',
@@ -1128,6 +1162,7 @@ const skills = [
   },
   {
     week_number: 69,
+    display_order: 36,
     title: '第69周 · 过去的投入不是继续的理由，未来的价值才是',
     skill_name: '损失厌恶破局',
     category: '决策能力类',
@@ -1162,6 +1197,7 @@ const skills = [
   },
   {
     week_number: 71,
+    display_order: 37,
     title: '第71周 · 先想清楚自己的数字，再听对方的',
     skill_name: '锚定效应破局',
     category: '决策能力类',
@@ -1179,6 +1215,7 @@ const skills = [
   },
   {
     week_number: 72,
+    display_order: 38,
     title: '第72周 · 同一件事，换个说法，感觉完全不同',
     skill_name: '框架效应识别',
     category: '决策能力类',
@@ -3338,6 +3375,7 @@ const skills = [
   },
   {
     week_number: 199,
+    display_order: 2,
     title: '第199周 · 意志力用来克服困难，不用来克服门槛——把门槛提前消除',
     skill_name: '让开始变容易',
     category: '自我管理类',
@@ -3481,6 +3519,7 @@ const skills = [
   },
   {
     week_number: 207,
+    display_order: 16,
     title: '第207周 · 嫉妒指向渴望，渴望指向方向',
     skill_name: '嫉妒解码',
     category: '情绪能力类',
@@ -3499,6 +3538,7 @@ const skills = [
   },
   {
     week_number: 208,
+    display_order: 17,
     title: '第208周 · 委屈是一个信号，指向一个还没有被说出来的需求',
     skill_name: '委屈归位',
     category: '情绪能力类',
@@ -3517,6 +3557,7 @@ const skills = [
   },
   {
     week_number: 209,
+    display_order: 18,
     title: '第209周 · 身体先知道，大脑后知道——先听身体说什么',
     skill_name: '身体在说话',
     category: '情绪能力类',
@@ -3535,6 +3576,7 @@ const skills = [
   },
   {
     week_number: 210,
+    display_order: 26,
     title: '第210周 · 孤独不是因为身边没有人，是因为真实的自己没有出口',
     skill_name: '孤独不是问题',
     category: '情绪能力类',
@@ -3553,6 +3595,7 @@ const skills = [
   },
   {
     week_number: 211,
+    display_order: 28,
     title: '第211周 · 目标清不清楚，就看它能不能告诉你明天做什么',
     skill_name: '把目标说清楚',
     category: '自我管理类',
@@ -3589,6 +3632,7 @@ const skills = [
   },
   {
     week_number: 213,
+    display_order: 31,
     title: '第213周 · 感性脑占90%，理性脑只有10%',
     skill_name: '感性脑和理性脑',
     category: '认知能力类',
@@ -3607,6 +3651,7 @@ const skills = [
   },
   {
     week_number: 214,
+    display_order: 32,
     title: '第214周 · 感受是真实的，但感受推出的结论需要被检验',
     skill_name: '你的大脑在说谎',
     category: '认知能力类',
@@ -3625,6 +3670,7 @@ const skills = [
   },
   {
     week_number: 215,
+    display_order: 6,
     title: '第215周 · 规则说"不能"，身份说"不是我"',
     skill_name: '我是那种人',
     category: '自我管理类',
@@ -3643,6 +3689,7 @@ const skills = [
   },
   {
     week_number: 216,
+    display_order: 4,
     title: '第216周 · 不是靠意志力选择好的，而是让好的成为最容易的选择',
     skill_name: '把好的设为默认',
     category: '自我管理类',
@@ -3661,6 +3708,7 @@ const skills = [
   },
   {
     week_number: 217,
+    display_order: 5,
     title: '第217周 · 大脑追求即时奖励——给好行为一个即时的理由',
     skill_name: '给好行为装上钩子',
     category: '自我管理类',
@@ -3679,6 +3727,7 @@ const skills = [
   },
   {
     week_number: 218,
+    display_order: 7,
     title: '第218周 · 你跟自己说的话，会成为你大脑里最常走的那条路',
     skill_name: '换个说法说自己',
     category: '自我管理类',
@@ -3697,6 +3746,7 @@ const skills = [
   },
   {
     week_number: 219,
+    display_order: 46,
     title: '第219周 · 他说的是需求，他要的是需求背后的那个东西',
     skill_name: '找到他真正要的',
     category: '社会能力类',
@@ -3715,6 +3765,7 @@ const skills = [
   },
   {
     week_number: 220,
+    display_order: 47,
     title: '第220周 · 在说服之前，先让他感到被重视',
     skill_name: '尊重是最被低估的杠杆',
     category: '社会能力类',
@@ -3751,6 +3802,7 @@ const skills = [
   },
   {
     week_number: 222,
+    display_order: 48,
     title: '第222周 · 往下问三次，才能找到真正驱动他行动的那个需求',
     skill_name: '需求链',
     category: '社会能力类',
