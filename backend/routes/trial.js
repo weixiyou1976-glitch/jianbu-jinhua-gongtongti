@@ -22,7 +22,7 @@ function getTrial(trialId) {
   return db.prepare('SELECT * FROM trial_users WHERE id = ?').get(trialId);
 }
 
-router.post('/trial/send-code', (req, res) => {
+router.post('/trial/send-code', async (req, res) => {
   const email = (req.body?.email || '').trim().toLowerCase();
   if (!EMAIL_RE.test(email)) return res.status(400).json({ error: '请输入正确的邮箱地址' });
 
@@ -36,9 +36,12 @@ router.post('/trial/send-code', (req, res) => {
     "INSERT INTO email_verifications (email, code, expires_at) VALUES (?, ?, datetime('now', '+5 minutes'))"
   ).run(email, code);
 
-  sendVerificationEmail(email, code).catch((err) => {
+  try {
+    await sendVerificationEmail(email, code);
+  } catch (err) {
     console.error('sendVerificationEmail failed:', err);
-  });
+    return res.status(502).json({ error: '验证码发送失败，请稍后再试' });
+  }
 
   res.json({ ok: true });
 });

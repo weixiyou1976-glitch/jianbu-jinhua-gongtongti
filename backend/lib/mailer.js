@@ -8,13 +8,14 @@ function getTransporter() {
       host: 'smtp.qq.com',
       port: 465,
       secure: true,
+      family: 4,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
-      connectionTimeout: 90000,
-      greetingTimeout: 90000,
-      socketTimeout: 90000,
+      connectionTimeout: 15000,
+      greetingTimeout: 15000,
+      socketTimeout: 15000,
     });
   }
   return transporter;
