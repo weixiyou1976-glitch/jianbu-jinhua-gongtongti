@@ -3,12 +3,9 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { requireTrialAuth } = require('../middleware/auth');
 const { buildSystemPrompt } = require('../lib/coachPrompt');
-const { sendVerificationEmail } = require('../lib/mailer');
-const { findReferrerByCode, upsertRecord } = require('./referral');
+const { refreshExpiredTrialAccounts } = require('../lib/trialAccounts');
 
 const router = express.Router();
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function signTrialToken(trialId) {
   return jwt.sign({ trialId, type: 'trial' }, process.env.JWT_SECRET, { expiresIn: '48h' });
@@ -19,73 +16,31 @@ function withParsedTags(row) {
 }
 
 function getTrial(trialId) {
-  return db.prepare('SELECT * FROM trial_users WHERE id = ?').get(trialId);
+  return db.prepare('SELECT * FROM trial_accounts WHERE id = ?').get(trialId);
 }
 
-router.post('/trial/send-code', async (req, res) => {
-  const email = (req.body?.email || '').trim().toLowerCase();
-  if (!EMAIL_RE.test(email)) return res.status(400).json({ error: '请输入正确的邮箱地址' });
+router.post('/trial/login', (req, res) => {
+  const username = (req.body?.username || '').trim();
+  const password = (req.body?.password || '').trim();
 
-  const recent = db
-    .prepare("SELECT 1 FROM email_verifications WHERE email = ? AND created_at > datetime('now', '-60 seconds') LIMIT 1")
-    .get(email);
-  if (recent) return res.status(429).json({ error: '发送太频繁，请稍后再试' });
-
-  const code = String(Math.floor(100000 + Math.random() * 900000));
-  db.prepare(
-    "INSERT INTO email_verifications (email, code, expires_at) VALUES (?, ?, datetime('now', '+5 minutes'))"
-  ).run(email, code);
-
-  try {
-    await sendVerificationEmail(email, code);
-  } catch (err) {
-    console.error('sendVerificationEmail failed:', err);
-    return res.status(502).json({ error: '验证码发送失败，请稍后再试' });
+  const account = db.prepare('SELECT * FROM trial_accounts WHERE username = ?').get(username);
+  if (!account || account.password !== password) {
+    return res.status(400).json({ error: '账号或密码不正确' });
   }
 
-  res.json({ ok: true });
-});
-
-router.post('/trial/verify-code', (req, res) => {
-  const email = (req.body?.email || '').trim().toLowerCase();
-  const code = (req.body?.code || '').trim();
-  if (!EMAIL_RE.test(email)) return res.status(400).json({ error: '请输入正确的邮箱地址' });
-  if (!/^\d{6}$/.test(code)) {
-    return res.status(400).json({ error: '验证码不正确或已过期，请重新获取' });
+  refreshExpiredTrialAccounts(db);
+  const fresh = db.prepare('SELECT * FROM trial_accounts WHERE id = ?').get(account.id);
+  if (fresh.status === 'expired') {
+    return res.status(409).json({ error: '体验账号已过期，欢迎加入渐步', expired: true });
   }
 
-  const record = db
-    .prepare(
-      `SELECT id FROM email_verifications
-       WHERE email = ? AND code = ? AND used = 0 AND expires_at > datetime('now')
-       ORDER BY created_at DESC LIMIT 1`
-    )
-    .get(email, code);
-  if (!record) return res.status(400).json({ error: '验证码不正确或已过期，请重新获取' });
-
-  db.prepare('UPDATE email_verifications SET used = 1 WHERE id = ?').run(record.id);
-
-  const existing = db.prepare('SELECT id FROM trial_users WHERE email = ?').get(email);
-  if (existing) {
-    return res.status(409).json({ error: '你已经体验过了，欢迎加入渐步', already_used: true });
+  if (fresh.status === 'unused') {
+    db.prepare(
+      "UPDATE trial_accounts SET status = 'active', first_used_at = datetime('now'), expires_at = datetime('now', '+48 hours') WHERE id = ?"
+    ).run(fresh.id);
   }
 
-  const { ref, skill_id: refSkillId, share_type: refShareType } = req.body || {};
-  const referrer = ref ? findReferrerByCode(ref) : null;
-  const hasReferral = referrer && refSkillId && (refShareType === 'stamped' || refShareType === 'basic');
-
-  const info = db
-    .prepare(
-      'INSERT INTO trial_users (email, referred_by, referred_skill_id, referred_share_type) VALUES (?, ?, ?, ?)'
-    )
-    .run(email, hasReferral ? referrer.referral_code : null, hasReferral ? refSkillId : null, hasReferral ? refShareType : null);
-
-  if (hasReferral) {
-    const recordId = upsertRecord(referrer.id, referrer.referral_code, refSkillId, refShareType);
-    db.prepare('UPDATE referral_records SET trial_count = trial_count + 1 WHERE id = ?').run(recordId);
-  }
-
-  res.json({ token: signTrialToken(info.lastInsertRowid) });
+  res.json({ token: signTrialToken(fresh.id) });
 });
 
 function buildMatchPrompt(query, candidates) {
@@ -171,7 +126,7 @@ router.post('/trial/match', requireTrialAuth, async (req, res) => {
     matched = fallbackPool[0] || allSkills[0];
   }
 
-  db.prepare('UPDATE trial_users SET concern = ?, matched_skill_id = ? WHERE id = ?').run(
+  db.prepare('UPDATE trial_accounts SET concern = ?, matched_skill_id = ? WHERE id = ?').run(
     concern,
     matched.id,
     trial.id
@@ -194,7 +149,7 @@ router.post('/trial/stamp', requireTrialAuth, (req, res) => {
 
   const info = db
     .prepare(
-      'INSERT INTO trial_stamps (trial_user_id, skill_id, learned, practiced, gained) VALUES (?, ?, ?, ?, ?)'
+      'INSERT INTO trial_account_stamps (trial_account_id, skill_id, learned, practiced, gained) VALUES (?, ?, ?, ?, ?)'
     )
     .run(trial.id, skill_id, learned, practiced, gained);
 
@@ -234,7 +189,7 @@ router.get('/trial/skill', requireTrialAuth, (req, res) => {
 });
 
 const insertTrialMessage = db.prepare(
-  'INSERT INTO trial_coach_messages (trial_user_id, role, content) VALUES (?, ?, ?)'
+  'INSERT INTO trial_account_coach_messages (trial_account_id, role, content) VALUES (?, ?, ?)'
 );
 
 async function streamTrialCoachReply(res, messages, trialUserId) {
@@ -308,7 +263,7 @@ async function streamTrialCoachReply(res, messages, trialUserId) {
 
 router.get('/trial/coach/history', requireTrialAuth, (req, res) => {
   const messages = db
-    .prepare('SELECT role, content, created_at FROM trial_coach_messages WHERE trial_user_id = ? ORDER BY id ASC')
+    .prepare('SELECT role, content, created_at FROM trial_account_coach_messages WHERE trial_account_id = ? ORDER BY id ASC')
     .all(req.trial.trialId);
   res.json({ messages });
 });
@@ -327,7 +282,7 @@ router.post('/trial/coach/message', requireTrialAuth, async (req, res) => {
   if (!skill) return res.status(404).json({ error: 'Skill不存在' });
 
   const history = db
-    .prepare('SELECT role, content FROM trial_coach_messages WHERE trial_user_id = ? ORDER BY id ASC')
+    .prepare('SELECT role, content FROM trial_account_coach_messages WHERE trial_account_id = ? ORDER BY id ASC')
     .all(trial.id);
 
   insertTrialMessage.run(trial.id, 'user', message);

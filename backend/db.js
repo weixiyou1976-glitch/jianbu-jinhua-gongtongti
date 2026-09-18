@@ -118,16 +118,40 @@ CREATE TABLE IF NOT EXISTS trial_users (
   converted INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS email_verifications (
+CREATE TABLE IF NOT EXISTS trial_accounts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT NOT NULL,
-  code TEXT NOT NULL,
-  expires_at TEXT NOT NULL,
-  used INTEGER NOT NULL DEFAULT 0,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'unused' CHECK (status IN ('unused', 'active', 'expired')),
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  first_used_at TEXT,
+  expires_at TEXT,
+  converted INTEGER NOT NULL DEFAULT 0,
+  concern TEXT NOT NULL DEFAULT '',
+  matched_skill_id INTEGER REFERENCES skills(id)
+);
+
+CREATE TABLE IF NOT EXISTS trial_account_coach_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  trial_account_id INTEGER NOT NULL REFERENCES trial_accounts(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+  content TEXT NOT NULL,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_email_verifications_email ON email_verifications(email, created_at);
+CREATE INDEX IF NOT EXISTS idx_trial_account_coach_messages_trial ON trial_account_coach_messages(trial_account_id, id);
+
+CREATE TABLE IF NOT EXISTS trial_account_stamps (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  trial_account_id INTEGER NOT NULL REFERENCES trial_accounts(id) ON DELETE CASCADE,
+  skill_id INTEGER NOT NULL REFERENCES skills(id),
+  learned TEXT NOT NULL,
+  practiced TEXT NOT NULL,
+  gained TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_trial_account_stamps_trial ON trial_account_stamps(trial_account_id);
 
 CREATE TABLE IF NOT EXISTS trial_coach_messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

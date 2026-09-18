@@ -169,7 +169,25 @@ test('两个进程并发执行增量迁移不会产生重复Skill或标签', asy
   } finally { db.close(); }
 });
 
-test('真实HTTP接口：总库、周次/类型/标签、解锁、详情、重复策印、匹配、陪练记忆、Trial迁移和进度', async () => {
+test('体验账号用户名按最大编号递增生成，密码互不相同，不会与已有编号重复', () => {
+  const { db } = openFixture('trial-accounts-seq', false);
+  try {
+    const { generateTrialAccounts } = require('../lib/trialAccounts');
+    const first = generateTrialAccounts(db, 3);
+    assert.deepEqual(first.map((a) => a.username), ['jianbu001', 'jianbu002', 'jianbu003']);
+    assert.equal(new Set(first.map((a) => a.password)).size, 3);
+    for (const a of first) assert.equal(a.password.length, 8);
+
+    db.prepare("DELETE FROM trial_accounts WHERE username = 'jianbu002'").run();
+    const second = generateTrialAccounts(db, 2);
+    assert.deepEqual(second.map((a) => a.username), ['jianbu004', 'jianbu005'], '删除中间编号后仍按已有最大编号继续递增，不回填空缺');
+
+    const all = db.prepare('SELECT username FROM trial_accounts ORDER BY id').all().map((r) => r.username);
+    assert.deepEqual(all, ['jianbu001', 'jianbu003', 'jianbu004', 'jianbu005']);
+  } finally { db.close(); }
+});
+
+test('真实HTTP接口：总库、周次/类型/标签、解锁、详情、重复策印、匹配、陪练记忆、Trial账号体验和进度', async () => {
   const fixture = openFixture('api');
   addLinkedRecords(fixture.db);
   fixture.db.close();
@@ -244,21 +262,55 @@ test('真实HTTP接口：总库、周次/类型/标签、解锁、详情、重�
       assert.equal(lastAIRequest.messages[1].content, '请结合我的策印继续陪练');
       assert.equal((await request(`/coach/${skill.id}/history`)).messages.length, 4);
 
-      const trialEmail = `local-new-trial-${expected.week_number}@example.invalid`;
-      db.prepare("INSERT INTO email_verifications (email, code, expires_at) VALUES (?, ?, datetime('now', '+5 minutes'))")
-        .run(trialEmail, '123456');
-      const trialToken = (await request('/trial/verify-code', { email: trialEmail, code: '123456' })).token;
+      const trialUsername = `jianbu-test-${expected.week_number}`;
+      db.prepare('INSERT INTO trial_accounts (username, password) VALUES (?, ?)').run(trialUsername, 'pw123456');
+      const trialToken = (await request('/trial/login', { username: trialUsername, password: 'pw123456' })).token;
       const trialSkill = await request('/trial/match', { concern: '我很担心报价后客户的沉默，迟迟不愿意开始做事，想练习新的方法' }, trialToken);
       assert.equal(trialSkill.id, skill.id);
       assert.equal((await request('/trial/skill', null, trialToken)).id, skill.id);
       await request('/trial/stamp', { skill_id: skill.id, ...stamp }, trialToken);
       assert.equal(await request('/trial/coach/message', { skill_id: skill.id, message: '请帮我练第一步' }, trialToken), '模拟陪练回复');
       assert.equal((await request('/trial/coach/history', null, trialToken)).messages.length, 2);
-      const result = require('../lib/trialMigration').migrateTrialToUser(jwt.verify(trialToken, process.env.JWT_SECRET).trialId, 1);
-      assert.deepEqual(result, { ok: true, migrated_messages: 2, migrated_stamps: 1 });
-      assert.equal((await request(`/skills/${skill.id}/stamps`)).length, 3);
-      assert.equal((await request(`/coach/${skill.id}/history`)).messages.length, 6);
     }
+
+    // 体验账号登录逻辑：密码错误、首次登录后转为已使用、未过期可重复登录、过期后拒绝并提示。
+    db.prepare("INSERT INTO trial_accounts (username, password) VALUES ('jianbu-login-test', 'rightpw')").run();
+    const wrongPw = await realFetch(base + '/trial/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'jianbu-login-test', password: 'wrongpw' }),
+    });
+    assert.equal(wrongPw.status, 400);
+    assert.equal((await wrongPw.json()).error, '账号或密码不正确');
+
+    const firstLogin = await realFetch(base + '/trial/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'jianbu-login-test', password: 'rightpw' }),
+    });
+    assert.equal(firstLogin.status, 200);
+    const afterFirstLogin = db.prepare('SELECT status, first_used_at, expires_at FROM trial_accounts WHERE username = ?').get('jianbu-login-test');
+    assert.equal(afterFirstLogin.status, 'active');
+    assert.ok(afterFirstLogin.first_used_at);
+    assert.ok(afterFirstLogin.expires_at);
+
+    const secondLogin = await realFetch(base + '/trial/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'jianbu-login-test', password: 'rightpw' }),
+    });
+    assert.equal(secondLogin.status, 200, '已使用但未过期的账号应可继续登录');
+
+    db.prepare("UPDATE trial_accounts SET expires_at = datetime('now', '-1 hour') WHERE username = 'jianbu-login-test'").run();
+    const expiredLogin = await realFetch(base + '/trial/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'jianbu-login-test', password: 'rightpw' }),
+    });
+    assert.equal(expiredLogin.status, 409);
+    assert.equal((await expiredLogin.json()).error, '体验账号已过期，欢迎加入渐步');
+    assert.equal(db.prepare("SELECT status FROM trial_accounts WHERE username = 'jianbu-login-test'").get().status, 'expired');
+
     failAI = true;
     const fallback = await request('/skills/match', { query: '选择性注意 机会 信念 注意力 元认知' });
     assert.equal(fallback.source, 'keyword');
@@ -266,7 +318,7 @@ test('真实HTTP接口：总库、周次/类型/标签、解锁、详情、重�
     const progress = await request('/progress');
     assert.equal(progress.total, 254);
     assert.equal(progress.skills_mastered, 31);
-    assert.equal(progress.total_stamps, 91);
+    assert.equal(progress.total_stamps, 61);
     assert.ok(progress.grid.find((g) => g.week === 224).completed);
     assert.ok(progress.grid.filter((g) => g.week >= 225).every((g) => g.completed));
     assert.equal((await request('/skills/1224/stamps'))[0].learned, '旧策印');

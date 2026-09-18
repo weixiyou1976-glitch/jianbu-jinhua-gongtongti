@@ -98,9 +98,8 @@ export const api = {
   saveQuote: (skill_id, quote_content) => request('/quotes/save', { method: 'POST', body: { skill_id, quote_content } }),
   getSavedQuotes: () => request('/quotes/saved'),
 
-  trialSendCode: (email) => request('/trial/send-code', { method: 'POST', body: { email } }),
-  trialVerifyCode: (email, code, referral) =>
-    request('/trial/verify-code', { method: 'POST', body: { email, code, ...referral } }),
+  trialLogin: (username, password) =>
+    request('/trial/login', { method: 'POST', body: { username, password } }),
   trialMatch: (concern) => request('/trial/match', { method: 'POST', body: { concern }, trial: true }),
   getTrialSkill: () => request('/trial/skill', { trial: true }),
   getTrialOtherSkills: () => request('/trial/skill/others', { trial: true }),
@@ -131,6 +130,11 @@ export const api = {
   adminListTrialUsers: () => request('/admin/trial-users', { admin: true }),
   adminUpdateTrialUser: (id, payload) =>
     request(`/admin/trial-users/${id}`, { method: 'PUT', body: payload, admin: true }),
+  adminGenerateTrialAccounts: (count) =>
+    request('/admin/trial-accounts', { method: 'POST', body: { count }, admin: true }),
+  adminListTrialAccounts: () => request('/admin/trial-accounts', { admin: true }),
+  adminMarkTrialAccountConverted: (id, converted) =>
+    request(`/admin/trial-accounts/${id}/convert`, { method: 'PUT', body: { converted }, admin: true }),
   adminListReferrals: () => request('/admin/referrals', { admin: true }),
   adminGetTrialAnalytics: () => request('/admin/trial-analytics', { admin: true }),
   adminSettleReferrals: (userId) =>

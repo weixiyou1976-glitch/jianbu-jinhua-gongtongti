@@ -468,6 +468,13 @@ function formatTrialTime(isoLike) {
   return date.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
+function formatAccountStatus(status) {
+  if (status === 'unused') return '未使用';
+  if (status === 'active') return '已使用';
+  if (status === 'expired') return '已过期';
+  return status;
+}
+
 function TrialUsersPanel() {
   const [trialUsers, setTrialUsers] = useState([]);
   const [error, setError] = useState('');
@@ -572,6 +579,111 @@ function TrialUsersPanel() {
                       </button>
                     </div>
                   )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function TrialAccountsPanel() {
+  const [accounts, setAccounts] = useState([]);
+  const [generated, setGenerated] = useState([]);
+  const [error, setError] = useState('');
+  const [generating, setGenerating] = useState(false);
+  const [updatingId, setUpdatingId] = useState(null);
+
+  function refresh() {
+    api.adminListTrialAccounts().then(setAccounts).catch((err) => setError(err.message));
+  }
+  useEffect(refresh, []);
+
+  async function handleGenerate() {
+    setGenerating(true);
+    setError('');
+    try {
+      const res = await api.adminGenerateTrialAccounts(10);
+      setGenerated(res.accounts);
+      refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  async function toggleConverted(row) {
+    setUpdatingId(row.id);
+    try {
+      await api.adminMarkTrialAccountConverted(row.id, !row.converted);
+      setAccounts((list) => list.map((a) => (a.id === row.id ? { ...a, converted: !row.converted } : a)));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setUpdatingId(null);
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <button
+          onClick={handleGenerate}
+          disabled={generating}
+          className="bg-vermilion text-paper rounded-lg px-4 py-2 text-sm disabled:opacity-50"
+        >
+          {generating ? '生成中…' : '生成体验账号'}
+        </button>
+        <p className="text-sm text-ink/60">共 {accounts.length} 个体验账号</p>
+      </div>
+      {error && <p className="text-vermilion text-sm">{error}</p>}
+      {generated.length > 0 && (
+        <div className="bg-white/50 border border-ink/10 rounded-xl p-4 text-sm">
+          <p className="text-ink/50 mb-2">本次生成 {generated.length} 个（用户名 / 密码），请手动发给体验者：</p>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 font-mono text-xs">
+            {generated.map((a) => (
+              <p key={a.username}>
+                {a.username} / {a.password}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-left text-ink/40 border-b border-ink/10">
+              <th className="py-2 font-normal">用户名</th>
+              <th className="py-2 font-normal">密码</th>
+              <th className="py-2 font-normal">状态</th>
+              <th className="py-2 font-normal">创建时间</th>
+              <th className="py-2 font-normal">使用时间</th>
+              <th className="py-2 font-normal">过期时间</th>
+              <th className="py-2 font-normal">转化</th>
+            </tr>
+          </thead>
+          <tbody>
+            {accounts.map((a) => (
+              <tr key={a.id} className="border-b border-ink/5 align-top">
+                <td className="py-2 whitespace-nowrap font-mono">{a.username}</td>
+                <td className="py-2 whitespace-nowrap font-mono">{a.password}</td>
+                <td className="py-2 whitespace-nowrap">{formatAccountStatus(a.status)}</td>
+                <td className="py-2 text-ink/50 whitespace-nowrap">{formatTrialTime(a.created_at)}</td>
+                <td className="py-2 text-ink/50 whitespace-nowrap">{formatTrialTime(a.first_used_at)}</td>
+                <td className="py-2 text-ink/50 whitespace-nowrap">{formatTrialTime(a.expires_at)}</td>
+                <td className="py-2 whitespace-nowrap">
+                  <button
+                    onClick={() => toggleConverted(a)}
+                    disabled={updatingId === a.id}
+                    className={`text-xs rounded-full px-3 py-1 border disabled:opacity-40 ${
+                      a.converted ? 'text-vermilion border-vermilion/30 bg-vermilion/5' : 'text-ink/40 border-ink/15'
+                    }`}
+                  >
+                    {a.converted ? '✓ 已转化' : '标记为已转化'}
+                  </button>
                 </td>
               </tr>
             ))}
@@ -1265,6 +1377,7 @@ export default function Admin() {
             ['codes', '激活码'],
             ['students', '学员'],
             ['trial', '试用用户'],
+            ['trial-accounts', '体验账号'],
             ['conversion', '转化分析'],
             ['referrals', '分享数据'],
             ['referral-rewards', '推荐奖励'],
@@ -1287,6 +1400,7 @@ export default function Admin() {
         {tab === 'codes' && <CodesPanel />}
         {tab === 'students' && <StudentsPanel />}
         {tab === 'trial' && <TrialUsersPanel />}
+        {tab === 'trial-accounts' && <TrialAccountsPanel />}
         {tab === 'conversion' && <ConversionAnalyticsPanel />}
         {tab === 'referrals' && <ReferralsPanel />}
         {tab === 'referral-rewards' && <ReferralRewardsPanel />}

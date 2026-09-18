@@ -1,12 +1,12 @@
 const express = require('express');
 const crypto = require('crypto');
-const net = require('net');
 const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { requireAdmin } = require('../middleware/auth');
 const { checkAndGrantMilestones, getShareTag, getConversionTag } = require('../lib/rewards');
 const { computeStreak } = require('../lib/streak');
 const { migrateTrialToUser } = require('../lib/trialMigration');
+const { generateTrialAccounts, refreshExpiredTrialAccounts } = require('../lib/trialAccounts');
 
 const router = express.Router();
 router.use(requireAdmin);
@@ -601,31 +601,29 @@ router.delete('/modules/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-function probeTcp(host, port, timeoutMs = 8000) {
-  return new Promise((resolve) => {
-    const started = Date.now();
-    const socket = net.connect({ host, port });
-    const finish = (ok, detail) => {
-      clearTimeout(timer);
-      socket.destroy();
-      resolve({ target: `${host}:${port}`, ok, ms: Date.now() - started, detail });
-    };
-    const timer = setTimeout(() => finish(false, 'TIMEOUT'), timeoutMs);
-    socket.once('connect', () => finish(true, 'CONNECTED'));
-    socket.once('error', (err) => finish(false, err.code || err.message));
-  });
-}
+router.post('/trial-accounts', (req, res) => {
+  const count = Math.min(Math.max(parseInt(req.body?.count, 10) || 10, 1), 500);
+  const created = generateTrialAccounts(db, count);
+  res.json({ accounts: created });
+});
 
-router.get('/net-diag', async (req, res) => {
-  const targets = [
-    ['smtp.qq.com', 465],
-    ['smtp.qq.com', 587],
-    ['smtp.gmail.com', 465],
-    ['smtp.gmail.com', 587],
-    ['www.qq.com', 443],
-  ];
-  const results = await Promise.all(targets.map(([host, port]) => probeTcp(host, port)));
-  res.json({ results });
+router.get('/trial-accounts', (req, res) => {
+  refreshExpiredTrialAccounts(db);
+  const rows = db
+    .prepare(
+      `SELECT t.*, s.week_number AS matched_week_number, s.skill_name AS matched_skill_name
+       FROM trial_accounts t
+       LEFT JOIN skills s ON s.id = t.matched_skill_id
+       ORDER BY t.created_at DESC`
+    )
+    .all();
+  res.json(rows);
+});
+
+router.put('/trial-accounts/:id/convert', (req, res) => {
+  const converted = req.body?.converted !== false;
+  db.prepare('UPDATE trial_accounts SET converted = ? WHERE id = ?').run(converted ? 1 : 0, req.params.id);
+  res.json({ ok: true });
 });
 
 module.exports = router;

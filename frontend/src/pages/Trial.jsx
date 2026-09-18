@@ -9,8 +9,8 @@ const TRIAL_TOKEN_KEY = 'trialToken';
 const REFERRAL_KEY = 'trialReferral';
 const REFERRAL_CLICK_TRACKED_KEY = 'trialReferralClickTracked';
 const PENDING_REFERRAL_CODE_KEY = 'pendingReferralCode';
-const ALREADY_USED_MSG = '你已经体验过了，欢迎加入渐步';
 const EXPIRED_MSG = '体验时间已结束，欢迎加入渐步';
+const ACCOUNT_EXPIRED_MSG = '体验账号已过期，欢迎加入渐步';
 const NO_MATCH_MSG = '还没有匹配到Skill';
 
 function readReferralFromUrl() {
@@ -24,134 +24,68 @@ function readReferralFromUrl() {
   return null;
 }
 
-function getStoredReferral() {
-  try {
-    const raw = sessionStorage.getItem(REFERRAL_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const RESEND_SECONDS = 60;
-
-function EmailVerificationScreen({ onStarted, onAlreadyUsed, referral }) {
-  const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
-  const [countdown, setCountdown] = useState(0);
-  const [sending, setSending] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [sendError, setSendError] = useState('');
-  const [verifyError, setVerifyError] = useState('');
-
-  useEffect(() => {
-    if (countdown <= 0) return;
-    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [countdown]);
-
-  async function handleSendCode() {
-    if (sending || countdown > 0) return;
-    const trimmed = email.trim();
-    if (!EMAIL_RE.test(trimmed)) {
-      setSendError('请输入正确的邮箱地址');
-      return;
-    }
-    setSending(true);
-    setSendError('');
-    try {
-      await api.trialSendCode(trimmed);
-      setCountdown(RESEND_SECONDS);
-    } catch (err) {
-      setSendError(err.message);
-    } finally {
-      setSending(false);
-    }
-  }
+function AccountLoginScreen({ onStarted, onExpired }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const trimmedEmail = email.trim();
-    const trimmedCode = code.trim();
-    if (!EMAIL_RE.test(trimmedEmail)) {
-      setVerifyError('请输入正确的邮箱地址');
-      return;
-    }
-    if (!/^\d{6}$/.test(trimmedCode)) {
-      setVerifyError('验证码不正确或已过期，请重新获取');
-      return;
-    }
-    if (verifying) return;
-    setVerifying(true);
-    setVerifyError('');
+    const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
+    if (!trimmedUsername || !trimmedPassword || loggingIn) return;
+    setLoggingIn(true);
+    setError('');
     try {
-      const res = await api.trialVerifyCode(trimmedEmail, trimmedCode, referral || undefined);
+      const res = await api.trialLogin(trimmedUsername, trimmedPassword);
       localStorage.setItem(TRIAL_TOKEN_KEY, res.token);
       onStarted();
     } catch (err) {
-      if (err.message === ALREADY_USED_MSG) {
-        onAlreadyUsed();
+      if (err.message === ACCOUNT_EXPIRED_MSG) {
+        onExpired(ACCOUNT_EXPIRED_MSG);
       } else {
-        setVerifyError(err.message);
+        setError(err.message);
       }
     } finally {
-      setVerifying(false);
+      setLoggingIn(false);
     }
   }
-
-  const emailValid = EMAIL_RE.test(email.trim());
-  const codeValid = /^\d{6}$/.test(code.trim());
 
   return (
     <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
         <h1 className="text-xl font-semibold text-ink mb-2">先体验一次，再决定要不要加入</h1>
-        <p className="text-sm text-ink/50 mb-8 leading-relaxed">
-          不需要激活码，不需要付费，完整体验一张最适合你的Skill
-        </p>
+        <p className="text-sm text-ink/50 mb-8 leading-relaxed">输入你收到的体验账号和密码</p>
         <form onSubmit={handleSubmit} className="space-y-3 text-left">
-          <div className="flex gap-2">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setSendError('');
-              }}
-              placeholder="请输入你的邮箱地址"
-              className="flex-1 min-w-0 border border-vermilion/20 bg-white/60 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-vermilion"
-              required
-            />
-            <button
-              type="button"
-              onClick={handleSendCode}
-              disabled={sending || countdown > 0 || !emailValid}
-              className="shrink-0 whitespace-nowrap border border-vermilion/30 text-vermilion rounded-lg px-3 text-xs font-medium disabled:opacity-40"
-            >
-              {countdown > 0 ? `${countdown}秒后重发` : sending ? '发送中…' : '发送验证码'}
-            </button>
-          </div>
-          {sendError && <p className="text-vermilion text-sm">{sendError}</p>}
           <input
-            value={code}
+            value={username}
             onChange={(e) => {
-              setCode(e.target.value.replace(/\D/g, '').slice(0, 6));
-              setVerifyError('');
+              setUsername(e.target.value);
+              setError('');
             }}
-            placeholder="请输入验证码"
-            inputMode="numeric"
-            maxLength={6}
+            placeholder="jianbu + 数字"
             className="w-full border border-vermilion/20 bg-white/60 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-vermilion"
             required
           />
-          {verifyError && <p className="text-vermilion text-sm">{verifyError}</p>}
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setError('');
+            }}
+            placeholder="体验密码"
+            className="w-full border border-vermilion/20 bg-white/60 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-vermilion"
+            required
+          />
+          {error && <p className="text-vermilion text-sm">{error}</p>}
           <button
             type="submit"
-            disabled={verifying || !emailValid || !codeValid}
+            disabled={loggingIn || !username.trim() || !password.trim()}
             className="w-full bg-vermilion text-paper rounded-lg py-3 text-sm font-medium disabled:opacity-50"
           >
-            {verifying ? '处理中…' : '开始体验'}
+            {loggingIn ? '处理中…' : '开始体验'}
           </button>
         </form>
       </div>
@@ -159,22 +93,11 @@ function EmailVerificationScreen({ onStarted, onAlreadyUsed, referral }) {
   );
 }
 
-function UsedScreen() {
+function ExpiredScreen({ message = EXPIRED_MSG }) {
   return (
     <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
-        <p className="text-lg font-semibold text-ink mb-8">{ALREADY_USED_MSG}</p>
-        <TrialJoinCard />
-      </div>
-    </div>
-  );
-}
-
-function ExpiredScreen() {
-  return (
-    <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-6">
-      <div className="w-full max-w-sm text-center">
-        <p className="text-lg font-semibold text-ink mb-8">{EXPIRED_MSG}</p>
+        <p className="text-lg font-semibold text-ink mb-8">{message}</p>
         <TrialJoinCard />
       </div>
     </div>
@@ -508,7 +431,7 @@ function DoneScreen({ skill }) {
 export default function Trial() {
   const [phase, setPhase] = useState('loading');
   const [skill, setSkill] = useState(null);
-  const [referral, setReferral] = useState(null);
+  const [expiredMessage, setExpiredMessage] = useState(undefined);
 
   useEffect(() => {
     const rawRef = new URLSearchParams(window.location.search).get('ref');
@@ -522,8 +445,6 @@ export default function Trial() {
     }
 
     const urlReferral = readReferralFromUrl();
-    const activeReferral = urlReferral || getStoredReferral();
-    setReferral(activeReferral);
 
     if (urlReferral) {
       try {
@@ -544,7 +465,7 @@ export default function Trial() {
 
     const token = localStorage.getItem(TRIAL_TOKEN_KEY);
     if (!token) {
-      setPhase('email');
+      setPhase('login');
       return;
     }
     api
@@ -560,23 +481,24 @@ export default function Trial() {
           setPhase('expired');
         } else {
           localStorage.removeItem(TRIAL_TOKEN_KEY);
-          setPhase('email');
+          setPhase('login');
         }
       });
   }, []);
 
   if (phase === 'loading') return <div className="min-h-screen bg-paper" />;
-  if (phase === 'email') {
+  if (phase === 'login') {
     return (
-      <EmailVerificationScreen
-        referral={referral}
+      <AccountLoginScreen
         onStarted={() => setPhase('concern')}
-        onAlreadyUsed={() => setPhase('used')}
+        onExpired={(message) => {
+          setExpiredMessage(message);
+          setPhase('expired');
+        }}
       />
     );
   }
-  if (phase === 'used') return <UsedScreen />;
-  if (phase === 'expired') return <ExpiredScreen />;
+  if (phase === 'expired') return <ExpiredScreen message={expiredMessage} />;
   if (phase === 'concern') {
     return (
       <ConcernScreen
