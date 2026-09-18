@@ -448,6 +448,9 @@ if (!trialUserColumns.includes('referred_share_type')) {
   db.exec(`ALTER TABLE trial_users ADD COLUMN referred_share_type TEXT`);
 }
 
+// 体验流程已从邮箱验证码改为预生成账号密码（trial_accounts），email_verifications表不再使用，清理残留。
+db.exec(`DROP TABLE IF EXISTS email_verifications`);
+
 const REFERRAL_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function generateReferralCode() {
   let code;
