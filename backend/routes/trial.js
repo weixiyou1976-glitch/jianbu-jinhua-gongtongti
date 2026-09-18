@@ -38,7 +38,8 @@ router.post('/trial/send-code', async (req, res) => {
 
   try {
     await sendVerificationEmail(email, code);
-  } catch {
+  } catch (err) {
+    console.error('sendVerificationEmail failed:', err);
     return res.status(502).json({ error: '验证码发送失败，请稍后再试' });
   }
 
