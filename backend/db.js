@@ -444,6 +444,11 @@ db.prepare(
   "UPDATE skills SET category = '行动与适应类' WHERE week_number = 234 AND category = '行动与适应能力类'"
 ).run();
 
+// 第243/245/246/247/248周录入时新开了"自我认知与人生方向类"，统一并回库里已有的"自我认知类"。
+db.prepare(
+  "UPDATE skills SET category = '自我认知类' WHERE category = '自我认知与人生方向类'"
+).run();
+
 // 第179周insight里"银行/河岸"偷换概念的例子换成"自然的东西/天然成分"，只在旧例子还在时才替换。
 {
   const week179 = db.prepare("SELECT insight FROM skills WHERE week_number = 179 AND insight LIKE '%河岸%'").get();
