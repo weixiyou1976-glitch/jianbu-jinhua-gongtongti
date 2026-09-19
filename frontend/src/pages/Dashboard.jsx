@@ -12,6 +12,7 @@ import StreakBanner from '../components/StreakBanner';
 import StreakBrokenModal from '../components/StreakBrokenModal';
 import WelcomeModal from '../components/WelcomeModal';
 import GrowthLevelUpModal from '../components/GrowthLevelUpModal';
+import ReviewReminderSection from '../components/ReviewReminderSection';
 
 const HIDE_ADD_BANNER_KEY = 'hideAddToHomeBanner';
 
@@ -60,6 +61,7 @@ export default function Dashboard() {
   const [practiceBroken, setPracticeBroken] = useState(false);
   const [practiceBannerStreak, setPracticeBannerStreak] = useState(null);
   const [welcomeInfo, setWelcomeInfo] = useState(null);
+  const [reviewReminders, setReviewReminders] = useState([]);
   // welcomePendingRef: true 表示欢迎弹窗状态尚未确定，或已确定要显示——此时今日策语要等待
   const welcomePendingRef = useRef(true);
   const pendingQuoteCheckRef = useRef(false);
@@ -117,6 +119,7 @@ export default function Dashboard() {
     api.getPendingRewards().then(setPendingRewards).catch(() => {});
     api.getGrowthPending().then(setPendingGrowthAchievements).catch(() => {});
     api.getGrowthInfo().then(setGrowthInfo).catch(() => {});
+    api.getReviewsDue().then(setReviewReminders).catch(() => {});
     Promise.all([api.getCurrentSkill(), api.getProgress(), api.getStamps()])
       .then(([c, p, s]) => {
         setCurrent(c);
@@ -180,6 +183,10 @@ export default function Dashboard() {
     api.markWelcomeShown().catch(() => {});
     setWelcomeInfo(null);
     resolveWelcomePending();
+  }
+
+  function handleReviewOpened(id) {
+    setReviewReminders((list) => list.filter((r) => r.id !== id));
   }
 
   function dismissAddBanner() {
@@ -287,6 +294,10 @@ export default function Dashboard() {
             learningStreak={checkinStats.learning_streak}
             practiceStreak={checkinStats.practice_streak}
           />
+        )}
+
+        {!welcomeInfo && !dailyQuote && !practiceBroken && (
+          <ReviewReminderSection reminders={reviewReminders} onOpened={handleReviewOpened} />
         )}
 
         <div className="mb-8">

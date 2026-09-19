@@ -123,9 +123,13 @@ export const api = {
   getGrowthPending: () => request('/growth/pending'),
   markGrowthNotified: (id) => request(`/growth/${id}/mark-notified`, { method: 'POST' }),
 
+  getReviewsDue: () => request('/reviews/due'),
+  markReviewOpened: (id) => request(`/reviews/${id}/open`, { method: 'PUT' }),
+
   adminGenerateCodes: (count) => request('/admin/activation-codes', { method: 'POST', body: { count }, admin: true }),
   adminListCodes: () => request('/admin/activation-codes', { admin: true }),
   adminListStudents: () => request('/admin/students', { admin: true }),
+  adminGetStudentActivity: () => request('/admin/student-activity', { admin: true }),
   adminResetPassword: (id) => request(`/admin/students/${id}/reset-password`, { method: 'POST', admin: true }),
   adminListTrialUsers: () => request('/admin/trial-users', { admin: true }),
   adminUpdateTrialUser: (id, payload) =>

@@ -78,6 +78,46 @@ router.get('/students', (req, res) => {
   res.json(withProgress);
 });
 
+router.get('/student-activity', (req, res) => {
+  const users = db.prepare('SELECT id, email FROM users ORDER BY created_at DESC').all();
+  const rows = users.map((u) => {
+    const lastLogin = db
+      .prepare('SELECT MAX(checkin_date) AS d FROM daily_checkins WHERE user_id = ?')
+      .get(u.id).d;
+    const stats = db
+      .prepare(
+        `SELECT COUNT(*) AS stamp_count, COUNT(DISTINCT skill_id) AS skills_mastered, MAX(submitted_at) AS last_stamp_at
+         FROM stamps WHERE user_id = ?`
+      )
+      .get(u.id);
+    const daysSinceStamp = stats.last_stamp_at
+      ? db.prepare(`SELECT CAST(julianday('now') - julianday(?) AS INTEGER) AS d`).get(stats.last_stamp_at).d
+      : null;
+    const avgPerSkill =
+      stats.skills_mastered > 0 ? Math.round((stats.stamp_count / stats.skills_mastered) * 10) / 10 : 0;
+    const viewedSkillCount = db
+      .prepare('SELECT COUNT(DISTINCT skill_id) AS c FROM learning_checkins WHERE user_id = ?')
+      .get(u.id).c;
+    const usageRate = viewedSkillCount > 0 ? stats.skills_mastered / viewedSkillCount : 0;
+    const browsing = viewedSkillCount >= 5 && usageRate < 0.3;
+    return {
+      id: u.id,
+      email: u.email,
+      last_login_date: lastLogin,
+      last_stamp_at: stats.last_stamp_at,
+      days_since_stamp: daysSinceStamp,
+      stamp_count: stats.stamp_count,
+      skills_mastered: stats.skills_mastered,
+      avg_per_skill: avgPerSkill,
+      viewed_skill_count: viewedSkillCount,
+      usage_rate_percent: Math.round(usageRate * 100),
+      browsing_type: browsing,
+    };
+  });
+  rows.sort((a, b) => (b.days_since_stamp ?? Infinity) - (a.days_since_stamp ?? Infinity));
+  res.json(rows);
+});
+
 router.get('/trial-users', (req, res) => {
   const rows = db
     .prepare(

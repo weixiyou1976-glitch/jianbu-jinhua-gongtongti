@@ -14,6 +14,7 @@ const referralRoutes = require('./routes/referral');
 const quotesRoutes = require('./routes/quotes');
 const rewardsRoutes = require('./routes/rewards');
 const growthRoutes = require('./routes/growth');
+const reviewsRoutes = require('./routes/reviews');
 
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean)
@@ -37,6 +38,7 @@ app.use('/api', referralRoutes);
 app.use('/api', quotesRoutes);
 app.use('/api', rewardsRoutes);
 app.use('/api', growthRoutes);
+app.use('/api', reviewsRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.use((err, req, res, next) => {

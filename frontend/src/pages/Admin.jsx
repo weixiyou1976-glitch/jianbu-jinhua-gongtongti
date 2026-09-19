@@ -332,6 +332,100 @@ function StudentsPanel() {
   );
 }
 
+const ACTIVITY_COLORS = {
+  red: { bg: 'rgba(196,30,30,0.06)', border: 'rgba(196,30,30,0.35)', text: '#C41E1E', label: '30天以上无策印/从未登录' },
+  orange: { bg: 'rgba(217,119,6,0.06)', border: 'rgba(217,119,6,0.35)', text: '#D97706', label: '15-30天无策印' },
+  yellow: { bg: 'rgba(202,138,4,0.06)', border: 'rgba(202,138,4,0.35)', text: '#CA8A04', label: '7-14天无策印' },
+  green: { bg: 'rgba(22,163,74,0.06)', border: 'rgba(22,163,74,0.35)', text: '#16A34A', label: '7天内有策印' },
+};
+
+function activityLevel(s) {
+  if (s.days_since_stamp == null || s.days_since_stamp >= 30 || !s.last_login_date) return 'red';
+  if (s.days_since_stamp >= 15) return 'orange';
+  if (s.days_since_stamp >= 7) return 'yellow';
+  return 'green';
+}
+
+function StudentActivityPanel() {
+  const [rows, setRows] = useState([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    api.adminGetStudentActivity().then(setRows).catch((err) => setError(err.message));
+  }, []);
+
+  return (
+    <div className="space-y-3">
+      {error && <p className="text-vermilion text-sm">{error}</p>}
+      <div className="flex flex-wrap gap-3 text-xs text-ink/50">
+        {Object.entries(ACTIVITY_COLORS).map(([key, c]) => (
+          <span key={key} className="flex items-center gap-1.5">
+            <span style={{ width: 8, height: 8, borderRadius: 999, background: c.text, display: 'inline-block' }} />
+            {c.label}
+          </span>
+        ))}
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-left text-ink/40 border-b border-ink/10">
+              <th className="py-2 font-normal">邮箱</th>
+              <th className="py-2 font-normal">最后登录</th>
+              <th className="py-2 font-normal">最后策印</th>
+              <th className="py-2 font-normal">距今无策印天数</th>
+              <th className="py-2 font-normal">累计策印数</th>
+              <th className="py-2 font-normal">掌握Skill数</th>
+              <th className="py-2 font-normal">平均每Skill策印数</th>
+              <th className="py-2 font-normal">已看过</th>
+              <th className="py-2 font-normal">用出来</th>
+              <th className="py-2 font-normal">用出来率</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((s) => {
+              const level = activityLevel(s);
+              const c = ACTIVITY_COLORS[level];
+              return (
+                <tr key={s.id} style={{ background: c.bg, borderBottom: `1px solid ${c.border}` }}>
+                  <td className="py-2 pl-2" style={{ borderLeft: `3px solid ${c.text}` }}>
+                    {s.email}
+                  </td>
+                  <td className="py-2" style={{ color: c.text }}>
+                    {s.last_login_date || '从未登录'}
+                  </td>
+                  <td className="py-2" style={{ color: c.text }}>
+                    {s.last_stamp_at ? s.last_stamp_at.slice(0, 10) : '从未策印'}
+                  </td>
+                  <td className="py-2 font-semibold" style={{ color: c.text }}>
+                    {s.days_since_stamp == null ? '—' : `${s.days_since_stamp} 天`}
+                  </td>
+                  <td className="py-2">{s.stamp_count}</td>
+                  <td className="py-2">{s.skills_mastered}</td>
+                  <td className="py-2">{s.avg_per_skill}</td>
+                  <td className="py-2">{s.viewed_skill_count} 张</td>
+                  <td className="py-2">{s.skills_mastered} 张</td>
+                  <td className="py-2">
+                    <span>{s.usage_rate_percent}%</span>
+                    {s.browsing_type && (
+                      <span
+                        title="看过≥5张Skill，但用出来率低于30%，可能在为学习而学习"
+                        className="ml-2 text-xs"
+                        style={{ color: '#D97706', border: '1px solid #D97706', borderRadius: 999, padding: '1px 6px' }}
+                      >
+                        👀 浏览型
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function SkillsPanel() {
   const [skills, setSkills] = useState([]);
   const [editing, setEditing] = useState(null);
@@ -1376,6 +1470,7 @@ export default function Admin() {
           {[
             ['codes', '激活码'],
             ['students', '学员'],
+            ['activity', '学员活跃度'],
             ['trial', '试用用户'],
             ['trial-accounts', '体验账号'],
             ['conversion', '转化分析'],
@@ -1399,6 +1494,7 @@ export default function Admin() {
       <main className="max-w-3xl mx-auto px-6">
         {tab === 'codes' && <CodesPanel />}
         {tab === 'students' && <StudentsPanel />}
+        {tab === 'activity' && <StudentActivityPanel />}
         {tab === 'trial' && <TrialUsersPanel />}
         {tab === 'trial-accounts' && <TrialAccountsPanel />}
         {tab === 'conversion' && <ConversionAnalyticsPanel />}

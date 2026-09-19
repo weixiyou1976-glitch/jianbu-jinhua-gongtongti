@@ -13,12 +13,12 @@ function currentWeekNumber(enrolledAt) {
   return Math.min(Math.max(week, 1), maxWeek);
 }
 
-// 52周主线路径的解锁节奏：与 week_number 完全独立，每7天解锁一个 display_order。
+// 52周主线路径的解锁节奏：与 week_number 完全独立，每5天解锁一个 display_order。
 function currentDisplayOrder(enrolledAt) {
   const start = new Date(enrolledAt);
   const now = new Date();
   const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-  const order = Math.floor(diffDays / 7) + 1;
+  const order = Math.floor(diffDays / 5) + 1;
   const maxOrder =
     db.prepare("SELECT MAX(display_order) AS m FROM skills WHERE status != 'draft'").get().m || 1;
   return Math.min(Math.max(order, 1), maxOrder);
@@ -26,6 +26,25 @@ function currentDisplayOrder(enrolledAt) {
 
 function isUnlockedByPacing(skill, currentWeek, currentOrder) {
   return skill.week_number <= currentWeek || (skill.display_order != null && skill.display_order <= currentOrder);
+}
+
+// 只对52周主线里还没解锁的Skill计算倒计时；diffDays 的算法必须和 currentDisplayOrder 完全一致，否则倒计时会和真实解锁时间对不上。
+function mainTrackCountdown(skill, enrolledAt, unlocked, stampedIds, orderToId) {
+  if (unlocked || skill.display_order == null) return {};
+  const start = new Date(enrolledAt);
+  const now = new Date();
+  const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  const daysRemaining = Math.max(1, (skill.display_order - 1) * 5 - diffDays);
+  const prevId = skill.display_order > 1 ? orderToId.get(skill.display_order - 1) : null;
+  return {
+    unlock_days_remaining: daysRemaining,
+    prev_skill_stamped: prevId != null ? stampedIds.has(prevId) : false,
+  };
+}
+
+function buildOrderToIdMap() {
+  const rows = db.prepare('SELECT id, display_order FROM skills WHERE display_order IS NOT NULL').all();
+  return new Map(rows.map((r) => [r.display_order, r.id]));
 }
 
 function withParsedTags(row) {
@@ -77,16 +96,21 @@ router.get('/skills', requireAuth, (req, res) => {
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
   const currentWeek = currentWeekNumber(user.enrolled_at);
   const currentOrder = currentDisplayOrder(user.enrolled_at);
+  const orderToId = buildOrderToIdMap();
   res.json(
-    skills.map((s) => ({
-      ...withParsedTags(s),
-      stamped: stampedIds.has(s.id),
-      unlocked:
+    skills.map((s) => {
+      const unlocked =
         isUnlockedByPacing(s, currentWeek, currentOrder) ||
         stampedIds.has(s.id) ||
         moduleSkillIds.has(s.id) ||
-        tempUnlockedIds.has(s.id),
-    }))
+        tempUnlockedIds.has(s.id);
+      return {
+        ...withParsedTags(s),
+        stamped: stampedIds.has(s.id),
+        unlocked,
+        ...mainTrackCountdown(s, user.enrolled_at, unlocked, stampedIds, orderToId),
+      };
+    })
   );
 });
 

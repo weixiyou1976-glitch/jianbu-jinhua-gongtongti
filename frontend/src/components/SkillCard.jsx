@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 
-export default function SkillCard({ skill, displayNumber }) {
+export default function SkillCard({ skill, displayNumber, showUnlockCountdown }) {
   const navigate = useNavigate();
   const locked = skill.unlocked === false;
   const tags = skill.tags || [];
   const weekLabel = displayNumber ?? skill.week_number;
+  const showCountdown = showUnlockCountdown && locked && skill.unlock_days_remaining != null;
 
   function handleTagClick(e, tag) {
     e.preventDefault();
@@ -44,6 +45,18 @@ export default function SkillCard({ skill, displayNumber }) {
       </div>
       <p className="text-sm font-medium text-ink">{skill.skill_name}</p>
       {skill.stamped && <span className="text-xs text-vermilion mt-1 inline-block">✓ 已打卡</span>}
+      {showCountdown && (
+        <div className="mt-2">
+          <p className="text-xs text-ink/60">还有 {skill.unlock_days_remaining} 天解锁</p>
+          {skill.prev_skill_stamped ? (
+            <p className="text-xs mt-0.5" style={{ color: '#16A34A' }}>
+              ✅ 已用出来，继续等待解锁
+            </p>
+          ) : (
+            <p className="text-xs text-ink/35 mt-0.5">这5天，把上一张Skill真正用出来一次</p>
+          )}
+        </div>
+      )}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-2">
           {tags.map((tag) => (

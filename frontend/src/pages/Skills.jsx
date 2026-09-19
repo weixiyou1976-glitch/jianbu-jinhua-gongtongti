@@ -248,7 +248,7 @@ export default function Skills() {
               ) : (
                 <div className="space-y-2">
                   {stage.items.map((s) => (
-                    <SkillCard key={s.id} skill={s} displayNumber={s.display_order} />
+                    <SkillCard key={s.id} skill={s} displayNumber={s.display_order} showUnlockCountdown />
                   ))}
                 </div>
               )}

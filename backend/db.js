@@ -321,6 +321,18 @@ CREATE TABLE IF NOT EXISTS share_click_logs (
 );
 
 CREATE INDEX IF NOT EXISTS idx_share_click_logs_lookup ON share_click_logs(referrer_user_id, dedup_key, created_at);
+
+CREATE TABLE IF NOT EXISTS review_reminders (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+  review_round INTEGER NOT NULL CHECK (review_round IN (1, 2, 3, 4)),
+  triggered_at TEXT NOT NULL DEFAULT (datetime('now')),
+  opened INTEGER NOT NULL DEFAULT 0,
+  UNIQUE(user_id, skill_id, review_round)
+);
+
+CREATE INDEX IF NOT EXISTS idx_review_reminders_user ON review_reminders(user_id, opened);
 `);
 
 const stampIndexes = db.prepare(`PRAGMA index_list(stamps)`).all();
