@@ -100,6 +100,7 @@ export const api = {
 
   trialLogin: (username, password) =>
     request('/trial/login', { method: 'POST', body: { username, password } }),
+  getTrialSeats: () => request('/trial/seats'),
   trialMatch: (concern) => request('/trial/match', { method: 'POST', body: { concern }, trial: true }),
   getTrialSkill: () => request('/trial/skill', { trial: true }),
   getTrialOtherSkills: () => request('/trial/skill/others', { trial: true }),

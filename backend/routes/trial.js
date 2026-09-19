@@ -19,6 +19,23 @@ function getTrial(trialId) {
   return db.prepare('SELECT * FROM trial_accounts WHERE id = ?').get(trialId);
 }
 
+const FOUNDING_MEMBER_SEATS = 100;
+
+// 公开接口，不需要登录——体验漏斗的营销文案（第一屏标签、第五/六屏数据）都要用到，此时学员还没有登录任何身份。
+router.get('/trial/seats', (req, res) => {
+  const foundingMembers = db
+    .prepare("SELECT COUNT(*) AS c FROM users WHERE email != 'demo@jianbu.app'")
+    .get().c;
+  const totalSkills = db.prepare("SELECT COUNT(*) AS c FROM skills WHERE status != 'draft'").get().c;
+  const seatsLeft = Math.max(0, FOUNDING_MEMBER_SEATS - foundingMembers);
+  res.json({
+    founding_members: foundingMembers,
+    seats_left: seatsLeft,
+    sold_out: seatsLeft <= 0,
+    total_skills: totalSkills,
+  });
+});
+
 router.post('/trial/login', (req, res) => {
   const username = (req.body?.username || '').trim();
   const password = (req.body?.password || '').trim();
@@ -185,7 +202,7 @@ router.get('/trial/skill', requireTrialAuth, (req, res) => {
 
   const skill = db.prepare('SELECT * FROM skills WHERE id = ?').get(trial.matched_skill_id);
   if (!skill) return res.status(404).json({ error: 'Skill不存在' });
-  res.json(withParsedTags(skill));
+  res.json({ ...withParsedTags(skill), trial_concern: trial.concern });
 });
 
 const insertTrialMessage = db.prepare(
