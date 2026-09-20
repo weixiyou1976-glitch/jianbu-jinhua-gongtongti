@@ -154,4 +154,4 @@ compare 退出码：0 无差异；1 存在差异；2 输入/结构错误。只�
 
 恢复范围是 Skill 内容，不包括用户、策印、模块关联、原数据库 ID/时间戳等运行数据。现有音频文件已在 Git 中保留；这里校验 URL 格式和文本一致性，没有声称逐个远程 URL 的持续可达性。
 
-本次不改生产、不中断服务、不重新 seed 生产、不开发 Problem、不改前端 UI、不改 AI 推荐。当前全部变更只在独立本地工作区，分支 codex/skill-source-of-truth；尚未 commit、push、合并或部署。GitHub main 仍未获得这些文件，待用户审核后决定是否提交。
+本次不改生产、不中断服务、不重新 seed 生产、不开发 Problem、不改前端 UI、不改 AI 推荐。治理实现基线 commit `b3bab85c42157add47d719ee7c63ee3b6d6c494a` 已提交并推送至独立分支 `codex/skill-source-of-truth`；该分支尚未合并 main，尚未部署生产，因此 GitHub main 仍未获得这些治理文件。

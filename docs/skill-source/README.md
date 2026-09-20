@@ -2,6 +2,8 @@
 
 本版本的内容权威来源是 `backend/data/skills/skills-*.json`。生产数据库是运行副本，不能替代版本管理。当前基线为 332 张、2,439 条标签，来自 2026-09-19 23:37:02（UTC+8）的生产只读快照。审计详情见 [AUDIT.md](AUDIT.md)。
 
+治理实现基线 commit `b3bab85c42157add47d719ee7c63ee3b6d6c494a` 已提交并推送至独立分支 `codex/skill-source-of-truth`。该分支尚未合并 main，尚未部署生产。
+
 ## 数据约定
 
 - 使用 `week_number` 作为稳定内容键。已有周次不改号、不复用；数据库 `id` 只用于当前运行库关联，不进入内容文件。
@@ -10,6 +12,12 @@
 - `manifest.json` 声明文件清单、总数、周次范围和来源基线。来源时间/哈希是历史快照证据，不把未重新导出的数据标成新的生产快照。
 - 所有 JSON 为 UTF-8。保存原文，不做 trim、自动润色、标点替换或 Unicode 归一化。验证器可以报告空白，但不能修改它。
 - 历史允许为空的 key_question、growth_friction_ending、insight_audio_url 可以为空字符串；键本身不能缺失。空标签和重名是警告，错误类型、重复周次等是阻断错误。
+
+## 基线哈希的语义
+
+- `manifest.json` 的 `export_file_sha256` 是完整 UTF-8 生产导出文件 `skill-library-production-320.json` 的原始字节 SHA-256。计算对象包含导出元数据、查询说明、格式化空白、332 张原始 Skill 行、每张嵌入的 `skill_tags` 及孤立标签数组；值为 `f31ec92178937790e2790a6a97daea4c86ef1fbe864b101c40d271d3dfe229f4`。它用于确认审计所依据的导出文件没有被替换或改写，因此格式变化也会改变该值。
+- 生产快照元数据及 `skill-source-production-comparison.json` 的 `content_sha256` 是只读查询结果 `{skills, skill_tags}` 经紧凑 `JSON.stringify` 后的 UTF-8 字节 SHA-256。`skills` 是按 `week_number, id` 排序的原始数据库行，包含数据库 `id`、19 个内容字段及 `created_at`；`skill_tags` 是按 `skill_id, tag` 排序的 2,439 条独立标签行。值为 `7e90102288b18f24b29dace7851f0b81dbe5da84194af56444a5aff9bfc1666a`。它用于确认数据库查询结果集合及顺序没有变化，不包含导出包装、元数据、孤立标签数组或格式化空白。
+- 两个哈希的计算对象不同，理论上不要求一致，也都不是 7 个仓库 JSON 分片的语义哈希。仓库与生产的 19 个内容字段及标签是否一致，以只读 compare 的逐字段结果为准。
 
 ## seed.js 的角色
 

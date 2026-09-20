@@ -17,6 +17,6 @@
     "exported_at_utc": "2026-09-19T15:37:02.634Z",
     "source": "production SQLite /data/jianbu.db",
     "deployment_commit": "9d54121bb09538aba484165e05fbfd169b58ce03",
-    "export_sha256": "f31ec92178937790e2790a6a97daea4c86ef1fbe864b101c40d271d3dfe229f4"
+    "export_file_sha256": "f31ec92178937790e2790a6a97daea4c86ef1fbe864b101c40d271d3dfe229f4"
   }
 }
