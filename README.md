@@ -29,7 +29,7 @@
 
 ## 已上线功能列表
 
-- 224张Skill卡（持续增加中）
+- 332张Skill卡（持续增加中；内容事实源见 `backend/data/skills/`）
 - 问题路由系统——描述处境，系统推荐匹配Skill（核心功能）
 - 六大主题模块：让人心动/看清自己/情绪也是资产/做成一件事/自我控制系统/影响他人
 - AI陪练（对话持久化，切换设备不丢失）
@@ -68,13 +68,16 @@ cp frontend/.env.example frontend/.env
 - `JWT_SECRET`：改成一串随机字符串
 - `ADMIN_PASSWORD`：后台管理登录密码
 
-### 3. 初始化数据库并写入示例内容 + 测试激活码
+### 3. 校验内容与本地初始化
 
 ```bash
-npm run seed
+npm run validate:skills
+npm run restore:skills -- --db ./backend/data/jianbu.db
+# 审核预览后，仅对本地库明确执行：
+npm run restore:skills -- --db ./backend/data/jianbu.db --apply --create
 ```
 
-会写入 4 周示例 Skill 内容，并生成测试激活码 **`TEST-0001`**。
+可恢复332张Skill及标签，只补缺失周次，不覆盖已有内容或ID。默认仅预览，不再自动生成测试激活码或修改其他业务表。应用启动后仍沿用原有业务表初始化。详见[内容治理与恢复说明](docs/skill-source/README.md)。
 
 ### 4. 启动后端
 
@@ -136,22 +139,16 @@ npm run dev:frontend
    - `CORS_ORIGIN`：你的 Netlify 站点域名（例如 `https://your-site.netlify.app`）
    - `DB_PATH`：`/data/jianbu.db`
 5. **重要**：SQLite 文件需要持久化存储，请在 Railway 项目中添加一个 Volume，挂载路径设为 `/data`，否则每次重新部署数据会丢失
-6. 首次部署后，通过 Railway 的 Shell 或本地临时指向该库执行一次种子脚本（`node seed.js`），写入首批 Skill 内容和测试激活码；也可以直接用 `/admin` 后台的"批量生成激活码"生成正式激活码
+6. 生产内容初始化/恢复需要单独审核发布计划；不要在生产运行 seed 或本地恢复工具。先完成本地恢复演练与只读对照。正式激活码由 `/admin` 后台的“批量生成激活码”功能生成。
 
 ### 部署后连通性检查
 
 - 后端：访问 `https://你的Railway域名/api/health`，应返回 `{"ok":true}`
-- 前端：访问 Netlify 域名，尝试用测试激活码 `TEST-0001` 注册（如种子脚本已在生产库执行过）
+- 前端：访问 Netlify 域名，用后台明确生成的验收激活码检查注册流程。
 
 ## 测试激活码
 
-执行 `npm run seed` 后会生成：
-
-```
-TEST-0001
-```
-
-可用于验收登录注册流程（每个激活码仅可使用一次）。
+Skill恢复不生成激活码。验收时在后台单独创建，每个激活码仅可使用一次。
 
 ## 设计规范
 

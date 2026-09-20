@@ -86,9 +86,9 @@ function assertNewSkills(db) {
   assert.equal(db.pragma('integrity_check', { simple: true }), 'ok');
 }
 
-test('种子内容包含连续的1—254周，导入不连接数据库', () => {
-  assert.equal(skills.length, 254);
-  assert.deepEqual(skills.map((s) => s.week_number), Array.from({ length: 254 }, (_, i) => i + 1));
+test('种子适配器包含连续的1—332周，导入不连接数据库', () => {
+  assert.equal(skills.length, 332);
+  assert.deepEqual(skills.map((s) => s.week_number), Array.from({ length: 332 }, (_, i) => i + 1));
   assert.equal(require.cache[dbModule], undefined);
 });
 
@@ -106,10 +106,16 @@ test('真实启动路径增量写入，并保留全部旧内容、ID、关联记
     initialize(dbPath);
     assert.deepEqual(snapshot(db), after);
     // 显式重新 seed 同样不得覆盖已有数据。
-    execFileSync(process.execPath, [seedModule], { cwd: workspace, env: env(dbPath) });
+    execFileSync(process.execPath, [seedModule, '--db', dbPath, '--apply'], { cwd: workspace, env: env(dbPath) });
     const reseeded = snapshot(db);
-    assert.deepEqual(reseeded.skills, after.skills);
-    assert.deepEqual(reseeded.skill_tags, after.skill_tags);
+    // New recovery adapter may fill 255–332, but never alters existing rows/IDs/tags.
+    const existingIds = new Set(after.skills.map((s) => s.id));
+    assert.deepEqual(reseeded.skills.filter((s) => existingIds.has(s.id)), after.skills);
+    assert.deepEqual(reseeded.skill_tags.filter((t) => existingIds.has(t.skill_id)), after.skill_tags);
+    assert.equal(reseeded.skills.length, 332);
+    for (const name of Object.keys(after).filter((name) => !['skills', 'skill_tags'].includes(name))) {
+      assert.deepEqual(reseeded[name], after[name]);
+    }
   } finally { db.close(); }
 });
 
@@ -142,16 +148,16 @@ test('标签写入失败时整批Skill和标签全部回滚', () => {
   } finally { db.close(); }
 });
 
-test('空库启动不抢先写六张，完整seed可初始化254张且再次执行不重复', () => {
+test('空库启动不抢先写六张，完整seed可初始化332张且再次执行不重复', () => {
   const { db, dbPath } = openFixture('fresh', false);
   try {
     assert.equal(migrate(db), 0);
     assert.equal(db.prepare('SELECT COUNT(*) AS n FROM skills').get().n, 0);
-    execFileSync(process.execPath, [seedModule], { cwd: workspace, env: env(dbPath) });
-    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM skills').get().n, 254);
+    execFileSync(process.execPath, [seedModule, '--db', dbPath, '--apply'], { cwd: workspace, env: env(dbPath) });
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM skills').get().n, 332);
     assertNewSkills(db);
     const before = snapshot(db);
-    execFileSync(process.execPath, [seedModule], { cwd: workspace, env: env(dbPath) });
+    execFileSync(process.execPath, [seedModule, '--db', dbPath, '--apply'], { cwd: workspace, env: env(dbPath) });
     assert.deepEqual(snapshot(db), before);
   } finally { db.close(); }
 });
@@ -237,7 +243,7 @@ test('真实HTTP接口：总库、周次/类型/标签、解锁、详情、重�
     assert.equal((await request('/skills/1002')).locked, true);
     assert.ok((await request('/skills/search?tag=' + encodeURIComponent('信念'))).filter((s) => s.week_number >= 225).length === 6);
 
-    for (const expected of skills.slice(224)) {
+    for (const expected of skills.filter((s) => s.week_number >= 225 && s.week_number <= 254)) {
       selected = expected;
       const skill = all.find((s) => s.week_number === expected.week_number);
       assert.equal(skill.unlocked, false);

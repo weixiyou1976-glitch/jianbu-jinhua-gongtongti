@@ -10,7 +10,13 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "seed": "node seed.js"
+    "seed": "node seed.js",
+    "validate:skills": "node scripts/validate-skills.cjs",
+    "compare:skills": "node scripts/compare-skills.cjs",
+    "export:skills": "node scripts/export-skills-readonly.cjs",
+    "rehearse:skills": "node scripts/rehearse-skills.cjs",
+    "test:skills-source": "node --test tests/skill-source.test.cjs",
+    "restore:skills": "node scripts/restore-skills.cjs"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

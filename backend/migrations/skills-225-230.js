@@ -10,10 +10,10 @@ module.exports = function migrateSkills225To230(db) {
     const insertSkill = db.prepare(`
       INSERT INTO skills (week_number, title, skill_name, category, trigger_condition, key_question,
         step_one, step_two, step_three, memory_anchor, insight, case_study, cognitive_reframe,
-        growth_friction, tags, status, insight_audio_url)
+        growth_friction, growth_friction_ending, tags, status, insight_audio_url)
       VALUES (@week_number, @title, @skill_name, @category, @trigger_condition, @key_question,
         @step_one, @step_two, @step_three, @memory_anchor, @insight, @case_study, @cognitive_reframe,
-        @growth_friction, @tags, @status, @insight_audio_url)
+        @growth_friction, @growth_friction_ending, @tags, @status, @insight_audio_url)
     `);
     const insertTag = db.prepare('INSERT INTO skill_tags (skill_id, tag) VALUES (?, ?)');
     let inserted = 0;

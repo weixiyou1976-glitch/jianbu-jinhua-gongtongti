@@ -1,0 +1,28 @@
+{
+  "productionCount": 332,
+  "repositoryCount": 332,
+  "source": {
+    "exported_at_utc": "2026-09-19T15:37:02.634Z",
+    "source": "live production SQLite",
+    "source_database_path": "/data/jianbu.db",
+    "railway_environment_name": "production",
+    "deployment_commit": "9d54121bb09538aba484165e05fbfd169b58ce03",
+    "sqlite_readonly": true,
+    "query_only": true,
+    "single_read_transaction": true,
+    "requested_count": 320,
+    "actual_count": 332,
+    "skill_tags_row_count": 2439,
+    "content_sha256": "7e90102288b18f24b29dace7851f0b81dbe5da84194af56444a5aff9bfc1666a",
+    "queries": [
+      "SELECT \"id\", \"week_number\", \"display_order\", \"title\", \"skill_name\", \"category\", \"trigger_condition\", \"key_question\", \"step_one\", \"step_two\", \"step_three\", \"memory_anchor\", \"insight\", \"case_study\", \"cognitive_reframe\", \"growth_friction\", \"growth_friction_ending\", \"tags\", \"status\", \"insight_audio_url\", \"created_at\" FROM skills ORDER BY week_number, id",
+      "SELECT skill_id, tag FROM skill_tags ORDER BY skill_id, tag"
+    ],
+    "tags_representation": "skills.tags preserved as raw SQLite value; skill_tags is queried independently"
+  },
+  "differenceCount": 0,
+  "missingInProduction": [],
+  "missingInRepository": [],
+  "differences": [],
+  "tagIssues": []
+}

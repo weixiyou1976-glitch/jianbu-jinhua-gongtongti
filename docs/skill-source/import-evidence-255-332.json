@@ -1,0 +1,804 @@
+{
+  "source_log": "9bb1eaea-dd3a-4ee7-8bda-fe8c94965597.jsonl",
+  "note": "Historical evidence only, sanitized. These POST calls were not executed in this audit.",
+  "batches": [
+    {
+      "line": 32310,
+      "timestamp": "2026-09-18T14:25:16.459Z",
+      "description": "POST all 6 new skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "255",
+        "256",
+        "257",
+        "258",
+        "259",
+        "260"
+      ],
+      "result_line": 32311,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        255,
+        256,
+        257,
+        258,
+        259,
+        260
+      ],
+      "results": [
+        {
+          "id": 255,
+          "week_number": 255,
+          "skill_name": "念头只是念头",
+          "error": "none"
+        },
+        {
+          "id": 256,
+          "week_number": 256,
+          "skill_name": "情绪可以同行",
+          "error": "none"
+        },
+        {
+          "id": 257,
+          "week_number": 257,
+          "skill_name": "不舒服不是停止指令",
+          "error": "none"
+        },
+        {
+          "id": 258,
+          "week_number": 258,
+          "skill_name": "冲动冲浪",
+          "error": "none"
+        },
+        {
+          "id": 259,
+          "week_number": 259,
+          "skill_name": "带着恐惧走一步",
+          "error": "none"
+        },
+        {
+          "id": 260,
+          "week_number": 260,
+          "skill_name": "价值优先",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32381,
+      "timestamp": "2026-09-18T14:35:19.619Z",
+      "description": "POST weeks 261-266 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "261",
+        "262",
+        "263",
+        "264",
+        "265",
+        "266"
+      ],
+      "result_line": 32382,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        261,
+        262,
+        263,
+        264,
+        265,
+        266
+      ],
+      "results": [
+        {
+          "id": 261,
+          "week_number": 261,
+          "skill_name": "这是谁的目标",
+          "error": "none"
+        },
+        {
+          "id": 262,
+          "week_number": 262,
+          "skill_name": "把必须换回我选择",
+          "error": "none"
+        },
+        {
+          "id": 263,
+          "week_number": 263,
+          "skill_name": "胜任感账户",
+          "error": "none"
+        },
+        {
+          "id": 264,
+          "week_number": 264,
+          "skill_name": "难度刚刚好",
+          "error": "none"
+        },
+        {
+          "id": 265,
+          "week_number": 265,
+          "skill_name": "找到同行者",
+          "error": "none"
+        },
+        {
+          "id": 266,
+          "week_number": 266,
+          "skill_name": "外驱转内驱",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32456,
+      "timestamp": "2026-09-18T14:39:07.930Z",
+      "description": "POST weeks 267-272 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "267",
+        "268",
+        "269",
+        "270",
+        "271",
+        "272"
+      ],
+      "result_line": 32457,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        267,
+        268,
+        269,
+        270,
+        271,
+        272
+      ],
+      "results": [
+        {
+          "id": 267,
+          "week_number": 267,
+          "skill_name": "我的故事是什么",
+          "error": "none"
+        },
+        {
+          "id": 268,
+          "week_number": 268,
+          "skill_name": "给那段经历一个新标题",
+          "error": "none"
+        },
+        {
+          "id": 269,
+          "week_number": 269,
+          "skill_name": "下一章叫什么",
+          "error": "none"
+        },
+        {
+          "id": 270,
+          "week_number": 270,
+          "skill_name": "救赎线",
+          "error": "none"
+        },
+        {
+          "id": 271,
+          "week_number": 271,
+          "skill_name": "主角视角",
+          "error": "none"
+        },
+        {
+          "id": 272,
+          "week_number": 272,
+          "skill_name": "把经历变成礼物",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32523,
+      "timestamp": "2026-09-18T14:44:16.290Z",
+      "description": "POST weeks 273-278 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "273",
+        "274",
+        "275",
+        "276",
+        "277",
+        "278"
+      ],
+      "result_line": 32524,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        273,
+        274,
+        275,
+        276,
+        277,
+        278
+      ],
+      "results": [
+        {
+          "id": 273,
+          "week_number": 273,
+          "skill_name": "让未来变真实",
+          "error": "none"
+        },
+        {
+          "id": 274,
+          "week_number": 274,
+          "skill_name": "时间桥",
+          "error": "none"
+        },
+        {
+          "id": 275,
+          "week_number": 275,
+          "skill_name": "预想最好的结果",
+          "error": "none"
+        },
+        {
+          "id": 276,
+          "week_number": 276,
+          "skill_name": "WOOP四步",
+          "error": "none"
+        },
+        {
+          "id": 277,
+          "week_number": 277,
+          "skill_name": "给未来的信",
+          "error": "none"
+        },
+        {
+          "id": 278,
+          "week_number": 278,
+          "skill_name": "小步预演",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32590,
+      "timestamp": "2026-09-18T14:49:02.305Z",
+      "description": "POST weeks 279-284 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "279",
+        "280",
+        "281",
+        "282",
+        "283",
+        "284"
+      ],
+      "result_line": 32591,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        279,
+        280,
+        281,
+        282,
+        283,
+        284
+      ],
+      "results": [
+        {
+          "id": 279,
+          "week_number": 279,
+          "skill_name": "解释风格检测",
+          "error": "none"
+        },
+        {
+          "id": 280,
+          "week_number": 280,
+          "skill_name": "暂时语言",
+          "error": "none"
+        },
+        {
+          "id": 281,
+          "week_number": 281,
+          "skill_name": "好事归因",
+          "error": "none"
+        },
+        {
+          "id": 282,
+          "week_number": 282,
+          "skill_name": "逆境后成长检测",
+          "error": "none"
+        },
+        {
+          "id": 283,
+          "week_number": 283,
+          "skill_name": "从灰转绿",
+          "error": "none"
+        },
+        {
+          "id": 284,
+          "week_number": 284,
+          "skill_name": "乐观肌肉",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32657,
+      "timestamp": "2026-09-18T14:53:34.334Z",
+      "description": "POST weeks 285-290 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "285",
+        "286",
+        "287",
+        "288",
+        "289",
+        "290"
+      ],
+      "result_line": 32658,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        285,
+        286,
+        287,
+        288,
+        289,
+        290
+      ],
+      "results": [
+        {
+          "id": 285,
+          "week_number": 285,
+          "skill_name": "现在锁定",
+          "error": "none"
+        },
+        {
+          "id": 286,
+          "week_number": 286,
+          "skill_name": "公开承诺",
+          "error": "none"
+        },
+        {
+          "id": 287,
+          "week_number": 287,
+          "skill_name": "退路封口",
+          "error": "none"
+        },
+        {
+          "id": 288,
+          "week_number": 288,
+          "skill_name": "代价绑定",
+          "error": "none"
+        },
+        {
+          "id": 289,
+          "week_number": 289,
+          "skill_name": "环境锁定",
+          "error": "none"
+        },
+        {
+          "id": 290,
+          "week_number": 290,
+          "skill_name": "未来信封",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32732,
+      "timestamp": "2026-09-19T04:34:50.263Z",
+      "description": "POST weeks 291-296 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "291",
+        "292",
+        "293",
+        "294",
+        "295",
+        "296"
+      ],
+      "result_line": 32733,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        291,
+        292,
+        293,
+        294,
+        295,
+        296
+      ],
+      "results": [
+        {
+          "id": 291,
+          "week_number": 291,
+          "skill_name": "先动后有感觉",
+          "error": "none"
+        },
+        {
+          "id": 292,
+          "week_number": 292,
+          "skill_name": "低能量动作",
+          "error": "none"
+        },
+        {
+          "id": 293,
+          "week_number": 293,
+          "skill_name": "情绪前行动",
+          "error": "none"
+        },
+        {
+          "id": 294,
+          "week_number": 294,
+          "skill_name": "活动-情绪记录",
+          "error": "none"
+        },
+        {
+          "id": 295,
+          "week_number": 295,
+          "skill_name": "行动恢复",
+          "error": "none"
+        },
+        {
+          "id": 296,
+          "week_number": 296,
+          "skill_name": "行动解冻",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32799,
+      "timestamp": "2026-09-19T04:43:34.453Z",
+      "description": "POST weeks 297-302 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "297",
+        "298",
+        "299",
+        "300",
+        "301",
+        "302"
+      ],
+      "result_line": 32800,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        297,
+        298,
+        299,
+        300,
+        301,
+        302
+      ],
+      "results": [
+        {
+          "id": 297,
+          "week_number": 297,
+          "skill_name": "越逼越不做",
+          "error": "none"
+        },
+        {
+          "id": 298,
+          "week_number": 298,
+          "skill_name": "选择权归还",
+          "error": "none"
+        },
+        {
+          "id": 299,
+          "week_number": 299,
+          "skill_name": "低压表达",
+          "error": "none"
+        },
+        {
+          "id": 300,
+          "week_number": 300,
+          "skill_name": "让他自己说出来",
+          "error": "none"
+        },
+        {
+          "id": 301,
+          "week_number": 301,
+          "skill_name": "抗拒中的自主权",
+          "error": "none"
+        },
+        {
+          "id": 302,
+          "week_number": 302,
+          "skill_name": "影响不喜欢被影响的人",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32859,
+      "timestamp": "2026-09-19T04:52:54.136Z",
+      "description": "POST weeks 303-308 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "303",
+        "304",
+        "305",
+        "306",
+        "307",
+        "308"
+      ],
+      "result_line": 32860,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        303,
+        304,
+        305,
+        306,
+        307,
+        308
+      ],
+      "results": [
+        {
+          "id": 303,
+          "week_number": 303,
+          "skill_name": "被否定时的归位",
+          "error": "none"
+        },
+        {
+          "id": 304,
+          "week_number": 304,
+          "skill_name": "价值支点",
+          "error": "none"
+        },
+        {
+          "id": 305,
+          "week_number": 305,
+          "skill_name": "威胁下的清醒",
+          "error": "none"
+        },
+        {
+          "id": 306,
+          "week_number": 306,
+          "skill_name": "反馈接收器",
+          "error": "none"
+        },
+        {
+          "id": 307,
+          "week_number": 307,
+          "skill_name": "核心价值锚定",
+          "error": "none"
+        },
+        {
+          "id": 308,
+          "week_number": 308,
+          "skill_name": "身份不等于一次表现",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 32926,
+      "timestamp": "2026-09-19T05:01:45.344Z",
+      "description": "POST weeks 309-314 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "309",
+        "310",
+        "311",
+        "312",
+        "313",
+        "314"
+      ],
+      "result_line": 32927,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        309,
+        310,
+        311,
+        312,
+        313,
+        314
+      ],
+      "results": [
+        {
+          "id": 309,
+          "week_number": 309,
+          "skill_name": "不敢进入那个场景",
+          "error": "none"
+        },
+        {
+          "id": 310,
+          "week_number": 310,
+          "skill_name": "恐惧预测验证",
+          "error": "none"
+        },
+        {
+          "id": 311,
+          "week_number": 311,
+          "skill_name": "微暴露",
+          "error": "none"
+        },
+        {
+          "id": 312,
+          "week_number": 312,
+          "skill_name": "尴尬耐受",
+          "error": "none"
+        },
+        {
+          "id": 313,
+          "week_number": 313,
+          "skill_name": "拒绝训练",
+          "error": "none"
+        },
+        {
+          "id": 314,
+          "week_number": 314,
+          "skill_name": "不确定性暴露",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 33876,
+      "timestamp": "2026-09-19T05:34:28.084Z",
+      "description": "POST weeks 315-320 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "weeks_in_loop": [
+        "315",
+        "316",
+        "317",
+        "318",
+        "319",
+        "320"
+      ],
+      "result_line": 33877,
+      "is_error": false,
+      "success_records": 6,
+      "returned_ids": [
+        315,
+        316,
+        317,
+        318,
+        319,
+        320
+      ],
+      "results": [
+        {
+          "id": 315,
+          "week_number": 315,
+          "skill_name": "我做了什么说明我是谁",
+          "error": "none"
+        },
+        {
+          "id": 316,
+          "week_number": 316,
+          "skill_name": "承诺一致性",
+          "error": "none"
+        },
+        {
+          "id": 317,
+          "week_number": 317,
+          "skill_name": "行为反向塑形",
+          "error": "none"
+        },
+        {
+          "id": 318,
+          "week_number": 318,
+          "skill_name": "一次例外",
+          "error": "none"
+        },
+        {
+          "id": 319,
+          "week_number": 319,
+          "skill_name": "防止身份坍塌",
+          "error": "none"
+        },
+        {
+          "id": 320,
+          "week_number": 320,
+          "skill_name": "认知失调用于改变",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 33943,
+      "result_line": 33944,
+      "timestamp": "2026-09-19T05:49:37.953Z",
+      "description": "POST weeks 321-326 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "success_records": 6,
+      "results": [
+        {
+          "id": 321,
+          "week_number": 321,
+          "skill_name": "成功证据库",
+          "error": "none"
+        },
+        {
+          "id": 322,
+          "week_number": 322,
+          "skill_name": "微胜任",
+          "error": "none"
+        },
+        {
+          "id": 323,
+          "week_number": 323,
+          "skill_name": "替代经验",
+          "error": "none"
+        },
+        {
+          "id": 324,
+          "week_number": 324,
+          "skill_name": "言语说服的真实用法",
+          "error": "none"
+        },
+        {
+          "id": 325,
+          "week_number": 325,
+          "skill_name": "身体信号重读",
+          "error": "none"
+        },
+        {
+          "id": 326,
+          "week_number": 326,
+          "skill_name": "难度阶梯",
+          "error": "none"
+        }
+      ]
+    },
+    {
+      "line": 34018,
+      "result_line": 34019,
+      "timestamp": "2026-09-19T05:58:54.360Z",
+      "description": "POST weeks 327-332 skill records to production admin API",
+      "method": "POST",
+      "endpoint": "https://jianbu-jinhua-gongtongti-production.up.railway.app/api/admin/skills",
+      "success_records": 6,
+      "results": [
+        {
+          "id": 327,
+          "week_number": 327,
+          "skill_name": "你的依恋模式",
+          "error": "none"
+        },
+        {
+          "id": 328,
+          "week_number": 328,
+          "skill_name": "焦虑型的安抚",
+          "error": "none"
+        },
+        {
+          "id": 329,
+          "week_number": 329,
+          "skill_name": "回避型的靠近",
+          "error": "none"
+        },
+        {
+          "id": 330,
+          "week_number": 330,
+          "skill_name": "安全基地",
+          "error": "none"
+        },
+        {
+          "id": 331,
+          "week_number": 331,
+          "skill_name": "关系修复",
+          "error": "none"
+        },
+        {
+          "id": 332,
+          "week_number": 332,
+          "skill_name": "亲密感建立",
+          "error": "none"
+        }
+      ]
+    }
+  ]
+}

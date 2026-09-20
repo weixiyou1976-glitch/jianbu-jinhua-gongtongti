@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "expected_count": 332,
+  "first_week": 1,
+  "last_week": 332,
+  "main_track_count": 52,
+  "files": [
+    "skills-001-050.json",
+    "skills-051-100.json",
+    "skills-101-150.json",
+    "skills-151-200.json",
+    "skills-201-250.json",
+    "skills-251-300.json",
+    "skills-301-332.json"
+  ],
+  "baseline": {
+    "exported_at_utc": "2026-09-19T15:37:02.634Z",
+    "source": "production SQLite /data/jianbu.db",
+    "deployment_commit": "9d54121bb09538aba484165e05fbfd169b58ce03",
+    "export_sha256": "f31ec92178937790e2790a6a97daea4c86ef1fbe864b101c40d271d3dfe229f4"
+  }
+}

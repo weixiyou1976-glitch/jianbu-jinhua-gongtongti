@@ -1,0 +1,2758 @@
+{
+  "main_commit": "9d54121bb09538aba484165e05fbfd169b58ce03",
+  "production_exported_at": "2026-09-19T15:37:02.634Z",
+  "production_count": 332,
+  "seed_objects": {
+    "count": 254,
+    "missing_weeks": [
+      255,
+      256,
+      257,
+      258,
+      259,
+      260,
+      261,
+      262,
+      263,
+      264,
+      265,
+      266,
+      267,
+      268,
+      269,
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277,
+      278,
+      279,
+      280,
+      281,
+      282,
+      283,
+      284,
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291,
+      292,
+      293,
+      294,
+      295,
+      296,
+      297,
+      298,
+      299,
+      300,
+      301,
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      327,
+      328,
+      329,
+      330,
+      331,
+      332
+    ],
+    "difference_count": 175,
+    "affected_weeks": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      188
+    ],
+    "differences": [
+      {
+        "week_number": 9,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-9.mp3"
+      },
+      {
+        "week_number": 10,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-10.mp3"
+      },
+      {
+        "week_number": 11,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-11.mp3"
+      },
+      {
+        "week_number": 12,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-12.mp3"
+      },
+      {
+        "week_number": 13,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-13.mp3"
+      },
+      {
+        "week_number": 14,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-14.mp3"
+      },
+      {
+        "week_number": 15,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-15.mp3"
+      },
+      {
+        "week_number": 16,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-16.mp3"
+      },
+      {
+        "week_number": 17,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-17.mp3"
+      },
+      {
+        "week_number": 18,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-18.mp3"
+      },
+      {
+        "week_number": 19,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-19.mp3"
+      },
+      {
+        "week_number": 20,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-20.mp3"
+      },
+      {
+        "week_number": 21,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-21.mp3"
+      },
+      {
+        "week_number": 22,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-22.mp3"
+      },
+      {
+        "week_number": 23,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-23.mp3"
+      },
+      {
+        "week_number": 24,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-24.mp3"
+      },
+      {
+        "week_number": 25,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-25.mp3"
+      },
+      {
+        "week_number": 26,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-26.mp3"
+      },
+      {
+        "week_number": 27,
+        "field": "insight",
+        "repository": "大多数人对\"向上管理\"有一种本能的抵触——感觉像是在拍马屁，或者觉得\"我只要把事情做好就够了，不需要去经营关系\"。\n\n但这个想法本身就是一种认知错误。\n\n上级不是全知全能的。他每天面对的信息量远超他能处理的范围，他需要做大量决策，他有自己的压力和盲区。在这种情况下，你的工作做得好不好，和他知不知道你的工作做得好，是两件完全不同的事。\n\n向上管理不是表演，不是讨好，而是一种信息传递的责任。你有责任让对你的工作有影响力的人，准确地了解你在做什么、做到了什么程度、需要什么支持。\n\n这不是软技能，这是职场里最被低估的硬能力之一。",
+        "production": "大多数人对\"向上管理\"有一种本能的抵触——感觉像是在溜须拍马，或者觉得\"我只要把事情做好就够了，不需要去经营关系\"。\n\n但这个想法本身就是一种认知错误。\n\n上级不是全知全能的。他每天面对的信息量远超他能处理的范围，他需要做大量决策，他有自己的压力和盲区。在这种情况下，你的工作做得好不好，和他知不知道你的工作做得好，是两件完全不同的事。\n\n向上管理不是表演，不是讨好，而是一种信息传递的责任。你有责任让对你的工作有影响力的人，准确地了解你在做什么、做到了什么程度、需要什么支持。\n\n这不是软技能，这是职场里最被低估的硬能力之一。"
+      },
+      {
+        "week_number": 27,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-27.mp3"
+      },
+      {
+        "week_number": 28,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-28.mp3"
+      },
+      {
+        "week_number": 29,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-29.mp3"
+      },
+      {
+        "week_number": 30,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-30.mp3"
+      },
+      {
+        "week_number": 31,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-31.mp3"
+      },
+      {
+        "week_number": 32,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-32.mp3"
+      },
+      {
+        "week_number": 33,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-33.mp3"
+      },
+      {
+        "week_number": 34,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-34.mp3"
+      },
+      {
+        "week_number": 35,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-35.mp3"
+      },
+      {
+        "week_number": 36,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-36.mp3"
+      },
+      {
+        "week_number": 37,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-37.mp3"
+      },
+      {
+        "week_number": 38,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-38.mp3"
+      },
+      {
+        "week_number": 39,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-39.mp3"
+      },
+      {
+        "week_number": 40,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-40.mp3"
+      },
+      {
+        "week_number": 41,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-41.mp3"
+      },
+      {
+        "week_number": 42,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-42.mp3"
+      },
+      {
+        "week_number": 43,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-43.mp3"
+      },
+      {
+        "week_number": 44,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-44.mp3"
+      },
+      {
+        "week_number": 45,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-45.mp3"
+      },
+      {
+        "week_number": 46,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-46.mp3"
+      },
+      {
+        "week_number": 47,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-47.mp3"
+      },
+      {
+        "week_number": 48,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-48.mp3"
+      },
+      {
+        "week_number": 49,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-49.mp3"
+      },
+      {
+        "week_number": 50,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-50.mp3"
+      },
+      {
+        "week_number": 51,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-51.mp3"
+      },
+      {
+        "week_number": 52,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-52.mp3"
+      },
+      {
+        "week_number": 53,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-53.mp3"
+      },
+      {
+        "week_number": 54,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-54.mp3"
+      },
+      {
+        "week_number": 55,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-55.mp3"
+      },
+      {
+        "week_number": 56,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-56.mp3"
+      },
+      {
+        "week_number": 57,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-57.mp3"
+      },
+      {
+        "week_number": 58,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-58.mp3"
+      },
+      {
+        "week_number": 59,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-59.mp3"
+      },
+      {
+        "week_number": 60,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-60.mp3"
+      },
+      {
+        "week_number": 61,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-61.mp3"
+      },
+      {
+        "week_number": 62,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-62.mp3"
+      },
+      {
+        "week_number": 63,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-63.mp3"
+      },
+      {
+        "week_number": 64,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-64.mp3"
+      },
+      {
+        "week_number": 65,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-65.mp3"
+      },
+      {
+        "week_number": 66,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-66.mp3"
+      },
+      {
+        "week_number": 67,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-67.mp3"
+      },
+      {
+        "week_number": 68,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-68.mp3"
+      },
+      {
+        "week_number": 69,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-69.mp3"
+      },
+      {
+        "week_number": 70,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-70.mp3"
+      },
+      {
+        "week_number": 71,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-71.mp3"
+      },
+      {
+        "week_number": 72,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-72.mp3"
+      },
+      {
+        "week_number": 73,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-73.mp3"
+      },
+      {
+        "week_number": 74,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-74.mp3"
+      },
+      {
+        "week_number": 75,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-75.mp3"
+      },
+      {
+        "week_number": 76,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-76.mp3"
+      },
+      {
+        "week_number": 77,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-77.mp3"
+      },
+      {
+        "week_number": 78,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-78.mp3"
+      },
+      {
+        "week_number": 79,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-79.mp3"
+      },
+      {
+        "week_number": 80,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-80.mp3"
+      },
+      {
+        "week_number": 81,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-81.mp3"
+      },
+      {
+        "week_number": 82,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-82.mp3"
+      },
+      {
+        "week_number": 83,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-83.mp3"
+      },
+      {
+        "week_number": 84,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-84.mp3"
+      },
+      {
+        "week_number": 85,
+        "field": "step_two",
+        "repository": "会议中，识别并打断跑题：当讨论偏离目标，直接说：\"这个话题很重要，我们把它记下来单独讨论，现在先回到X\"——不是粗鲁，而是对所有人时间的尊重",
+        "production": "会议中，识别并打断跑题：当讨论偏离目标，直接说——\"这个话题很重要，我们把它记下来单独讨论，现在先回到X\"——不是粗鲁，而是对所有人时间的尊重"
+      },
+      {
+        "week_number": 85,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-85.mp3"
+      },
+      {
+        "week_number": 86,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-86.mp3"
+      },
+      {
+        "week_number": 87,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-87.mp3"
+      },
+      {
+        "week_number": 88,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-88.mp3"
+      },
+      {
+        "week_number": 89,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-89.mp3"
+      },
+      {
+        "week_number": 90,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-90.mp3"
+      },
+      {
+        "week_number": 91,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-91.mp3"
+      },
+      {
+        "week_number": 92,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-92.mp3"
+      },
+      {
+        "week_number": 93,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-93.mp3"
+      },
+      {
+        "week_number": 94,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-94.mp3"
+      },
+      {
+        "week_number": 95,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-95.mp3"
+      },
+      {
+        "week_number": 96,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-96.mp3"
+      },
+      {
+        "week_number": 97,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-97.mp3"
+      },
+      {
+        "week_number": 98,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-98.mp3"
+      },
+      {
+        "week_number": 99,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-99.mp3"
+      },
+      {
+        "week_number": 100,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-100.mp3"
+      },
+      {
+        "week_number": 101,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-101.mp3"
+      },
+      {
+        "week_number": 102,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-102.mp3"
+      },
+      {
+        "week_number": 103,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-103.mp3"
+      },
+      {
+        "week_number": 104,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-104.mp3"
+      },
+      {
+        "week_number": 105,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-105.mp3"
+      },
+      {
+        "week_number": 106,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-106.mp3"
+      },
+      {
+        "week_number": 107,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-107.mp3"
+      },
+      {
+        "week_number": 108,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-108.mp3"
+      },
+      {
+        "week_number": 109,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-109.mp3"
+      },
+      {
+        "week_number": 110,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-110.mp3"
+      },
+      {
+        "week_number": 111,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-111.mp3"
+      },
+      {
+        "week_number": 112,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-112.mp3"
+      },
+      {
+        "week_number": 113,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-113.mp3"
+      },
+      {
+        "week_number": 114,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-114.mp3"
+      },
+      {
+        "week_number": 115,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-115.mp3"
+      },
+      {
+        "week_number": 116,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-116.mp3"
+      },
+      {
+        "week_number": 117,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-117.mp3"
+      },
+      {
+        "week_number": 118,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-118.mp3"
+      },
+      {
+        "week_number": 119,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-119.mp3"
+      },
+      {
+        "week_number": 120,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-120.mp3"
+      },
+      {
+        "week_number": 121,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-121.mp3"
+      },
+      {
+        "week_number": 122,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-122.mp3"
+      },
+      {
+        "week_number": 123,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-123.mp3"
+      },
+      {
+        "week_number": 124,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-124.mp3"
+      },
+      {
+        "week_number": 125,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-125.mp3"
+      },
+      {
+        "week_number": 126,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-126.mp3"
+      },
+      {
+        "week_number": 127,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-127.mp3"
+      },
+      {
+        "week_number": 128,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-128.mp3"
+      },
+      {
+        "week_number": 129,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-129.mp3"
+      },
+      {
+        "week_number": 130,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-130.mp3"
+      },
+      {
+        "week_number": 131,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-131.mp3"
+      },
+      {
+        "week_number": 132,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-132.mp3"
+      },
+      {
+        "week_number": 133,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-133.mp3"
+      },
+      {
+        "week_number": 134,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-134.mp3"
+      },
+      {
+        "week_number": 135,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-135.mp3"
+      },
+      {
+        "week_number": 136,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-136.mp3"
+      },
+      {
+        "week_number": 137,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-137.mp3"
+      },
+      {
+        "week_number": 138,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-138.mp3"
+      },
+      {
+        "week_number": 139,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-139.mp3"
+      },
+      {
+        "week_number": 140,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-140.mp3"
+      },
+      {
+        "week_number": 141,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-141.mp3"
+      },
+      {
+        "week_number": 142,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-142.mp3"
+      },
+      {
+        "week_number": 143,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-143.mp3"
+      },
+      {
+        "week_number": 144,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-144.mp3"
+      },
+      {
+        "week_number": 145,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-145.mp3"
+      },
+      {
+        "week_number": 146,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-146.mp3"
+      },
+      {
+        "week_number": 147,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-147.mp3"
+      },
+      {
+        "week_number": 148,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-148.mp3"
+      },
+      {
+        "week_number": 149,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-149.mp3"
+      },
+      {
+        "week_number": 150,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-150.mp3"
+      },
+      {
+        "week_number": 151,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-151.mp3"
+      },
+      {
+        "week_number": 152,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-152.mp3"
+      },
+      {
+        "week_number": 153,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-153.mp3"
+      },
+      {
+        "week_number": 154,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-154.mp3"
+      },
+      {
+        "week_number": 155,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-155.mp3"
+      },
+      {
+        "week_number": 156,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-156.mp3"
+      },
+      {
+        "week_number": 157,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-157.mp3"
+      },
+      {
+        "week_number": 158,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-158.mp3"
+      },
+      {
+        "week_number": 159,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-159.mp3"
+      },
+      {
+        "week_number": 160,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-160.mp3"
+      },
+      {
+        "week_number": 161,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-161.mp3"
+      },
+      {
+        "week_number": 162,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-162.mp3"
+      },
+      {
+        "week_number": 163,
+        "field": "insight",
+        "repository": "语言学家哈里·海亚卡瓦提出了\"抽象阶梯\"（Abstraction Ladder）的概念——任何概念都存在于一个从具体到抽象的层级系统里，同一个事物可以在不同层级被描述。\n\n以一头牛为例：最具体层——贝西（一头具体的牛）；类别层——奶牛、牲畜、农场动物；原则层——财富、资产、经济资源。在不同层级上谈同一件事，传递的信息和适用的场景完全不同。\n\n沟通研究发现，很多沟通失败不是因为双方不聪明，而是因为他们在不同层级上说话——一方在原则层表达，另一方在具体层理解，结果是鸡同鸭讲。\n\n在分析思维里，层级切换的能力同样关键——能够从一个具体案例抽象出规律（向上），也能够把一个抽象规律落实到具体情境（向下）。这两个方向的流畅切换，是高质量思维的核心标志之一。",
+        "production": "语言学家哈里·海亚卡瓦提出了\"抽象阶梯\"（Abstraction Ladder）的概念——任何概念都存在于一个从具体到抽象的层级系统里，同一个事物可以在不同层级被描述。\n\n以一头牛为例：最具体层——牛（一头具体的牛）；类别层——奶牛、牲畜、农场动物；原则层——财富、资产、经济资源。在不同层级上谈同一件事，传递的信息和适用的场景完全不同。\n\n沟通研究发现，很多沟通失败不是因为双方不聪明，而是因为他们在不同层级上说话——一方在原则层表达，另一方在具体层理解，结果是鸡同鸭讲。\n\n在分析思维里，层级切换的能力同样关键——能够从一个具体案例抽象出规律（向上），也能够把一个抽象规律落实到具体情境（向下）。这两个方向的流畅切换，是高质量思维的核心标志之一。"
+      },
+      {
+        "week_number": 163,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-163.mp3"
+      },
+      {
+        "week_number": 164,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-164.mp3"
+      },
+      {
+        "week_number": 165,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-165.mp3"
+      },
+      {
+        "week_number": 166,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-166.mp3"
+      },
+      {
+        "week_number": 167,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-167.mp3"
+      },
+      {
+        "week_number": 168,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-168.mp3"
+      },
+      {
+        "week_number": 169,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-169.mp3"
+      },
+      {
+        "week_number": 170,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-170.mp3"
+      },
+      {
+        "week_number": 171,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-171.mp3"
+      },
+      {
+        "week_number": 172,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-172.mp3"
+      },
+      {
+        "week_number": 173,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-173.mp3"
+      },
+      {
+        "week_number": 174,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-174.mp3"
+      },
+      {
+        "week_number": 175,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-175.mp3"
+      },
+      {
+        "week_number": 176,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-176.mp3"
+      },
+      {
+        "week_number": 177,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-177.mp3"
+      },
+      {
+        "week_number": 178,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-178.mp3"
+      },
+      {
+        "week_number": 179,
+        "field": "insight",
+        "repository": "这三种论证漏洞，在日常论述、广告、政治演讲里极其普遍，但因为它们都有一定的表面合理性，很多人不会主动识别它们。\n\n偷换概念（Equivocation）：利用一个词在不同语境里有不同含义，把在一个含义下成立的结论，偷偷转移到另一个含义上。例：\"自然的东西都是好的，所以天然成分的产品一定对身体有益\"——这里\"自然\"在第一句里是\"符合自然规律\"的意思，在第二句里悄悄变成了\"天然提取、无人工成分\"的意思，两个含义之间被偷偷替换了。现实里的偷换往往更隐蔽，不容易被察觉。\n\n错误类比（False Analogy）：用两件事的表面相似，来转移对差异的注意。例：\"管理公司就像管理一个家庭，家里父母说了算，所以公司里老板说了算也是正确的\"——忽略了家庭和公司在本质上的巨大差异。\n\n循环论证（Circular Reasoning）：前提和结论互相支撑，表面上有推理，实际上什么都没有证明。例：\"上帝存在，因为《圣经》说上帝存在；《圣经》是正确的，因为上帝写的\"——两个互相支撑，但没有任何外部证据。",
+        "production": "这三种论证漏洞，在日常论述、广告、政治演讲里极其普遍，但因为它们都有一定的表面合理性，很多人不会主动识别它们。\n\n偷换概念（Equivocation）：利用一个词在不同语境里有不同含义，把在一个含义下成立的结论，偷偷转移到另一个含义上。例：\"自然的东西都是好的，所以天然成分的产品一定对身体有益\"——这里\"自然\"在第一句里是\"符合自然规律\"的意思，在第二句里悄悄变成了\"天然提取、无人工成分\"的意思，两个含义之间被偷偷替换了。现实里的偷换往往更隐蔽，不容易被察觉。\"\n\n错误类比（False Analogy）：用两件事的表面相似，来转移对差异的注意。例：\"管理公司就像管理一个家庭，家里父母说了算，所以公司里老板说了算也是正确的\"——忽略了家庭和公司在本质上的巨大差异。\n\n循环论证（Circular Reasoning）：前提和结论互相支撑，表面上有推理，实际上什么都没有证明。例：\"上帝存在，因为《圣经》说上帝存在；《圣经》是正确的，因为上帝写的\"——两个互相支撑，但没有任何外部证据。"
+      },
+      {
+        "week_number": 188,
+        "field": "insight",
+        "repository": "创新研究发现，很多重要的创新，来自对行业默认假设的系统性质疑和翻转——这个思维方式在创新领域叫做\"逆向思维\"或者\"第一性原理\"的应用之一。\n\n一个经典例子：传统酒店行业的默认假设是\"旅客需要入住由专业机构管理的空间\"。Airbnb翻转了这个假设——\"旅客可以入住普通人的家\"——然后认真想这个翻转意味着什么：成本更低、体验更本地化、供给可以无限扩展。翻转一个假设，产生了一个全新的商业模式。\n\n心理学研究发现，大多数创意思维卡住，不是因为缺乏信息，而是因为\"认知定势\"——大脑在处理熟悉领域的问题时，会自动采用已有的框架，这个框架既提供了效率，也创造了盲点。翻转假设是打破认知定势最直接的方法之一——因为它强迫大脑从一个完全不同的起点开始搜索。",
+        "production": "创新研究发现，很多重要的创新，来自对行业默认假设的系统性质疑和翻转——这个思维方式在创新领域叫做\"逆向思维\"或者\"第一性原理\"的应用之一。\n\n一个经典例子：传统酒店行业的默认假设是\"旅客需要入住由专业机构管理的空间\"。Airbnb爱彼迎酒店预定平台翻转了这个假设——\"旅客可以入住普通人的家\"——然后认真想这个翻转意味着什么：成本更低、体验更本地化、供给可以无限扩展。翻转一个假设，产生了一个全新的商业模式。\n\n心理学研究发现，大多数创意思维卡住，不是因为缺乏信息，而是因为\"认知定势\"——大脑在处理熟悉领域的问题时，会自动采用已有的框架，这个框架既提供了效率，也创造了盲点。翻转假设是打破认知定势最直接的方法之一——因为它强迫大脑从一个完全不同的起点开始搜索。"
+      }
+    ]
+  },
+  "fresh_seed_then_restart": {
+    "count": 254,
+    "missing_weeks": [
+      255,
+      256,
+      257,
+      258,
+      259,
+      260,
+      261,
+      262,
+      263,
+      264,
+      265,
+      266,
+      267,
+      268,
+      269,
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277,
+      278,
+      279,
+      280,
+      281,
+      282,
+      283,
+      284,
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291,
+      292,
+      293,
+      294,
+      295,
+      296,
+      297,
+      298,
+      299,
+      300,
+      301,
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      327,
+      328,
+      329,
+      330,
+      331,
+      332
+    ],
+    "difference_count": 194,
+    "affected_weeks": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      188,
+      231,
+      232,
+      233,
+      234,
+      235,
+      236,
+      237,
+      243,
+      244,
+      245,
+      246,
+      247,
+      248,
+      249,
+      250,
+      251,
+      252,
+      253,
+      254
+    ],
+    "differences": [
+      {
+        "week_number": 9,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-9.mp3"
+      },
+      {
+        "week_number": 10,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-10.mp3"
+      },
+      {
+        "week_number": 11,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-11.mp3"
+      },
+      {
+        "week_number": 12,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-12.mp3"
+      },
+      {
+        "week_number": 13,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-13.mp3"
+      },
+      {
+        "week_number": 14,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-14.mp3"
+      },
+      {
+        "week_number": 15,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-15.mp3"
+      },
+      {
+        "week_number": 16,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-16.mp3"
+      },
+      {
+        "week_number": 17,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-17.mp3"
+      },
+      {
+        "week_number": 18,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-18.mp3"
+      },
+      {
+        "week_number": 19,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-19.mp3"
+      },
+      {
+        "week_number": 20,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-20.mp3"
+      },
+      {
+        "week_number": 21,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-21.mp3"
+      },
+      {
+        "week_number": 22,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-22.mp3"
+      },
+      {
+        "week_number": 23,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-23.mp3"
+      },
+      {
+        "week_number": 24,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-24.mp3"
+      },
+      {
+        "week_number": 25,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-25.mp3"
+      },
+      {
+        "week_number": 26,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-26.mp3"
+      },
+      {
+        "week_number": 27,
+        "field": "insight",
+        "repository": "大多数人对\"向上管理\"有一种本能的抵触——感觉像是在拍马屁，或者觉得\"我只要把事情做好就够了，不需要去经营关系\"。\n\n但这个想法本身就是一种认知错误。\n\n上级不是全知全能的。他每天面对的信息量远超他能处理的范围，他需要做大量决策，他有自己的压力和盲区。在这种情况下，你的工作做得好不好，和他知不知道你的工作做得好，是两件完全不同的事。\n\n向上管理不是表演，不是讨好，而是一种信息传递的责任。你有责任让对你的工作有影响力的人，准确地了解你在做什么、做到了什么程度、需要什么支持。\n\n这不是软技能，这是职场里最被低估的硬能力之一。",
+        "production": "大多数人对\"向上管理\"有一种本能的抵触——感觉像是在溜须拍马，或者觉得\"我只要把事情做好就够了，不需要去经营关系\"。\n\n但这个想法本身就是一种认知错误。\n\n上级不是全知全能的。他每天面对的信息量远超他能处理的范围，他需要做大量决策，他有自己的压力和盲区。在这种情况下，你的工作做得好不好，和他知不知道你的工作做得好，是两件完全不同的事。\n\n向上管理不是表演，不是讨好，而是一种信息传递的责任。你有责任让对你的工作有影响力的人，准确地了解你在做什么、做到了什么程度、需要什么支持。\n\n这不是软技能，这是职场里最被低估的硬能力之一。"
+      },
+      {
+        "week_number": 27,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-27.mp3"
+      },
+      {
+        "week_number": 28,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-28.mp3"
+      },
+      {
+        "week_number": 29,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-29.mp3"
+      },
+      {
+        "week_number": 30,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-30.mp3"
+      },
+      {
+        "week_number": 31,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-31.mp3"
+      },
+      {
+        "week_number": 32,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-32.mp3"
+      },
+      {
+        "week_number": 33,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-33.mp3"
+      },
+      {
+        "week_number": 34,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-34.mp3"
+      },
+      {
+        "week_number": 35,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-35.mp3"
+      },
+      {
+        "week_number": 36,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-36.mp3"
+      },
+      {
+        "week_number": 37,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-37.mp3"
+      },
+      {
+        "week_number": 38,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-38.mp3"
+      },
+      {
+        "week_number": 39,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-39.mp3"
+      },
+      {
+        "week_number": 40,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-40.mp3"
+      },
+      {
+        "week_number": 41,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-41.mp3"
+      },
+      {
+        "week_number": 42,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-42.mp3"
+      },
+      {
+        "week_number": 43,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-43.mp3"
+      },
+      {
+        "week_number": 44,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-44.mp3"
+      },
+      {
+        "week_number": 45,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-45.mp3"
+      },
+      {
+        "week_number": 46,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-46.mp3"
+      },
+      {
+        "week_number": 47,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-47.mp3"
+      },
+      {
+        "week_number": 48,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-48.mp3"
+      },
+      {
+        "week_number": 49,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-49.mp3"
+      },
+      {
+        "week_number": 50,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-50.mp3"
+      },
+      {
+        "week_number": 51,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-51.mp3"
+      },
+      {
+        "week_number": 52,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-52.mp3"
+      },
+      {
+        "week_number": 53,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-53.mp3"
+      },
+      {
+        "week_number": 54,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-54.mp3"
+      },
+      {
+        "week_number": 55,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-55.mp3"
+      },
+      {
+        "week_number": 56,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-56.mp3"
+      },
+      {
+        "week_number": 57,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-57.mp3"
+      },
+      {
+        "week_number": 58,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-58.mp3"
+      },
+      {
+        "week_number": 59,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-59.mp3"
+      },
+      {
+        "week_number": 60,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-60.mp3"
+      },
+      {
+        "week_number": 61,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-61.mp3"
+      },
+      {
+        "week_number": 62,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-62.mp3"
+      },
+      {
+        "week_number": 63,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-63.mp3"
+      },
+      {
+        "week_number": 64,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-64.mp3"
+      },
+      {
+        "week_number": 65,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-65.mp3"
+      },
+      {
+        "week_number": 66,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-66.mp3"
+      },
+      {
+        "week_number": 67,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-67.mp3"
+      },
+      {
+        "week_number": 68,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-68.mp3"
+      },
+      {
+        "week_number": 69,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-69.mp3"
+      },
+      {
+        "week_number": 70,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-70.mp3"
+      },
+      {
+        "week_number": 71,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-71.mp3"
+      },
+      {
+        "week_number": 72,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-72.mp3"
+      },
+      {
+        "week_number": 73,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-73.mp3"
+      },
+      {
+        "week_number": 74,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-74.mp3"
+      },
+      {
+        "week_number": 75,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-75.mp3"
+      },
+      {
+        "week_number": 76,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-76.mp3"
+      },
+      {
+        "week_number": 77,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-77.mp3"
+      },
+      {
+        "week_number": 78,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-78.mp3"
+      },
+      {
+        "week_number": 79,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-79.mp3"
+      },
+      {
+        "week_number": 80,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-80.mp3"
+      },
+      {
+        "week_number": 81,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-81.mp3"
+      },
+      {
+        "week_number": 82,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-82.mp3"
+      },
+      {
+        "week_number": 83,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-83.mp3"
+      },
+      {
+        "week_number": 84,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-84.mp3"
+      },
+      {
+        "week_number": 85,
+        "field": "step_two",
+        "repository": "会议中，识别并打断跑题：当讨论偏离目标，直接说：\"这个话题很重要，我们把它记下来单独讨论，现在先回到X\"——不是粗鲁，而是对所有人时间的尊重",
+        "production": "会议中，识别并打断跑题：当讨论偏离目标，直接说——\"这个话题很重要，我们把它记下来单独讨论，现在先回到X\"——不是粗鲁，而是对所有人时间的尊重"
+      },
+      {
+        "week_number": 85,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-85.mp3"
+      },
+      {
+        "week_number": 86,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-86.mp3"
+      },
+      {
+        "week_number": 87,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-87.mp3"
+      },
+      {
+        "week_number": 88,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-88.mp3"
+      },
+      {
+        "week_number": 89,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-89.mp3"
+      },
+      {
+        "week_number": 90,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-90.mp3"
+      },
+      {
+        "week_number": 91,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-91.mp3"
+      },
+      {
+        "week_number": 92,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-92.mp3"
+      },
+      {
+        "week_number": 93,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-93.mp3"
+      },
+      {
+        "week_number": 94,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-94.mp3"
+      },
+      {
+        "week_number": 95,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-95.mp3"
+      },
+      {
+        "week_number": 96,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-96.mp3"
+      },
+      {
+        "week_number": 97,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-97.mp3"
+      },
+      {
+        "week_number": 98,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-98.mp3"
+      },
+      {
+        "week_number": 99,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-99.mp3"
+      },
+      {
+        "week_number": 100,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-100.mp3"
+      },
+      {
+        "week_number": 101,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-101.mp3"
+      },
+      {
+        "week_number": 102,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-102.mp3"
+      },
+      {
+        "week_number": 103,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-103.mp3"
+      },
+      {
+        "week_number": 104,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-104.mp3"
+      },
+      {
+        "week_number": 105,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-105.mp3"
+      },
+      {
+        "week_number": 106,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-106.mp3"
+      },
+      {
+        "week_number": 107,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-107.mp3"
+      },
+      {
+        "week_number": 108,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-108.mp3"
+      },
+      {
+        "week_number": 109,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-109.mp3"
+      },
+      {
+        "week_number": 110,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-110.mp3"
+      },
+      {
+        "week_number": 111,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-111.mp3"
+      },
+      {
+        "week_number": 112,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-112.mp3"
+      },
+      {
+        "week_number": 113,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-113.mp3"
+      },
+      {
+        "week_number": 114,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-114.mp3"
+      },
+      {
+        "week_number": 115,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-115.mp3"
+      },
+      {
+        "week_number": 116,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-116.mp3"
+      },
+      {
+        "week_number": 117,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-117.mp3"
+      },
+      {
+        "week_number": 118,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-118.mp3"
+      },
+      {
+        "week_number": 119,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-119.mp3"
+      },
+      {
+        "week_number": 120,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-120.mp3"
+      },
+      {
+        "week_number": 121,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-121.mp3"
+      },
+      {
+        "week_number": 122,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-122.mp3"
+      },
+      {
+        "week_number": 123,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-123.mp3"
+      },
+      {
+        "week_number": 124,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-124.mp3"
+      },
+      {
+        "week_number": 125,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-125.mp3"
+      },
+      {
+        "week_number": 126,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-126.mp3"
+      },
+      {
+        "week_number": 127,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-127.mp3"
+      },
+      {
+        "week_number": 128,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-128.mp3"
+      },
+      {
+        "week_number": 129,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-129.mp3"
+      },
+      {
+        "week_number": 130,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-130.mp3"
+      },
+      {
+        "week_number": 131,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-131.mp3"
+      },
+      {
+        "week_number": 132,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-132.mp3"
+      },
+      {
+        "week_number": 133,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-133.mp3"
+      },
+      {
+        "week_number": 134,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-134.mp3"
+      },
+      {
+        "week_number": 135,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-135.mp3"
+      },
+      {
+        "week_number": 136,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-136.mp3"
+      },
+      {
+        "week_number": 137,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-137.mp3"
+      },
+      {
+        "week_number": 138,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-138.mp3"
+      },
+      {
+        "week_number": 139,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-139.mp3"
+      },
+      {
+        "week_number": 140,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-140.mp3"
+      },
+      {
+        "week_number": 141,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-141.mp3"
+      },
+      {
+        "week_number": 142,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-142.mp3"
+      },
+      {
+        "week_number": 143,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-143.mp3"
+      },
+      {
+        "week_number": 144,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-144.mp3"
+      },
+      {
+        "week_number": 145,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-145.mp3"
+      },
+      {
+        "week_number": 146,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-146.mp3"
+      },
+      {
+        "week_number": 147,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-147.mp3"
+      },
+      {
+        "week_number": 148,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-148.mp3"
+      },
+      {
+        "week_number": 149,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-149.mp3"
+      },
+      {
+        "week_number": 150,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-150.mp3"
+      },
+      {
+        "week_number": 151,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-151.mp3"
+      },
+      {
+        "week_number": 152,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-152.mp3"
+      },
+      {
+        "week_number": 153,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-153.mp3"
+      },
+      {
+        "week_number": 154,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-154.mp3"
+      },
+      {
+        "week_number": 155,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-155.mp3"
+      },
+      {
+        "week_number": 156,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-156.mp3"
+      },
+      {
+        "week_number": 157,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-157.mp3"
+      },
+      {
+        "week_number": 158,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-158.mp3"
+      },
+      {
+        "week_number": 159,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-159.mp3"
+      },
+      {
+        "week_number": 160,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-160.mp3"
+      },
+      {
+        "week_number": 161,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-161.mp3"
+      },
+      {
+        "week_number": 162,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-162.mp3"
+      },
+      {
+        "week_number": 163,
+        "field": "insight",
+        "repository": "语言学家哈里·海亚卡瓦提出了\"抽象阶梯\"（Abstraction Ladder）的概念——任何概念都存在于一个从具体到抽象的层级系统里，同一个事物可以在不同层级被描述。\n\n以一头牛为例：最具体层——贝西（一头具体的牛）；类别层——奶牛、牲畜、农场动物；原则层——财富、资产、经济资源。在不同层级上谈同一件事，传递的信息和适用的场景完全不同。\n\n沟通研究发现，很多沟通失败不是因为双方不聪明，而是因为他们在不同层级上说话——一方在原则层表达，另一方在具体层理解，结果是鸡同鸭讲。\n\n在分析思维里，层级切换的能力同样关键——能够从一个具体案例抽象出规律（向上），也能够把一个抽象规律落实到具体情境（向下）。这两个方向的流畅切换，是高质量思维的核心标志之一。",
+        "production": "语言学家哈里·海亚卡瓦提出了\"抽象阶梯\"（Abstraction Ladder）的概念——任何概念都存在于一个从具体到抽象的层级系统里，同一个事物可以在不同层级被描述。\n\n以一头牛为例：最具体层——牛（一头具体的牛）；类别层——奶牛、牲畜、农场动物；原则层——财富、资产、经济资源。在不同层级上谈同一件事，传递的信息和适用的场景完全不同。\n\n沟通研究发现，很多沟通失败不是因为双方不聪明，而是因为他们在不同层级上说话——一方在原则层表达，另一方在具体层理解，结果是鸡同鸭讲。\n\n在分析思维里，层级切换的能力同样关键——能够从一个具体案例抽象出规律（向上），也能够把一个抽象规律落实到具体情境（向下）。这两个方向的流畅切换，是高质量思维的核心标志之一。"
+      },
+      {
+        "week_number": 163,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-163.mp3"
+      },
+      {
+        "week_number": 164,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-164.mp3"
+      },
+      {
+        "week_number": 165,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-165.mp3"
+      },
+      {
+        "week_number": 166,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-166.mp3"
+      },
+      {
+        "week_number": 167,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-167.mp3"
+      },
+      {
+        "week_number": 168,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-168.mp3"
+      },
+      {
+        "week_number": 169,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-169.mp3"
+      },
+      {
+        "week_number": 170,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-170.mp3"
+      },
+      {
+        "week_number": 171,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-171.mp3"
+      },
+      {
+        "week_number": 172,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-172.mp3"
+      },
+      {
+        "week_number": 173,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-173.mp3"
+      },
+      {
+        "week_number": 174,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-174.mp3"
+      },
+      {
+        "week_number": 175,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-175.mp3"
+      },
+      {
+        "week_number": 176,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-176.mp3"
+      },
+      {
+        "week_number": 177,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-177.mp3"
+      },
+      {
+        "week_number": 178,
+        "field": "insight_audio_url",
+        "repository": "",
+        "production": "https://jianbu-jinhua-gongtongti.netlify.app/audio/insight/week-178.mp3"
+      },
+      {
+        "week_number": 179,
+        "field": "insight",
+        "repository": "这三种论证漏洞，在日常论述、广告、政治演讲里极其普遍，但因为它们都有一定的表面合理性，很多人不会主动识别它们。\n\n偷换概念（Equivocation）：利用一个词在不同语境里有不同含义，把在一个含义下成立的结论，偷偷转移到另一个含义上。例：\"自然的东西都是好的，所以天然成分的产品一定对身体有益\"——这里\"自然\"在第一句里是\"符合自然规律\"的意思，在第二句里悄悄变成了\"天然提取、无人工成分\"的意思，两个含义之间被偷偷替换了。现实里的偷换往往更隐蔽，不容易被察觉。\n\n错误类比（False Analogy）：用两件事的表面相似，来转移对差异的注意。例：\"管理公司就像管理一个家庭，家里父母说了算，所以公司里老板说了算也是正确的\"——忽略了家庭和公司在本质上的巨大差异。\n\n循环论证（Circular Reasoning）：前提和结论互相支撑，表面上有推理，实际上什么都没有证明。例：\"上帝存在，因为《圣经》说上帝存在；《圣经》是正确的，因为上帝写的\"——两个互相支撑，但没有任何外部证据。",
+        "production": "这三种论证漏洞，在日常论述、广告、政治演讲里极其普遍，但因为它们都有一定的表面合理性，很多人不会主动识别它们。\n\n偷换概念（Equivocation）：利用一个词在不同语境里有不同含义，把在一个含义下成立的结论，偷偷转移到另一个含义上。例：\"自然的东西都是好的，所以天然成分的产品一定对身体有益\"——这里\"自然\"在第一句里是\"符合自然规律\"的意思，在第二句里悄悄变成了\"天然提取、无人工成分\"的意思，两个含义之间被偷偷替换了。现实里的偷换往往更隐蔽，不容易被察觉。\"\n\n错误类比（False Analogy）：用两件事的表面相似，来转移对差异的注意。例：\"管理公司就像管理一个家庭，家里父母说了算，所以公司里老板说了算也是正确的\"——忽略了家庭和公司在本质上的巨大差异。\n\n循环论证（Circular Reasoning）：前提和结论互相支撑，表面上有推理，实际上什么都没有证明。例：\"上帝存在，因为《圣经》说上帝存在；《圣经》是正确的，因为上帝写的\"——两个互相支撑，但没有任何外部证据。"
+      },
+      {
+        "week_number": 188,
+        "field": "insight",
+        "repository": "创新研究发现，很多重要的创新，来自对行业默认假设的系统性质疑和翻转——这个思维方式在创新领域叫做\"逆向思维\"或者\"第一性原理\"的应用之一。\n\n一个经典例子：传统酒店行业的默认假设是\"旅客需要入住由专业机构管理的空间\"。Airbnb翻转了这个假设——\"旅客可以入住普通人的家\"——然后认真想这个翻转意味着什么：成本更低、体验更本地化、供给可以无限扩展。翻转一个假设，产生了一个全新的商业模式。\n\n心理学研究发现，大多数创意思维卡住，不是因为缺乏信息，而是因为\"认知定势\"——大脑在处理熟悉领域的问题时，会自动采用已有的框架，这个框架既提供了效率，也创造了盲点。翻转假设是打破认知定势最直接的方法之一——因为它强迫大脑从一个完全不同的起点开始搜索。",
+        "production": "创新研究发现，很多重要的创新，来自对行业默认假设的系统性质疑和翻转——这个思维方式在创新领域叫做\"逆向思维\"或者\"第一性原理\"的应用之一。\n\n一个经典例子：传统酒店行业的默认假设是\"旅客需要入住由专业机构管理的空间\"。Airbnb爱彼迎酒店预定平台翻转了这个假设——\"旅客可以入住普通人的家\"——然后认真想这个翻转意味着什么：成本更低、体验更本地化、供给可以无限扩展。翻转一个假设，产生了一个全新的商业模式。\n\n心理学研究发现，大多数创意思维卡住，不是因为缺乏信息，而是因为\"认知定势\"——大脑在处理熟悉领域的问题时，会自动采用已有的框架，这个框架既提供了效率，也创造了盲点。翻转假设是打破认知定势最直接的方法之一——因为它强迫大脑从一个完全不同的起点开始搜索。"
+      },
+      {
+        "week_number": 231,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "识别是第一步，找到一个真实的反例是第二步——不要跳过第一步。"
+      },
+      {
+        "week_number": 232,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "先做那个小动作，不是因为它够大，而是因为它能让大脑重新开始运作。"
+      },
+      {
+        "week_number": 233,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "小反馈不是终点，是维持行动到大结果出现之前的燃料。"
+      },
+      {
+        "week_number": 234,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "先要完成感，再要意义感——在可控感崩溃的时候，顺序很重要。"
+      },
+      {
+        "week_number": 235,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "不是在情绪最强的时候分析，而是等情绪过去之后，把失败变成数据。"
+      },
+      {
+        "week_number": 236,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "在能影响的地方行动，不只是为了改变外面，也是为了不让外面完全决定里面。"
+      },
+      {
+        "week_number": 237,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "忘记了不是失败，是提醒你再演练一次——重复够了，触发自然变成自动。"
+      },
+      {
+        "week_number": 243,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "一次例外打不开新的身份，但它能在旧标签上打一个裂缝——裂缝够了，改变就进来了。"
+      },
+      {
+        "week_number": 244,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "一天负票多，不是失败，是在告诉你哪里需要调整——调整，然后继续投。"
+      },
+      {
+        "week_number": 245,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "旧身份会回来，那是新的选择时刻——每次选择新的，新的身份就强一点。"
+      },
+      {
+        "week_number": 246,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "建一个例外证据库，定期回看——看见的次数多了，例外就变成了常态。"
+      },
+      {
+        "week_number": 247,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "不要求一次走到那个人的位置——找到那个方向里最小的一步，今天做那一步。"
+      },
+      {
+        "week_number": 248,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "整合视角是开始，行为投票是建立——每次在冲突里选择新的整合，就是给它投一票。"
+      },
+      {
+        "week_number": 249,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "先让目标点亮，再评估怎么走——两个步骤，不要混在一起。"
+      },
+      {
+        "week_number": 250,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "即使最后选了第一条路，知道有其他路可以走——这本身就改变了你和目标的关系。"
+      },
+      {
+        "week_number": 251,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "把等待的成本也算进去——很多时候，绕路比等待更值。"
+      },
+      {
+        "week_number": 252,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "下一步不是为了改变处境，而是为了让你从停住变成在动——在动，才能看见下一步。"
+      },
+      {
+        "week_number": 253,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "改变的不是处境，而是你在处境里的位置——从被推着走，变成在做选择。"
+      },
+      {
+        "week_number": 254,
+        "field": "growth_friction_ending",
+        "repository": "",
+        "production": "专注一件事，不是背叛其他目标——是在为其他目标创造条件。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,2256 @@
+{
+  "count": 332,
+  "minWeek": 1,
+  "maxWeek": 332,
+  "weekNumbersContinuous": true,
+  "errors": [],
+  "warnings": [
+    {
+      "duplicateNames": [
+        {
+          "skill_name": "关系修复",
+          "week_numbers": [
+            137,
+            331
+          ]
+        }
+      ]
+    },
+    {
+      "noTags": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        27,
+        28,
+        35,
+        36,
+        37,
+        38
+      ]
+    },
+    {
+      "emptyOptionalField": "key_question",
+      "week_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "emptyOptionalField": "growth_friction_ending",
+      "week_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        238,
+        239,
+        240,
+        241,
+        242
+      ]
+    },
+    {
+      "emptyOptionalField": "insight_audio_url",
+      "week_numbers": [
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332
+      ]
+    }
+  ],
+  "missingWeeks": [],
+  "duplicateWeeks": [],
+  "duplicateNames": [
+    {
+      "skill_name": "关系修复",
+      "week_numbers": [
+        137,
+        331
+      ]
+    }
+  ],
+  "missingFields": [],
+  "tagAnomalies": [],
+  "audioUrlAnomalies": [],
+  "mainTrackCount": 52,
+  "mainTrackComplete": true,
+  "categories": {
+    "认知类": 6,
+    "决策类": 5,
+    "行动类": 4,
+    "表达类": 2,
+    "关系类": 6,
+    "影响力类": 7,
+    "效能类": 1,
+    "谈判类": 1,
+    "职场类": 1,
+    "思维类": 1,
+    "自我管理类": 32,
+    "情绪能力类": 26,
+    "营销能力类": 15,
+    "认知能力类": 75,
+    "社会能力类": 26,
+    "决策能力类": 21,
+    "行动与适应类": 8,
+    "元能力类": 5,
+    "身体与状态管理类": 6,
+    "自我认知类": 50,
+    "管理与领导类": 5,
+    "AI协同能力类": 4,
+    "个人品牌类": 2,
+    "财务管理类": 4,
+    "表达与影响力类": 5,
+    "状态管理类": 1,
+    "心理韧性类": 3,
+    "行动与适应能力类": 10
+  },
+  "tagCounts": [
+    {
+      "week_number": 1,
+      "count": 0
+    },
+    {
+      "week_number": 2,
+      "count": 0
+    },
+    {
+      "week_number": 3,
+      "count": 0
+    },
+    {
+      "week_number": 4,
+      "count": 0
+    },
+    {
+      "week_number": 5,
+      "count": 0
+    },
+    {
+      "week_number": 6,
+      "count": 0
+    },
+    {
+      "week_number": 7,
+      "count": 0
+    },
+    {
+      "week_number": 8,
+      "count": 0
+    },
+    {
+      "week_number": 9,
+      "count": 0
+    },
+    {
+      "week_number": 10,
+      "count": 8
+    },
+    {
+      "week_number": 11,
+      "count": 8
+    },
+    {
+      "week_number": 12,
+      "count": 0
+    },
+    {
+      "week_number": 13,
+      "count": 0
+    },
+    {
+      "week_number": 14,
+      "count": 0
+    },
+    {
+      "week_number": 15,
+      "count": 0
+    },
+    {
+      "week_number": 16,
+      "count": 0
+    },
+    {
+      "week_number": 17,
+      "count": 0
+    },
+    {
+      "week_number": 18,
+      "count": 0
+    },
+    {
+      "week_number": 19,
+      "count": 0
+    },
+    {
+      "week_number": 20,
+      "count": 0
+    },
+    {
+      "week_number": 21,
+      "count": 0
+    },
+    {
+      "week_number": 22,
+      "count": 8
+    },
+    {
+      "week_number": 23,
+      "count": 0
+    },
+    {
+      "week_number": 24,
+      "count": 0
+    },
+    {
+      "week_number": 25,
+      "count": 8
+    },
+    {
+      "week_number": 26,
+      "count": 8
+    },
+    {
+      "week_number": 27,
+      "count": 0
+    },
+    {
+      "week_number": 28,
+      "count": 0
+    },
+    {
+      "week_number": 29,
+      "count": 8
+    },
+    {
+      "week_number": 30,
+      "count": 8
+    },
+    {
+      "week_number": 31,
+      "count": 8
+    },
+    {
+      "week_number": 32,
+      "count": 8
+    },
+    {
+      "week_number": 33,
+      "count": 7
+    },
+    {
+      "week_number": 34,
+      "count": 8
+    },
+    {
+      "week_number": 35,
+      "count": 0
+    },
+    {
+      "week_number": 36,
+      "count": 0
+    },
+    {
+      "week_number": 37,
+      "count": 0
+    },
+    {
+      "week_number": 38,
+      "count": 0
+    },
+    {
+      "week_number": 39,
+      "count": 8
+    },
+    {
+      "week_number": 40,
+      "count": 8
+    },
+    {
+      "week_number": 41,
+      "count": 8
+    },
+    {
+      "week_number": 42,
+      "count": 8
+    },
+    {
+      "week_number": 43,
+      "count": 8
+    },
+    {
+      "week_number": 44,
+      "count": 8
+    },
+    {
+      "week_number": 45,
+      "count": 8
+    },
+    {
+      "week_number": 46,
+      "count": 8
+    },
+    {
+      "week_number": 47,
+      "count": 8
+    },
+    {
+      "week_number": 48,
+      "count": 8
+    },
+    {
+      "week_number": 49,
+      "count": 8
+    },
+    {
+      "week_number": 50,
+      "count": 8
+    },
+    {
+      "week_number": 51,
+      "count": 8
+    },
+    {
+      "week_number": 52,
+      "count": 8
+    },
+    {
+      "week_number": 53,
+      "count": 8
+    },
+    {
+      "week_number": 54,
+      "count": 8
+    },
+    {
+      "week_number": 55,
+      "count": 8
+    },
+    {
+      "week_number": 56,
+      "count": 8
+    },
+    {
+      "week_number": 57,
+      "count": 8
+    },
+    {
+      "week_number": 58,
+      "count": 8
+    },
+    {
+      "week_number": 59,
+      "count": 8
+    },
+    {
+      "week_number": 60,
+      "count": 8
+    },
+    {
+      "week_number": 61,
+      "count": 8
+    },
+    {
+      "week_number": 62,
+      "count": 8
+    },
+    {
+      "week_number": 63,
+      "count": 8
+    },
+    {
+      "week_number": 64,
+      "count": 8
+    },
+    {
+      "week_number": 65,
+      "count": 8
+    },
+    {
+      "week_number": 66,
+      "count": 8
+    },
+    {
+      "week_number": 67,
+      "count": 8
+    },
+    {
+      "week_number": 68,
+      "count": 8
+    },
+    {
+      "week_number": 69,
+      "count": 8
+    },
+    {
+      "week_number": 70,
+      "count": 8
+    },
+    {
+      "week_number": 71,
+      "count": 8
+    },
+    {
+      "week_number": 72,
+      "count": 8
+    },
+    {
+      "week_number": 73,
+      "count": 8
+    },
+    {
+      "week_number": 74,
+      "count": 8
+    },
+    {
+      "week_number": 75,
+      "count": 8
+    },
+    {
+      "week_number": 76,
+      "count": 8
+    },
+    {
+      "week_number": 77,
+      "count": 8
+    },
+    {
+      "week_number": 78,
+      "count": 8
+    },
+    {
+      "week_number": 79,
+      "count": 8
+    },
+    {
+      "week_number": 80,
+      "count": 8
+    },
+    {
+      "week_number": 81,
+      "count": 8
+    },
+    {
+      "week_number": 82,
+      "count": 8
+    },
+    {
+      "week_number": 83,
+      "count": 8
+    },
+    {
+      "week_number": 84,
+      "count": 8
+    },
+    {
+      "week_number": 85,
+      "count": 8
+    },
+    {
+      "week_number": 86,
+      "count": 8
+    },
+    {
+      "week_number": 87,
+      "count": 8
+    },
+    {
+      "week_number": 88,
+      "count": 8
+    },
+    {
+      "week_number": 89,
+      "count": 8
+    },
+    {
+      "week_number": 90,
+      "count": 8
+    },
+    {
+      "week_number": 91,
+      "count": 8
+    },
+    {
+      "week_number": 92,
+      "count": 8
+    },
+    {
+      "week_number": 93,
+      "count": 8
+    },
+    {
+      "week_number": 94,
+      "count": 8
+    },
+    {
+      "week_number": 95,
+      "count": 8
+    },
+    {
+      "week_number": 96,
+      "count": 8
+    },
+    {
+      "week_number": 97,
+      "count": 8
+    },
+    {
+      "week_number": 98,
+      "count": 8
+    },
+    {
+      "week_number": 99,
+      "count": 8
+    },
+    {
+      "week_number": 100,
+      "count": 8
+    },
+    {
+      "week_number": 101,
+      "count": 8
+    },
+    {
+      "week_number": 102,
+      "count": 8
+    },
+    {
+      "week_number": 103,
+      "count": 8
+    },
+    {
+      "week_number": 104,
+      "count": 8
+    },
+    {
+      "week_number": 105,
+      "count": 8
+    },
+    {
+      "week_number": 106,
+      "count": 8
+    },
+    {
+      "week_number": 107,
+      "count": 8
+    },
+    {
+      "week_number": 108,
+      "count": 8
+    },
+    {
+      "week_number": 109,
+      "count": 8
+    },
+    {
+      "week_number": 110,
+      "count": 8
+    },
+    {
+      "week_number": 111,
+      "count": 8
+    },
+    {
+      "week_number": 112,
+      "count": 8
+    },
+    {
+      "week_number": 113,
+      "count": 8
+    },
+    {
+      "week_number": 114,
+      "count": 8
+    },
+    {
+      "week_number": 115,
+      "count": 8
+    },
+    {
+      "week_number": 116,
+      "count": 8
+    },
+    {
+      "week_number": 117,
+      "count": 8
+    },
+    {
+      "week_number": 118,
+      "count": 8
+    },
+    {
+      "week_number": 119,
+      "count": 8
+    },
+    {
+      "week_number": 120,
+      "count": 8
+    },
+    {
+      "week_number": 121,
+      "count": 8
+    },
+    {
+      "week_number": 122,
+      "count": 8
+    },
+    {
+      "week_number": 123,
+      "count": 8
+    },
+    {
+      "week_number": 124,
+      "count": 8
+    },
+    {
+      "week_number": 125,
+      "count": 8
+    },
+    {
+      "week_number": 126,
+      "count": 8
+    },
+    {
+      "week_number": 127,
+      "count": 8
+    },
+    {
+      "week_number": 128,
+      "count": 8
+    },
+    {
+      "week_number": 129,
+      "count": 8
+    },
+    {
+      "week_number": 130,
+      "count": 8
+    },
+    {
+      "week_number": 131,
+      "count": 8
+    },
+    {
+      "week_number": 132,
+      "count": 8
+    },
+    {
+      "week_number": 133,
+      "count": 8
+    },
+    {
+      "week_number": 134,
+      "count": 8
+    },
+    {
+      "week_number": 135,
+      "count": 8
+    },
+    {
+      "week_number": 136,
+      "count": 8
+    },
+    {
+      "week_number": 137,
+      "count": 8
+    },
+    {
+      "week_number": 138,
+      "count": 8
+    },
+    {
+      "week_number": 139,
+      "count": 8
+    },
+    {
+      "week_number": 140,
+      "count": 8
+    },
+    {
+      "week_number": 141,
+      "count": 8
+    },
+    {
+      "week_number": 142,
+      "count": 8
+    },
+    {
+      "week_number": 143,
+      "count": 8
+    },
+    {
+      "week_number": 144,
+      "count": 8
+    },
+    {
+      "week_number": 145,
+      "count": 8
+    },
+    {
+      "week_number": 146,
+      "count": 8
+    },
+    {
+      "week_number": 147,
+      "count": 8
+    },
+    {
+      "week_number": 148,
+      "count": 8
+    },
+    {
+      "week_number": 149,
+      "count": 8
+    },
+    {
+      "week_number": 150,
+      "count": 8
+    },
+    {
+      "week_number": 151,
+      "count": 8
+    },
+    {
+      "week_number": 152,
+      "count": 8
+    },
+    {
+      "week_number": 153,
+      "count": 8
+    },
+    {
+      "week_number": 154,
+      "count": 8
+    },
+    {
+      "week_number": 155,
+      "count": 8
+    },
+    {
+      "week_number": 156,
+      "count": 8
+    },
+    {
+      "week_number": 157,
+      "count": 8
+    },
+    {
+      "week_number": 158,
+      "count": 8
+    },
+    {
+      "week_number": 159,
+      "count": 8
+    },
+    {
+      "week_number": 160,
+      "count": 8
+    },
+    {
+      "week_number": 161,
+      "count": 8
+    },
+    {
+      "week_number": 162,
+      "count": 8
+    },
+    {
+      "week_number": 163,
+      "count": 8
+    },
+    {
+      "week_number": 164,
+      "count": 8
+    },
+    {
+      "week_number": 165,
+      "count": 8
+    },
+    {
+      "week_number": 166,
+      "count": 8
+    },
+    {
+      "week_number": 167,
+      "count": 8
+    },
+    {
+      "week_number": 168,
+      "count": 8
+    },
+    {
+      "week_number": 169,
+      "count": 8
+    },
+    {
+      "week_number": 170,
+      "count": 8
+    },
+    {
+      "week_number": 171,
+      "count": 8
+    },
+    {
+      "week_number": 172,
+      "count": 8
+    },
+    {
+      "week_number": 173,
+      "count": 8
+    },
+    {
+      "week_number": 174,
+      "count": 8
+    },
+    {
+      "week_number": 175,
+      "count": 8
+    },
+    {
+      "week_number": 176,
+      "count": 8
+    },
+    {
+      "week_number": 177,
+      "count": 8
+    },
+    {
+      "week_number": 178,
+      "count": 8
+    },
+    {
+      "week_number": 179,
+      "count": 8
+    },
+    {
+      "week_number": 180,
+      "count": 8
+    },
+    {
+      "week_number": 181,
+      "count": 8
+    },
+    {
+      "week_number": 182,
+      "count": 8
+    },
+    {
+      "week_number": 183,
+      "count": 8
+    },
+    {
+      "week_number": 184,
+      "count": 8
+    },
+    {
+      "week_number": 185,
+      "count": 8
+    },
+    {
+      "week_number": 186,
+      "count": 8
+    },
+    {
+      "week_number": 187,
+      "count": 8
+    },
+    {
+      "week_number": 188,
+      "count": 8
+    },
+    {
+      "week_number": 189,
+      "count": 8
+    },
+    {
+      "week_number": 190,
+      "count": 8
+    },
+    {
+      "week_number": 191,
+      "count": 8
+    },
+    {
+      "week_number": 192,
+      "count": 8
+    },
+    {
+      "week_number": 193,
+      "count": 8
+    },
+    {
+      "week_number": 194,
+      "count": 8
+    },
+    {
+      "week_number": 195,
+      "count": 8
+    },
+    {
+      "week_number": 196,
+      "count": 8
+    },
+    {
+      "week_number": 197,
+      "count": 8
+    },
+    {
+      "week_number": 198,
+      "count": 8
+    },
+    {
+      "week_number": 199,
+      "count": 8
+    },
+    {
+      "week_number": 200,
+      "count": 8
+    },
+    {
+      "week_number": 201,
+      "count": 8
+    },
+    {
+      "week_number": 202,
+      "count": 8
+    },
+    {
+      "week_number": 203,
+      "count": 8
+    },
+    {
+      "week_number": 204,
+      "count": 8
+    },
+    {
+      "week_number": 205,
+      "count": 8
+    },
+    {
+      "week_number": 206,
+      "count": 8
+    },
+    {
+      "week_number": 207,
+      "count": 8
+    },
+    {
+      "week_number": 208,
+      "count": 8
+    },
+    {
+      "week_number": 209,
+      "count": 8
+    },
+    {
+      "week_number": 210,
+      "count": 8
+    },
+    {
+      "week_number": 211,
+      "count": 8
+    },
+    {
+      "week_number": 212,
+      "count": 8
+    },
+    {
+      "week_number": 213,
+      "count": 8
+    },
+    {
+      "week_number": 214,
+      "count": 8
+    },
+    {
+      "week_number": 215,
+      "count": 8
+    },
+    {
+      "week_number": 216,
+      "count": 8
+    },
+    {
+      "week_number": 217,
+      "count": 8
+    },
+    {
+      "week_number": 218,
+      "count": 8
+    },
+    {
+      "week_number": 219,
+      "count": 8
+    },
+    {
+      "week_number": 220,
+      "count": 8
+    },
+    {
+      "week_number": 221,
+      "count": 8
+    },
+    {
+      "week_number": 222,
+      "count": 8
+    },
+    {
+      "week_number": 223,
+      "count": 8
+    },
+    {
+      "week_number": 224,
+      "count": 8
+    },
+    {
+      "week_number": 225,
+      "count": 8
+    },
+    {
+      "week_number": 226,
+      "count": 8
+    },
+    {
+      "week_number": 227,
+      "count": 8
+    },
+    {
+      "week_number": 228,
+      "count": 8
+    },
+    {
+      "week_number": 229,
+      "count": 8
+    },
+    {
+      "week_number": 230,
+      "count": 8
+    },
+    {
+      "week_number": 231,
+      "count": 8
+    },
+    {
+      "week_number": 232,
+      "count": 8
+    },
+    {
+      "week_number": 233,
+      "count": 8
+    },
+    {
+      "week_number": 234,
+      "count": 8
+    },
+    {
+      "week_number": 235,
+      "count": 8
+    },
+    {
+      "week_number": 236,
+      "count": 8
+    },
+    {
+      "week_number": 237,
+      "count": 8
+    },
+    {
+      "week_number": 238,
+      "count": 8
+    },
+    {
+      "week_number": 239,
+      "count": 8
+    },
+    {
+      "week_number": 240,
+      "count": 8
+    },
+    {
+      "week_number": 241,
+      "count": 8
+    },
+    {
+      "week_number": 242,
+      "count": 8
+    },
+    {
+      "week_number": 243,
+      "count": 8
+    },
+    {
+      "week_number": 244,
+      "count": 8
+    },
+    {
+      "week_number": 245,
+      "count": 8
+    },
+    {
+      "week_number": 246,
+      "count": 8
+    },
+    {
+      "week_number": 247,
+      "count": 8
+    },
+    {
+      "week_number": 248,
+      "count": 8
+    },
+    {
+      "week_number": 249,
+      "count": 8
+    },
+    {
+      "week_number": 250,
+      "count": 8
+    },
+    {
+      "week_number": 251,
+      "count": 8
+    },
+    {
+      "week_number": 252,
+      "count": 8
+    },
+    {
+      "week_number": 253,
+      "count": 8
+    },
+    {
+      "week_number": 254,
+      "count": 8
+    },
+    {
+      "week_number": 255,
+      "count": 8
+    },
+    {
+      "week_number": 256,
+      "count": 8
+    },
+    {
+      "week_number": 257,
+      "count": 8
+    },
+    {
+      "week_number": 258,
+      "count": 8
+    },
+    {
+      "week_number": 259,
+      "count": 8
+    },
+    {
+      "week_number": 260,
+      "count": 8
+    },
+    {
+      "week_number": 261,
+      "count": 8
+    },
+    {
+      "week_number": 262,
+      "count": 8
+    },
+    {
+      "week_number": 263,
+      "count": 8
+    },
+    {
+      "week_number": 264,
+      "count": 8
+    },
+    {
+      "week_number": 265,
+      "count": 8
+    },
+    {
+      "week_number": 266,
+      "count": 8
+    },
+    {
+      "week_number": 267,
+      "count": 8
+    },
+    {
+      "week_number": 268,
+      "count": 8
+    },
+    {
+      "week_number": 269,
+      "count": 8
+    },
+    {
+      "week_number": 270,
+      "count": 8
+    },
+    {
+      "week_number": 271,
+      "count": 8
+    },
+    {
+      "week_number": 272,
+      "count": 8
+    },
+    {
+      "week_number": 273,
+      "count": 8
+    },
+    {
+      "week_number": 274,
+      "count": 8
+    },
+    {
+      "week_number": 275,
+      "count": 8
+    },
+    {
+      "week_number": 276,
+      "count": 8
+    },
+    {
+      "week_number": 277,
+      "count": 8
+    },
+    {
+      "week_number": 278,
+      "count": 8
+    },
+    {
+      "week_number": 279,
+      "count": 8
+    },
+    {
+      "week_number": 280,
+      "count": 8
+    },
+    {
+      "week_number": 281,
+      "count": 8
+    },
+    {
+      "week_number": 282,
+      "count": 8
+    },
+    {
+      "week_number": 283,
+      "count": 8
+    },
+    {
+      "week_number": 284,
+      "count": 8
+    },
+    {
+      "week_number": 285,
+      "count": 8
+    },
+    {
+      "week_number": 286,
+      "count": 8
+    },
+    {
+      "week_number": 287,
+      "count": 8
+    },
+    {
+      "week_number": 288,
+      "count": 8
+    },
+    {
+      "week_number": 289,
+      "count": 8
+    },
+    {
+      "week_number": 290,
+      "count": 8
+    },
+    {
+      "week_number": 291,
+      "count": 8
+    },
+    {
+      "week_number": 292,
+      "count": 8
+    },
+    {
+      "week_number": 293,
+      "count": 8
+    },
+    {
+      "week_number": 294,
+      "count": 8
+    },
+    {
+      "week_number": 295,
+      "count": 8
+    },
+    {
+      "week_number": 296,
+      "count": 8
+    },
+    {
+      "week_number": 297,
+      "count": 8
+    },
+    {
+      "week_number": 298,
+      "count": 8
+    },
+    {
+      "week_number": 299,
+      "count": 8
+    },
+    {
+      "week_number": 300,
+      "count": 8
+    },
+    {
+      "week_number": 301,
+      "count": 8
+    },
+    {
+      "week_number": 302,
+      "count": 8
+    },
+    {
+      "week_number": 303,
+      "count": 8
+    },
+    {
+      "week_number": 304,
+      "count": 8
+    },
+    {
+      "week_number": 305,
+      "count": 8
+    },
+    {
+      "week_number": 306,
+      "count": 8
+    },
+    {
+      "week_number": 307,
+      "count": 8
+    },
+    {
+      "week_number": 308,
+      "count": 8
+    },
+    {
+      "week_number": 309,
+      "count": 8
+    },
+    {
+      "week_number": 310,
+      "count": 8
+    },
+    {
+      "week_number": 311,
+      "count": 8
+    },
+    {
+      "week_number": 312,
+      "count": 8
+    },
+    {
+      "week_number": 313,
+      "count": 8
+    },
+    {
+      "week_number": 314,
+      "count": 8
+    },
+    {
+      "week_number": 315,
+      "count": 8
+    },
+    {
+      "week_number": 316,
+      "count": 8
+    },
+    {
+      "week_number": 317,
+      "count": 8
+    },
+    {
+      "week_number": 318,
+      "count": 8
+    },
+    {
+      "week_number": 319,
+      "count": 8
+    },
+    {
+      "week_number": 320,
+      "count": 8
+    },
+    {
+      "week_number": 321,
+      "count": 8
+    },
+    {
+      "week_number": 322,
+      "count": 8
+    },
+    {
+      "week_number": 323,
+      "count": 8
+    },
+    {
+      "week_number": 324,
+      "count": 8
+    },
+    {
+      "week_number": 325,
+      "count": 8
+    },
+    {
+      "week_number": 326,
+      "count": 8
+    },
+    {
+      "week_number": 327,
+      "count": 8
+    },
+    {
+      "week_number": 328,
+      "count": 8
+    },
+    {
+      "week_number": 329,
+      "count": 8
+    },
+    {
+      "week_number": 330,
+      "count": 8
+    },
+    {
+      "week_number": 331,
+      "count": 8
+    },
+    {
+      "week_number": 332,
+      "count": 8
+    }
+  ],
+  "emptyFields": {
+    "key_question": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      13,
+      14,
+      15
+    ],
+    "growth_friction_ending": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218,
+      219,
+      220,
+      221,
+      222,
+      223,
+      224,
+      225,
+      226,
+      227,
+      228,
+      229,
+      230,
+      238,
+      239,
+      240,
+      241,
+      242
+    ],
+    "insight_audio_url": [
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218,
+      219,
+      220,
+      221,
+      222,
+      223,
+      224,
+      225,
+      226,
+      227,
+      228,
+      229,
+      230,
+      231,
+      232,
+      233,
+      234,
+      235,
+      236,
+      237,
+      238,
+      239,
+      240,
+      241,
+      242,
+      243,
+      244,
+      245,
+      246,
+      247,
+      248,
+      249,
+      250,
+      251,
+      252,
+      253,
+      254,
+      255,
+      256,
+      257,
+      258,
+      259,
+      260,
+      261,
+      262,
+      263,
+      264,
+      265,
+      266,
+      267,
+      268,
+      269,
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277,
+      278,
+      279,
+      280,
+      281,
+      282,
+      283,
+      284,
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291,
+      292,
+      293,
+      294,
+      295,
+      296,
+      297,
+      298,
+      299,
+      300,
+      301,
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      327,
+      328,
+      329,
+      330,
+      331,
+      332
+    ]
+  }
+}

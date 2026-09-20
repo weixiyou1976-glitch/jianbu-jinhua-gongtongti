@@ -1,0 +1,15 @@
+{
+  "structured_json_files": 8,
+  "pattern_matches": {
+    "email": 0,
+    "jwt": 0,
+    "private_key": 0,
+    "api_key": 0
+  },
+  "record_count": 332,
+  "content_field_counts": {
+    "19": 332
+  },
+  "forbidden_record_fields": [],
+  "nonempty_growth_friction_endings": 97
+}

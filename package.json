@@ -6,8 +6,14 @@
   "scripts": {
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
-    "seed": "npm --prefix backend run seed",
+    "seed": "node backend/seed.js",
     "install:all": "npm --prefix backend install && npm --prefix frontend install",
-    "build:frontend": "npm --prefix frontend run build"
+    "build:frontend": "npm --prefix frontend run build",
+    "validate:skills": "node backend/scripts/validate-skills.cjs",
+    "compare:skills": "node backend/scripts/compare-skills.cjs",
+    "export:skills": "node backend/scripts/export-skills-readonly.cjs",
+    "rehearse:skills": "node backend/scripts/rehearse-skills.cjs",
+    "test:skills-source": "node --test backend/tests/skill-source.test.cjs",
+    "restore:skills": "node backend/scripts/restore-skills.cjs"
   }
 }
